@@ -1,0 +1,25 @@
+*.bak
+*.bat
+*.config
+*.config.par
+*.jar
+*.launch
+*.lnk
+*.project
+*=WreslCheck_main=.log
+*.dll
+*.dsc
+*.dsd
+*.dsk
+*.sty
+*.xml
+
+# File names
+Error_evaluation.txt
+Error_solving.txt
+
+# Folders
+config/
+jre8/
+log4j/
+
