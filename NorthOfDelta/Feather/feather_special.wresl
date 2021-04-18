@@ -40,7 +40,7 @@ define minflow_C_Therm {
     condition month == NOV .and. D_Banks_exp1(prevOCT) < 300.1
     value  0.
   }
-  case November4 {                         !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
+  case November4 {
     condition month == NOV
     value   C_Therm(prevOCT) - 500
   }
@@ -53,7 +53,7 @@ define minflow_C_Therm {
         S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
     value   max(C_Therm(prevOCT) - 500, C_Therm(prevNOV) - 500)
   }
-  case DecemberToMarch2 {                  !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
+  case DecemberToMarch2 {
     condition month >= DEC .AND. month <= MAR .AND.
         int(C_Therm(prevOCT)) > oct_trigger_cfs .AND. D_Banks_exp1(prevOct) > 300.1 .and.
         S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT)
@@ -65,7 +65,7 @@ define minflow_C_Therm {
         S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
     value   C_Therm(prevNOV) - 500
   }
-  case otherwise {                         !minflow_C_Therm + 500 = 500 cfs
+  case otherwise {
     condition always
     value   0.
   }
@@ -141,6 +141,28 @@ goal OroRelJulSep {
       lhs<rhs   penalty 0 }
 }
 
+!DWR maintains flow at the "Mouth of Feather River" based on requirements of diversion pumping facilities.
+!Their flow target depends on upstream Yuba and Oroville inflow, the DWR/DFG agreed flow target above Verona,
+!and a 2800 cfs flow rate related to pumping facility requirements.
+ define frsa_alloc {
+   case Drought {
+     condition     wyt_FEATHER == 1
+    value         0.50*(dem_D7A_PAG + dem_D7B_PAG + dem_D206A_PAG + dem_D206B_PAG)*taf_cfs}
+   case Normal {
+     condition    always
+    value        1.00*(dem_D7A_PAG + dem_D7B_PAG + dem_D206A_PAG + dem_D206B_PAG)*taf_cfs}
+ }
+
+
+ define minflowFeaMouth {
+     case DiversionSeason {
+         condition month>=APR .and. month<=SEP
+         value     max(min(2800.,I_YubaUP-dem_D230_MI+I_Orovl-frsa_alloc),minflow_C_YubFea) }
+     case other {
+         condition always
+         value     minflow_C_YubFea }
+ }
+ 
 !=========================================================================
 ! Oroville would be operated only to satify minimum instream and 
 ! delta conditions if less than 1.0 MAF 
@@ -149,7 +171,7 @@ define C_Orovl_IBU {std kind 'flow-channel' units 'cfs'}  !Weight with -3000 to 
 define C_Orovl_EXP {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl {C_Orovl = C_Orovl_IBU + C_Orovl_EXP}
 
-define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs)}
+define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1600. - DrainTar_buffer)*taf_cfs)}
 
 goal lim_C_Orovl_EXP {C_Orovl_EXP < C_Orovl_EXP_max_}
 
@@ -276,25 +298,30 @@ If releases for flood control are made then no minimum flow is applied.
  !define dem_d206b_PAG {timeseries kind 'DEMAND-SWP-AG' units 'TAF'}
  !define dem_D230_mi    {timeseries kind 'DEMAND-NP-MI' units 'CFS'}   !Define Non-prject Demands by Contract Type
  define frsa_all { value (dem_D7A_PAG + dem_D7B_PAG + dem_D206A_PAG + dem_D206B_PAG)*taf_cfs }
-
-!DWR maintains flow at the "Mouth of Feather River" based on requirements of diversion pumping facilities.
-!Their flow target depends on upstream Yuba and Oroville inflow, the DWR/DFG agreed flow target above Verona,
-!and a 2800 cfs flow rate related to pumping facility requirements.
- define frsa_alloc {
-   case Drought {
-     condition     wyt_FEATHER == 1
-     value         0.50* frsa_all}
-   case Normal {
-     condition    always
-     value        1.00* frsa_all}
- }
- define minflowFeaMouth {
-     case DiversionSeason {
-         condition month>=APR .and. month<=SEP
-         value     max(min(2800.,I_YubaUP-dem_D230_MI+I_Orovl-frsa_alloc),minflow_C_YubFea) }
-     case other {
-         condition always
-         value     minflow_C_YubFea }
- }
 */
 
+!-KS, 11/20/18. FRSA Winter Water Allocation.
+!Based on recommendation from Aaron Miller (O&M) and Ming-Yen Tu (O&M).
+!Winter water allocations are made in full unless...
+!	(1) Oroville EOS storage is below 900 TAF, then 0% allocation
+!	(2) Oroville EOS storage is above 900 TAF but not enough to meet full 100% winter water allocation
+!	    In this case, winter water allocations are scaled based on previous month storage above 900 TAF, 
+!		current month's inflow and current month's winter water demand.
+!	(3) Protect C203 MIF releases in additional to 900 TAF storage threshold.
+!		minflow_C203 = redd dewatering protection
+!		minflow_C223 = DFG/DWR Feather R MIF Agreement between Thermalito Complex and Verona
+
+define decomp_allocdv {std kind 'Decomp-Alloc' units 'None'}
+
+define decomp_alloc {
+	case Oro_high {
+		condition dem_D7C_DCMP > 0. .and. S_OROVL(-1) + (I_OROVL*cfs_TAF) - (max(minflow_C_Therm, minflow_c_YubFea)*cfs_TAF) > 900.
+			value min ((S_OROVL(-1) - 900. + (I_OROVL*cfs_TAF) - (max(minflow_C_Therm, minflow_c_YubFea)*cfs_TAF))/dem_D7C_DCMP, 1.)	}
+	case Oro_cutoff {
+		condition always
+			value 0.0	}
+}
+
+goal setdecomp_alloc {decomp_allocdv = decomp_alloc}
+
+goal set_D7C {D7C < dem_D7C_DCMP*taf_cfs*decomp_alloc}
