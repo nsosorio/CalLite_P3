@@ -1,6 +1,7 @@
 *.bak
 *.bat
 *.config
+*.config.ifs
 *.config.par
 *.jar
 *.launch
@@ -20,6 +21,7 @@ Error_solving.txt
 
 # Folders
 config/
+DSS/output
 jre8/
 log4j/
-
+Run/External
