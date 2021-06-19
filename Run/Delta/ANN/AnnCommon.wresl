@@ -123,8 +123,9 @@ goal def_sac_oth { sac_oth = C_YoloBP + AD_Mokelumne  + AD_SJRCalALL - C_NBA }
 define C_cosumnes_Vamp {timeseries kind 'FLOW-CHANNEL'  units 'CFS'}
 define I_Mokelumne {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Mokelumne inflow from EBMUDSIM
 define C_Calaveras_vamp {timeseries kind 'FLOW-CHANNEL'  units 'CFS'}
+define R_Mokelumne {timeseries kind 'FLOW' UNITS 'CFS'} ! El Dorado ID and El Dorado County Water Agency Returns to Cosumnes
 
-define sac_oth_est { value C_cosumnes_VAMP + I_Mokelumne + C_Calaveras_vamp             
+define sac_oth_est { value C_cosumnes_VAMP + I_Mokelumne + R_Mokelumne + C_Calaveras_vamp             
         - demand_d_Vallejo*taf_cfs - dem_D403B_PMI*taf_cfs*perdel_27 - dem_D403C_PMI*taf_cfs*perdel_36}
 define sac_oth_est_ { alias sac_oth_est kind 'FLOW-INFLOW' units 'CFS'}
 
