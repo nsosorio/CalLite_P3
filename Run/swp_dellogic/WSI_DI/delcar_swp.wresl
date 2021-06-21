@@ -427,5 +427,5 @@ define deltar_drymn_dv	{alias deltar_drymin	 kind 'swp_debug' units 'taf'}
 define swp_alloc_1dv    {alias swp_allocation_1 kind 'swp_debug' units 'taf'}
 define swp_alloc_2dv    {alias swp_allocation_2 kind 'swp_debug' units 'taf'}
 define swp_alloc_3dv    {alias swp_allocation_3 kind 'swp_debug' units 'taf'}
-
+define SWPRuleDrainTar_dv {alias SWPRuleDrainTar kind 'rule' units 'None'}
 
