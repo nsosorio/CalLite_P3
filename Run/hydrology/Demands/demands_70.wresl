@@ -154,6 +154,7 @@ define d8i_pmi    {STD KIND 'FLOW-DELIVERY' UNITS 'CFS'}
 goal set_d8_prj   {d8_prj = d8_pmi}
 goal set_d8_pmi   {d8_pmi = d8b_pmi + d8e_pmi + d8f_pmi + d8g_pmi + d8h_pmi + d8i_pmi}
 
+define D8_ed {std kind 'FLOW-DELIVERY' UNITS 'CFS'} !ElDoradoID and ElDorCWA
 define d8_ed_prj     {STD KIND 'FLOW-DELIVERY' UNITS 'CFS'}
 goal set_d8_ed_prj  {d8_ed_prj = d8f_pmi + d8i_pmi}
 goal set_d8_ed      {d8_ed = d8_ed_prj}

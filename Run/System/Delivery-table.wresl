@@ -18,35 +18,47 @@ define D_SacAme {std kind 'FLOW-DELIVERY' units 'CFS'}!DIVERSION AT SACRAMETO AN
 goal meet_D_SacAme_NP {D_SacAme_NP = demand_D_SacAme_NP}
 goal Diversion_SacAme {D_SacAme = D_SacAme_P + D_SacAme_NP}
 define D_SacWeir {std kind 'FLOW-DELIVERY' units 'CFS'} !SACRAMENTO WEIR SPILL
+
 define D_Orovl_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion from Oroville Lake
 define D_Orovl {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion from Oroville Lake
 goal Diversion_Orovl {D_Orovl = D_Orovl_P}
+
 define D_Therm_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion at Thermalito
 define D_Therm {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Thermalito
 goal Diversion_Therm {D_Therm = D_Therm_P}
+
 define D_YubFea_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion at Yuba Feather Confluence
 define D_YubFea_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !Non-Project Diversion at Yuba Feather Confluence
 define D_YubFea {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Yuba Feather Confluence
 goal Diversion_YubFea {D_YubFea = D_YubFea_P + D_YubFea_NP}
+
 define demand_D_Daguer_NP {timeseries kind 'DEMAND' units 'CFS'}!Dagurre Point Non-Project 
 define D_Daguer_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !Non Project Diversion at Daguerre Point
 define D_Daguer {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Daguerre Point
 goal meet_D_Daguer_NP {D_Daguer_NP = demand_D_Daguer_NP}
 goal Diversion_Daguer {D_Daguer = D_Daguer_NP}
+
 define demand_D_Folsm_NP {timeseries kind 'DEMAND' units 'CFS'}!Non-Project Diversion from Folsom reservoir
 define D_Folsm_P {std kind 'FLOW-DELIVERY' units 'CFS'}!Project Diversion from Folsom reservoir
-define D_Folsm_ED {std kind 'FLOW-DELIVERY' units 'CFS'}!Project Diversion from Folsom reservoir - El Dorado
 define D_Folsm_NP {std kind 'FLOW-DELIVERY' units 'CFS'}!NonProject Diversion from Folsom reservoir
 define D_Folsm {std kind 'FLOW-DELIVERY' units 'CFS'}!Diversion from Folsom reservoir
+goal Diversion_Folsm {D_Folsm=D_Folsm_P+D_Folsm_NP}
 goal meet_D_Folsm_NP {D_Folsm_NP = demand_D_Folsm_NP}
-goal meet_D_Folsm_ED_NP {D_Folsm_ED_NP = demand_D_Folsm_ED_NP}
-goal Diversion_Folsm {D_Folsm=D_Folsm_P+D_Folsm_NP+D_Folsm_ED_NP}
+
+define demand_D_Folsm_ED_NP {timeseries kind 'DEMAND' units 'cfs'} ! El Dorado non-project diversion from Folsom reservoir
+define D_Folsm_ED_P {std kind 'FLOW-DELIVERY' units 'CFS'}!Project Diversion from Folsom reservoir - El Dorado
+define D_Folsm_ED_NP {std kind 'FLOW-DELIVERY' units 'CFS'}!Non-Project Diversion from Folsom reservoir - El Dorado
+define D_Folsm_ED {std kind 'FLOW-DELIVERY' units 'CFS'}!Project Diversion from Folsom reservoir - El Dorado
+goal Diversion_Folsm_ED {D_Folsm_ED=D_Folsm_ED_P+D_Folsm_ED_NP}
+goal set_D_Folsm_ED_NP {D_Folsm_ED_NP = demand_D_Folsm_ED_NP}
+
 define demand_D_Nimbus_NP {timeseries kind 'DEMAND' units 'CFS'} !Non-Project Diversion at Nimbus
 define D_Nimbus_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion at Nimbus
 define D_Nimbus_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !NonProject Diversion at Nimbus
 define D_Nimbus {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Nimbus
 goal meet_D_Nimbus_NP {D_Nimbus_NP = demand_D_Nimbus_NP}
 goal Diversion_Nimbus {D_Nimbus=D_Nimbus_P+D_Nimbus_NP}
+
 define demand_D_HSt_NP {timeseries kind 'DEMAND' units 'CFS'}!Non-Project Diversion at H St
 define D_HSt_NP {std kind 'FLOW-DELIVERY' units 'CFS'}! Diversion at H St
 define D_HSt {std kind 'FLOW-DELIVERY' units 'CFS'}! Diversion at H St
