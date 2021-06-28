@@ -4,7 +4,6 @@
 *.config.ifs
 *.config.par
 *.jar
-*.launch
 *.lnk
 *.project
 *=WreslCheck_main=.log
