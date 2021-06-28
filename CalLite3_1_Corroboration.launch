@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="wpp.launchType">
-<stringAttribute key="wpp.debugModel.ATTR_WPP_ALLOWSVTSINIT" value="no"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_ALLOWSVTSINIT" value="yes"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ALLRESTARTFILES" value="no"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_APART" value="CALSIM"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_APART_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="06/26/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Rerun with DCR 17 CS2CL with WTS disabled"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_Corrob_noWTS_DV.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="06/27/2021"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Disable D207A as was done in 3.1.0 corrob"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_Corrob_noD207A_DV.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>

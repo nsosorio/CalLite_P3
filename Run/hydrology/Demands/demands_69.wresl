@@ -93,7 +93,8 @@ goal split_d206c     {d206c = d206c_prj } ! Miscellaneous FRSA
 goal split_d206c_prj {d206c_prj = d206c_pag + d206c_pwr}
 
 !Additional non-project surface water deliveries
-define D207A {std kind 'FLOW-DELIVERY' units 'CFS'}
+!define D207A {std kind 'FLOW-DELIVERY' units 'CFS'}   !To Exclude D207A. 8/28/2015
+define D207A {value 0}   !To Exclude D207A. 8/28/2015
 
 !Split the diversion requirement arc C209
 define c209_prj   {STD KIND 'FLOW-CHANNEL' UNITS 'CFS' }  ! total prj deliveries and gw applied to 210
