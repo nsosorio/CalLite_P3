@@ -6,7 +6,6 @@
 *.jar
 *.lnk
 *.project
-*=WreslCheck_main=.log
 *.dll
 *.dsc
 *.dsd
@@ -18,8 +17,10 @@
 # File names
 Error_evaluation.txt
 Error_solving.txt
+=FileCollector=.log
 shorts.txt
 xa.log
+=WreslCheck_main=.log
 
 # Folders
 config/
