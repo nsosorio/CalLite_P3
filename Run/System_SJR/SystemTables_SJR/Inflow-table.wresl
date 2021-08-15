@@ -12,7 +12,7 @@ define I_TUOL {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Accr La
 define I_MERCED1C {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Exchequer to Crocker-Huffman Accr, I561
 define I_MERCED1B {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Crocker-Huffman to Cressey Accr, I562
 define I_MERCED2 {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !Cressy to Stevenson Accr, I566
-define I_MDOTA {timeseries kind 'FLOW-INFLOW' units 'TAF' convert 'CFS'} !James Bypass
+define I_MDOTA {timeseries kind 'FLOW-INFLOW' units 'cfs'} !James Bypass
 define I_SJRMSA {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Mud and Salt Slu Base flow
 define I_SJRMSx {timeseries 'I_SJRMS'kind 'FLOW-INFLOW' units 'CFS'} !Mud and Salt Slu Base flow
 define I_SJRMS{std kind 'FLOW-INFLOW' units 'CFS'} !SLDR
