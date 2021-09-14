@@ -71,7 +71,7 @@ define max_14day_running_avg {value 6}
 !define avg_first_15days {value 7}
 !define avg_last_15days {value 8}
 
-define daysindv {alias daysin kind 'DAYS' units 'DAYS'}
+!define daysindv {alias daysin kind 'DAYS' units 'DAYS'}
 
 !Linegen parameters
 define slope {value 1}

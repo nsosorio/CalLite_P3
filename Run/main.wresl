@@ -84,6 +84,26 @@ SEQUENCE CYCLE10 {
     model   Wheeling
     order   10
     }    
+   
+group Tdomain {
+
+    ! Define start month and start water year
+    define BgnWY {value 1997}
+    define EndWY   {value 1997}
+    define BgnMo {value OCT}
+    
+    ! Conversion factors   
+    define daysindv    { alias daysin    kind 'DAYS'          units 'days'}
+    define cfs_cfm     { value daysin * 86400.0}
+    define taf_cfm {value 43560*1000}  !AF/month to ft^3/month
+    !define af_cfs {value 43560/(86400*daysin)} !3600*24=86400
+    define cfs_cfmp    { case first{
+                              condition wateryear == BgnWY .and. month == Oct
+                              value     daysin * 86400.0}
+                         case other{
+                              condition always
+                              value     daysindv(-1) * 86400.0 } }
+    }   
     
 model block1 {
     INCLUDE '\Assumptions\Options_Switches.wresl'
@@ -305,6 +325,7 @@ MODEL LVEM3 {
 }
 
 MODEL FAM {              !CYCLE 1
+    include group Tdomain
     define S44 {std kind 'STORAGE' units 'TAF'}
     INCLUDE 'FAM\Misc\General.wresl'
     INCLUDE 'FAM\Misc\GeneralInfo_Forecasted_CAMOnly2.wresl'
@@ -347,8 +368,8 @@ MODEL FAM {              !CYCLE 1
 }
 
 MODEL SJRBASE {         !CYCLE 2
+	include group Tdomain
     INCLUDE model block1
-
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'
     INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
@@ -360,8 +381,8 @@ MODEL SJRBASE {         !CYCLE 2
   }
 
 MODEL SJR_WQ1 {         !CYCLE 3
+	include group Tdomain
     INCLUDE model block1
-
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'
     INCLUDE '\sanjoaquin\Friant\SJR_Rest_Req_Local.wresl'     !Turns on SJRR Operations
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
@@ -373,6 +394,7 @@ MODEL SJR_WQ1 {         !CYCLE 3
 }
 
 MODEL SJR_PULSE {            !CYCLE 4
+    include group Tdomain
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'   
@@ -386,6 +408,7 @@ MODEL SJR_PULSE {            !CYCLE 4
 }
 
 MODEL SJR_WQ2 {         !CYCLE 5
+    include group Tdomain
     INCLUDE model block1
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'   
@@ -399,6 +422,7 @@ MODEL SJR_WQ2 {         !CYCLE 5
 }
 
 MODEL VAMP_AND_DO {           !CYCLE 6
+	include group Tdomain
     INCLUDE model block1
 	if int(Dynamic_SJR)==0 {define VAMP_reqdv {std kind 'flow-requirement' units 'cfs'}}
 
@@ -414,6 +438,7 @@ MODEL VAMP_AND_DO {           !CYCLE 6
 }
     
 MODEL Upstream {         !CYCLE 7
+include group Tdomain
 INCLUDE model Block2
 INCLUDE model Block3
 
@@ -459,6 +484,7 @@ if LVEM_switch > 0.5 {
 
 
 MODEL BASE {         !CYCLE 8
+include group Tdomain
 INCLUDE model Block2
 INCLUDE model Block3
 
@@ -506,6 +532,7 @@ if LVEM_switch > 0.5 {
 
 
 MODEL B2_BO {         !CYCLE 9
+include group Tdomain
 INCLUDE model Block2
 INCLUDE model Block3
 
@@ -571,6 +598,7 @@ if LVEM_switch > 0.5 {
 
 
 MODEL Wheeling {         !CYCLE 10
+include group Tdomain
 INCLUDE model Block2
 INCLUDE model Block3
 INCLUDE model Block4

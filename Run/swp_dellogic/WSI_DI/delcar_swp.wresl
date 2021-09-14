@@ -264,7 +264,7 @@ define fam_swpdel {
     condition  month >=JAN .and. month <=may .and. AllocationSwitch==2
     value      SWP_Delivery[FAM] + 64.5 + SWPC_NTHRM_A56 + SWPC_STHRM_A56 + NBV_A56}
   case start {
-    condition  wateryear==1922 .and. month==oct
+    condition  wateryear==BgnWY .and. month==oct
     value      0.}
   case otherwise {
     condition  always
@@ -317,7 +317,7 @@ define swp_allocation_3 {value min(max_tableA,swp_allocation_2)}
 ! This implements the no reduction rule for april to december
 define swp_alloc {
     case start {
-        condition  wateryear==1922 .and. month==oct
+        condition  wateryear==BgnWY .and. month==oct
         value      max_tableA*0.5}
     case JanToApr {                                         ! reductions allowed
         condition  month >= JAN .and. month <= APR

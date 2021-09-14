@@ -52,7 +52,7 @@ define I3_50sum {alias I3sum kind 'FLOW' units 'TAF'}
 !annual total for last year
 define I3_lastyr{
   case a{
-    condition wateryear == 1922 .or. wateryear == 2003
+    condition wateryear == BgnWY .or. wateryear == endwy
     value 4001.}
   case b{
     condition always
@@ -150,7 +150,7 @@ define I4_50apr_jul {alias I4_apr_jul kind 'FLOW' units 'TAF'}
 !annual total for last year
 define I4_lastyr{
   case a{
-    condition wateryear == 1922 .or. wateryear == 2003
+    condition wateryear == BgnWY .or. wateryear == endwy
     value 4001.}
   case b{
     condition always

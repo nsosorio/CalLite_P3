@@ -49,7 +49,7 @@ define C407 {std kind 'flow_channel' units 'cfs'}
 define swp_IN_total {std kind 'swp_delivery' units 'cfs'}
 
 define co_del_act {
-  case a {condition wateryear==1922 .and. month==Oct value 0}
+  case a {condition wateryear==BgnWY .and. month==Oct value 0}
   case b {condition month==jan                       value 0}
   case c {condition always                           value swp_CO_total(-1)*cfs_taf(-1)}
 }
@@ -63,7 +63,7 @@ define co_stor_lost_ {alias co_stor_lost kind 'A56_LOST' units 'taf'}
 
 define swp_co_1 {
 !  case PA {condition month==jan                       value 405.} !initialize for position analysis
-!  case c1 {condition month==jan .and. wateryear==1922 value 0.} !initialize
+!  case c1 {condition month==jan .and. wateryear==BgnWY value 0.} !initialize
   case c2 {condition month==jan                       value min(del_swp_codv(prevMay),S_SLSWP(-1)-42.)} !initialize
   case d  {condition month>=feb .and. month<=sep      value max(0., swp_co(-1) - co_del_act - co_stor_lost)} !
   case e  {condition always                           value 0}
