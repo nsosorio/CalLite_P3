@@ -1,7 +1,10 @@
 ! Outputs for spreadsheet analyzing controlling factors
 
-define[local] D_NapaBASE  {alias D_NAPA[BASE]     KIND 'FLOW-DELIVERY' UNITS 'CFS'}
 define[local] c_YubFeaBASE  {alias c_YubFea[Base]      kind 'FLOW-CHANNEL'  units 'CFS'}
+define[local] C209_np_exc_up    {alias C209_np_exc KIND 'FLOW-CHANNEL' UNITS 'CFS'}
+define[local] C209_prj_exc_up   {alias c209_prj KIND 'FLOW-CHANNEL' UNITS 'CFS'}
+
+define[local] D_NapaBASE  {alias D_NAPA[BASE]     KIND 'FLOW-DELIVERY' UNITS 'CFS'}
 
 define[local] c_OMRUP  {alias c_OMR[UPSTREAM]      kind 'FLOW-CHANNEL'  units 'CFS'}
 define[local] c_OMRBASE  {alias c_OMR[Base]      kind 'FLOW-CHANNEL'  units 'CFS'}
@@ -20,8 +23,6 @@ define[local] eiexpctrlUP       {alias eiexpctrl[UPSTREAM]      KIND 'debug' uni
 define[local] aprmayexpctrlUP       {alias aprmayexpctrl[UPSTREAM]      KIND 'debug' units 'cfs'}
 define[local] aprmaybanksctrlUP       {alias aprmaybanksctrl[UPSTREAM]      KIND 'debug' units 'cfs'}
 define[local] aprmayjonesctrlUP       {alias aprmayjonesctrl[UPSTREAM]      KIND 'debug' units 'cfs'}
-define[local] C209_np_exc_up    {alias C209_np_exc KIND 'FLOW-CHANNEL' UNITS 'CFS'}
-define[local] C209_prj_exc_up   {alias c209_prj KIND 'FLOW-CHANNEL' UNITS 'CFS'}
 
 define[local] D_BanksBASE  {alias D_Banks[BASE]     KIND 'FLOW-DELIVERY' UNITS 'CFS'}
 define[local] D_Banks_swpBASE  {alias D_Banks_swp[BASE]     KIND 'FLOW-DELIVERY' UNITS 'CFS'}

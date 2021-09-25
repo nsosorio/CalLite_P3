@@ -6,7 +6,7 @@
 !********************************************************
 
 !include 'shortage_cvp_n.wresl'
-include 'shortage_cvp_s.wresl'
+if int(Dynamic_Delta) == 1 {include 'shortage_cvp_s.wresl'}
 include 'shortage_swp.wresl'
 !include 'shortage_prf_n.wresl'
 

@@ -1,0 +1,6 @@
+! This file uses timeseries from a CalSim II DCR 2017 corrob CalLite study to define the inputs for CVP allocation if Dynamic Delta is off
+define perdel_cvpag_sys { timeseries kind 'percent-delivery' units 'none'}
+define perdel_cvpmi_sys { timeseries kind 'percent-delivery' units 'none'}
+define perdel_cvpex_sys { timeseries kind 'percent-delivery' units 'none'}
+define perdel_cvpsc_sys { timeseries kind 'percent-delivery' units 'none'}
+define perdel_cvprf_sys { timeseries kind 'percent-delivery' units 'none'}

@@ -1,0 +1,80 @@
+/****************************
+weir_steps_dailyops.wresl
+
+Tom FitzHugh BOR 5/18/2010
+
+Operates Freemont and Sacramento Weirs using disaggregated daily flows.  Code works by
+computing a daily flow using the monthly flow from cycle 1 and a daily flow fraction.  
+Then weir spills are computed for each day, and summed for the month.
+
+Hao Xie DWR 9/28/2012 add Notch for Water Management Action
+****************************/
+
+!*******************************************************************************
+!Estimated Overflow Rating for Fremont Weir to the Yolo Bypass (River Mile 82), DSA 69.
+
+!Estimate of daily flow entering SacFeather node in CFS
+!Disaggregates monthly flow from cycle 1 using daily fractions
+define qsacFth_est {value QsacFth_prv}
+
+!Estimation of additional Freemont weir monthly average spill based on daily spill estimations for flows over 23,100 cfs according to CONV_ proposed notch.
+!Daily operation time frame defined in FRENothc_OnOff.table
+
+define gate11flow {      !Flow for the gate at 11.5 ft elevation
+    case Sep_Jun {condition month <=JUN .or. month==SEP
+        value 100. * fremont_notch_on}
+    case other { condition always
+        value 0. }  }
+
+!Daily operation of notch. Modify lookup table FRENotch_OnOff to indicate the days the notch will be operating. CONV_ Proposed Operation: DEC 1st through APR 30th
+define Notch_OnOff {select switch from FRE_Weir_Notch_OnOff where Day=day, month=month}
+
+!Estimation of Fremont spill when the notch is operating: weir + notch spills
+define frespill_wn {select Spill from FRE_weir_Notch given Sac_Flow=qsacFth_est use linear}
+
+!Estimation of Fremont spill when the notch is NOT operating: weir spill
+define frespill_w {select Spill from FRE_weir_No_Notch given Sac_Flow=qsacFth_est use linear}
+
+!Estimation of Fremont daily spill based on notch operation
+define frespill {
+	case notchon{
+		condition fremont_notch_on==1
+		value max(frespill_wn*Notch_OnOff + frespill_w*(1-Notch_OnOff),gate11flow)
+	}
+	case notchoff{
+		condition always
+		value frespill_w
+	}
+}
+
+
+!Fremont spill daily outputs
+define frespilldv {alias frespill kind 'FLOW-DELIVERY' units 'cfs'}
+
+goal actfwflow_day {D_FreWeir = frespill}
+
+! total flow entering SacFeather node
+define QSacFth {alias C_Wilkns + C_YubFea + AD_SacFea kind 'flow-channel' units 'cfs'}
+
+!*******************************************************************************
+!Estimated Overflow Rating for Sacramento Weir to the Yolo Bypass
+!(River Mile 63), DSA 70.
+
+!Estimate of daily flow that would enter SacAmerican node if Fremont weir wasn't spilling (in CFS)
+!Disaggregates monthly flow from cycle 1 using daily fractions
+define qsacAme_est {value (QsacAmenospill)-frespill}
+define qsacAme_estdv {alias qsacAme_est kind 'debug' units 'cfs'}
+
+!Estimation of Sacramento weir monthly average spill based on daily spill estimations for flows over 73,000 cfs
+
+!Estimation of Sacramento weir daily spill
+define sacspill {select Spill from SAC_weir given Sac_Flow=qsacAme_est use linear}
+
+!Sacramento weir daily spill outputs
+define sacspilldv {alias sacspill kind 'debug' units 'cfs'}
+
+goal actswflow_day {D_SacWeir = sacspill}
+
+! total flow entering SacAmerican node
+define QSacAme {alias C_SacFea + C_HSt + AD_SacAme - D_SacAme kind 'flow-channel' units 'cfs'}
+

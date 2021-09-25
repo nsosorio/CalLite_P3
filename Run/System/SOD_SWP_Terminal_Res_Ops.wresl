@@ -1,3 +1,4 @@
+if Dynamic_Delta == 1 { 
 
 
 !Retrieve CalSim storage diversions and releases.
@@ -37,4 +38,4 @@ goal lim_D_Pyramid {D_Pyramid < SD_Pyramid}
 goal lim_I_Pyramid {I_Pyramid < SW_Pyramid}
 goal lim_D_Castaic {D_Castaic < SD_Castaic}
 goal lim_I_Castaic {I_Castaic < SW_Castaic}
-
+}

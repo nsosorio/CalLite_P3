@@ -8,7 +8,7 @@ Fremont weirs in cycle 2
 *************************************/
 
 !Definition of daily fraction to map daily pattern
-include 'read_dailypattern_SacRFreeport.wresl'
+!include 'read_dailypattern_SacRFreeport.wresl'
 
 ! reads in monthly flows from previous cycle
 ! total flow entering SacFeather node prior to Fremont weir spills
@@ -23,4 +23,4 @@ define QSacAme_prv {value QsacAme[B2_BO]}
 define QSacAmenospill{value QSacAme[B2_BO]+ D_FreWeir[B2_BO]}
 define QSacAmenospilldv {alias QSacAmenospill kind 'debug' units 'cfs'}
 
-include 'weir_steps_dailyops.wresl'
+include 'weir_steps_dailyops_mod.wresl'

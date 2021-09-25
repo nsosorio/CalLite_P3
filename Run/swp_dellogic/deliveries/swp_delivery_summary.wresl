@@ -32,6 +32,25 @@ define swp_TA_Yuba   {alias D204 kind 'swp_delivery' units 'cfs'} !City of Yuba 
 
 define swp_TA_Feath  {alias swp_TA_Butte + swp_TA_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
 
+!********************************************************************************
+!article 56 carryover deliveries (allocated in previous year)
+
+!Feather River
+define swp_CO_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
+define swp_CO_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
+define swp_CO_Feath  {alias swp_CO_Butte + swp_CO_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
+
+!********************************************************************************
+!Article 21 interruptable deliveries
+
+!Feather River
+define swp_IN_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
+define swp_IN_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
+define swp_IN_Feath  {alias swp_IN_Butte + swp_IN_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
+!********************************************************************************
+! Delta and South of Delta
+!********************************************************************************
+if int(Dynamic_Delta)== 1 {
 !North Bay
 define swp_TA_Napa   {alias D403B_PMI kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
 define swp_TA_Solano {alias D403C_PMI kind 'swp_delivery' units 'cfs'} !Solano County WA
@@ -141,11 +160,6 @@ define swp_TA_total {alias swp_TA_Feath  +
 !********************************************************************************
 !article 56 carryover deliveries (allocated in previous year)
 
-!Feather River
-define swp_CO_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
-define swp_CO_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
-define swp_CO_Feath  {alias swp_CO_Butte + swp_CO_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
-
 !North Bay
 define swp_CO_Napa   {alias D403B_PCO kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
 define swp_CO_Solano {alias D403C_PCO kind 'swp_delivery' units 'cfs'} !Solano County WA
@@ -219,11 +233,6 @@ goal set_swp_CO_total {swp_CO_total = swp_CO_Feath  +
 
 !********************************************************************************
 !Article 21 interruptable deliveries
-
-!Feather River
-define swp_IN_Butte  {alias 0. kind 'swp_delivery' units 'cfs'} !County of Butte
-define swp_IN_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba City
-define swp_IN_Feath  {alias swp_IN_Butte + swp_IN_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
 
 !North Bay
 define swp_IN_Napa   {alias D403B_PIN kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
@@ -306,3 +315,4 @@ goal set_swp_IN_total {swp_IN_total =
                            swp_IN_CCoast +
                            swp_IN_SoCal }
 
+}

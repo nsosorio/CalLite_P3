@@ -21,6 +21,7 @@ define nov_trigger_cfs {                    !2500 cfs
         from      feather_fish_203
         where   month = NOV}
 
+if int(Dynamic_Delta)==1 {
 define minflow_C_Therm {        
   case October {                            !minflow_C_Therm + 500 = 500 cfs
     condition month == OCT
@@ -70,6 +71,59 @@ define minflow_C_Therm {
     value   0.
   }
 }
+}
+
+if int(Dynamic_Delta)==0 {
+define minflow_C_Therm {        
+  case October {                            !minflow_C_Therm + 500 = 500 cfs
+    condition month == OCT
+    value   0.
+  }
+  case November1 {                     
+    condition   month == NOV .AND.
+        int(C_Therm(prevOCT)) <= oct_trigger_cfs
+    value   0.
+  }
+  case November2 {              
+    condition month == NOV .AND.
+        S_Orovl(prevOCT)+1. >= s_OrovlLevel5(prevOCT)
+    value   0.
+  }
+!  case November3 {
+!    condition month == NOV .and. D_Banks_exp1(prevOCT) < 300.1
+!    value  0.
+!  }
+  case November4 {                         !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
+    condition month == NOV
+    value   C_Therm(prevOCT) - 500
+  }
+
+  case DecemberToMarch1 {                  !minflow_C_Therm + 500 = max(C_Therm(prevOCT),C_Therm(prevNOV))
+    condition month >= DEC .AND. month <= MAR .AND.
+        int(C_Therm(prevOCT)) > oct_trigger_cfs .AND.
+        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT) /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
+        int(C_Therm(prevNOV)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
+        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
+    value   max(C_Therm(prevOCT) - 500, C_Therm(prevNOV) - 500)
+  }
+  case DecemberToMarch2 {                  !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
+    condition month >= DEC .AND. month <= MAR .AND.
+        int(C_Therm(prevOCT)) > oct_trigger_cfs /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
+        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT)
+    value   C_Therm(prevOCT) - 500
+  }
+  case DecemberToMarch3 {                  !minflow_C_Therm + 500 = C_Therm(prevNOV) cfs
+    condition month >= DEC .AND. month <= MAR .AND.
+        int(C_Therm(prevNOV)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
+        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
+    value   C_Therm(prevNOV) - 500
+  }
+  case otherwise {                         !minflow_C_Therm + 500 = 500 cfs
+    condition always
+    value   0.
+  }
+}
+}
 
 /* 
  If trigger is exceeded because of flood spills then no minflow is applied.
@@ -80,7 +134,7 @@ define minflow_C_Therm {
 */
 
 !Ensure that the state can release sufficient water to meet it's IBU obligations and H&S
-
+if int(Dynamic_Delta)==1. {
 define D_Banks_0 {upper 300 kind 'flow-delivery' units 'cfs'}
 define D_Banks_1 {std kind 'flow-delivery' units 'cfs'}
 goal split_D_Banks_EXP1 {D_Banks_Exp1 = D_Banks_0 + D_Banks_1}
@@ -88,18 +142,30 @@ goal split_D_Banks_EXP1 {D_Banks_Exp1 = D_Banks_0 + D_Banks_1}
 define int_HandS {integer std kind 'INTEGER' units 'none'}
 goal boundN_D_Banks_0 {D_Banks_0 > int_HandS * 300}
 goal boundN_D_Banks_1 {D_Banks_1 < int_HandS * 99999}
-
+}
 goal avoidTrigger {
   lhs C_Therm
-  case October {
-    condition month == OCT
+  case October1 {
+    condition month == OCT .and. int(Dynamic_Delta) == 1
     rhs   oct_trigger_cfs + 99999 - 99999*int_HandS
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
   }
-  case November {
-    condition month == NOV
+  case October2 {
+    condition month == OCT .and. int(Dynamic_Delta) == 0
+    rhs   oct_trigger_cfs
+    lhs>rhs   penalty 4600
+    lhs<rhs   penalty 0
+  }
+  case November1 {
+    condition month == NOV .and. int(Dynamic_Delta) == 1
     rhs   max(nov_trigger_cfs, minflow_C_Therm + 500) + 99999 - 99999*int_HandS
+    lhs>rhs   penalty 4600
+    lhs<rhs   penalty 0
+  }
+  case November2 {
+    condition month == NOV .and. int(Dynamic_Delta) == 0
+    rhs   max(nov_trigger_cfs, minflow_C_Therm + 500)
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
   }
@@ -149,6 +215,16 @@ define C_Orovl_IBU {std kind 'flow-channel' units 'cfs'}  !Weight with -3000 to 
 define C_Orovl_EXP {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl {C_Orovl = C_Orovl_IBU + C_Orovl_EXP}
 
+if int(Dynamic_Delta)== 0 {
+define DrainTar_buffer {
+    case BOSWITCHON {
+        condition int(OMRBOON)==1
+        value 250.} ! Buffer is used so that model does not exceeds the limits        
+    case D1641_PREBO {
+        condition always
+        value 0.  }
+}
+}
 define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs)}
 
 goal lim_C_Orovl_EXP {C_Orovl_EXP < C_Orovl_EXP_max_}

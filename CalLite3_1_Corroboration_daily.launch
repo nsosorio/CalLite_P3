@@ -9,7 +9,7 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="08/12/2021"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Test daily wresl data"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_test.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
@@ -18,7 +18,7 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_GWDATA" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_GWDATA_MS2" value=""/>
 <intAttribute key="wpp.debugModel.ATTR_WPP_IFS_NUMBER_SELECT_ENTRIES" value="0"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_INIT" value="DSS\CL_INIT.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_INIT" value="DSS\CL_INIT_daily.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_INITFPART" value="INITIAL"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_INITFPART_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_INIT_MS2" value=""/>

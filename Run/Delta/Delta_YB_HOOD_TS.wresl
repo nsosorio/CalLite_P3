@@ -1,0 +1,27 @@
+/*************************************
+Delta.wresl
+ 
+Nazrul Islam 5/17/2010
+
+This is the top level include file for general logic for Delta
+
+Richard Chen 4/20/2011 add User Defined Qwest constrain (C_SJRVI-Venice Island)
+*************************************/
+
+define C_HOOD_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
+define C_YOLOBP_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
+
+goal setYoloBPflows {
+	lhs C_YOLOBP
+	rhs C_YOLOBP_ts
+	lhs>rhs penalty 2010
+	lhs<rhs penalty 0.
+}
+
+
+goal setHoodflows {
+	lhs C_HOOD
+	rhs C_HOOD_ts
+	lhs>rhs penalty 2010
+	lhs<rhs penalty 0.
+}

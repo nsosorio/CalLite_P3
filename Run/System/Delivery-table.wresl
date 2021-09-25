@@ -34,7 +34,11 @@ goal Diversion_YubFea {D_YubFea = D_YubFea_P  /*+D_YubFea_NP*/}  !Excluded the n
 define demand_D_Daguer_NP {timeseries kind 'DEMAND' units 'CFS'}!Dagurre Point Non-Project 
 define D_Daguer_NP {std kind 'FLOW-DELIVERY' units 'CFS'} !Non Project Diversion at Daguerre Point
 define D_Daguer {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion at Daguerre Point
-goal meet_D_Daguer_NP {D_Daguer_NP = demand_D_Daguer_NP}
+goal meet_D_Daguer_NP {
+  lhs D_Daguer_NP
+  rhs demand_D_Daguer_NP
+  lhs>rhs constrain
+  lhs<rhs penalty 999999}
 goal Diversion_Daguer {D_Daguer = D_Daguer_NP}
 
 define demand_D_Folsm_NP {timeseries kind 'DEMAND' units 'CFS'}!Non-Project Diversion from Folsom reservoir
@@ -73,6 +77,7 @@ define D_CCWDIF {std kind 'FLOW-DELIVERY' units 'CFS'} !CCWD delivery  by Isolat
 define D_SODIF {std kind 'FLOW-DELIVERY' units 'CFS'} !SOD delivery by Isolated Facility
 goal Diversion_Hood {D_Hood=D_Hood_NP + D_HoodIF}
 
+if int(Dynamic_Delta)==1. {
 /** Net_DICU component**/
 define demand_D_BrananIs_NP {timeseries kind 'NETDICU_POS' units  'CFS'}
 define D_BrananIs_NP {lower 0. upper demand_D_BrananIs_NP kind 'FLOW-DELIVERY' units 'CFS'} !NET DELTA ISLAND CONSUMPTIVE USE (NET DICU) - POSITIVE VALUES
@@ -178,4 +183,4 @@ goal Diversion_Alamo {D_Alamo=D_Alamo_P}
 define D_PearBlPP_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project total Demand after Pearblossom Pumping Plant
 define D_PearBlPP {std kind 'FLOW-DELIVERY' units 'CFS'} !Total Demand after Pearblossom Pumping Plant
 goal Diversion_PearBlPP{D_PearBlPP=D_PearBlPP_P}
-
+}

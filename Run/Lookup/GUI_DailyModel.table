@@ -1,0 +1,5 @@
+! Daily Model switches
+GUI_DailyModel
+Index	Option
+1	0	!"DYNAMIC_HOOD_YOLOBP - Sac R at Hood and Yolo Bypass flows. 1=on, 0=off"
+

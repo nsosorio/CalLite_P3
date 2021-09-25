@@ -50,10 +50,17 @@ define C_HSt {lower 0. upper 7071.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !AME
 define C_HSt_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_HSt_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
 goal C_HSttotal {C_HSt=C_HSt_MIF+C_HSt_EXC}
-define C_YoloBP {std kind 'FLOW-CHANNEL' units 'CFS'} !YOLO BYPASS
 
 define C_Freeport {lower 0. upper 11000.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !Sacramento River at Freeport
 
+define D_ClearTu {lower 0. upper 3300. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
+define D_Spring {lower 0. upper 4200. kind 'FLOW-TUNNEL' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
+
+define C_YoloBP {std kind 'FLOW-CHANNEL' units 'CFS'} !YOLO BYPASS
+define C_Hood {lower 0. upper 11000.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !Sacramento River at Hood
+
+if Dynamic_Delta == 1 { 
+define C_YoloBP {std kind 'FLOW-CHANNEL' units 'CFS'} !YOLO BYPASS
 define C_Hood {lower 0. upper 11000.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !Sacramento River at Hood
 define C_Hood_ANN{lower 0 upper 11000*taf_cfs kind 'FLOW-ANN' units 'CFS'} !For ANN calculations
 goal C_HoodTotal {C_Hood = C_Hood_Ann}
@@ -100,7 +107,6 @@ define C_SLCVP {lower 0. upper 8000. kind 'FLOW-CHANNEL' units 'CFS'} !CVP SAN L
 define C_SWPJU {lower 0. upper 8465. kind 'FLOW-CHANNEL' units 'CFS'} !SWP Joint Use (C807)
 define C_CVPJU {std kind 'FLOW-CHANNEL' units 'CFS'} !CVP Joint Use (D704)
 !define C_CVPDMC {lower 0 upper 3500 kind 'FLOW-CHANNEL' units 'CFS'} !DMC to Mendota Pool (C708)
-if int(Dynamic_SJR)==0 {define C_Mdota {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'}} !Flow to Exchange Contractors and Refuges from Sack Dam
 define C_DsAmgS {lower 0. upper 8465. kind 'FLOW-CHANNEL' units 'CFS'} !Dos Amigos SWP
 define C_DsAmgC {lower 0. upper 4635. kind 'FLOW-CHANNEL' units 'CFS'} !Dos Amigos CVP
 define C_JtUTerm {lower 0. upper 8100. kind 'FLOW-CHANNEL' units 'CFS'} !End of Joint Use
@@ -113,6 +119,5 @@ define C_Alamo {lower 0. upper 3150. kind 'FLOW-CHANNEL' units 'CFS'} !Californi
 define C_OSO {lower 0. upper 3130. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct West Branch downstream Bifuraction Point (890) OSO
 define C_PearBlPP {lower 0. upper 2105. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct East Branch downstream Pearblossom PP (880)
 define C_WarnePP {lower 0. upper 1565. kind 'FLOW-CHANNEL' units 'CFS'} !California Aqueduct West Branch downstream Warne PP (892)
-define D_ClearTu {lower 0. upper 3300. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
-define D_Spring {lower 0. upper 4200. kind 'FLOW-TUNNEL' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
-
+}
+if int(Dynamic_SJR)==0 {define C_Mdota {lower 0 upper 99999 kind 'FLOW-CHANNEL' units 'CFS'}} !Flow to Exchange Contractors and Refuges from Sack Dam
