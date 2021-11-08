@@ -7,9 +7,9 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="10/26/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Input new AD therm, kswck, redblf, wilkns, and sacfea"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_20211026.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="11/07/2021"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="debugging why Oroville releases are very high: OUTPUT RELCAP_OROVL"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_20211107.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>

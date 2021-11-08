@@ -148,6 +148,7 @@ define coefev_Orovl {value (A_Orovlforward - A_Orovlback)/(100*max(0.01,S_Orovl(
 goal area_Orovl {A_Orovl=A_Orovllast+1000*coefev_Orovl*S_Orovl-1000*coefev_Orovl*S_Orovl(-1)}
 goal evap_Orovl {E_Orovl*cfs_af=(evap_S_Orovl/24)*A_Orovllast+(evap_S_Orovl/24)*A_Orovl}
 define relcap_Orovl {select discharge from res_info given storage=1000*S_Orovl(-1) use linear where res_num=6}
+define relcap_orovl_ {alias relcap_Orovl kind 'debug-TAF' units 'cfs'}
 goal maxrelease_Orovl {C_Orovl<relcap_Orovl}
 define S_Folsmlevel1 {value 90.}
 define S_Folsm_1 {std kind 'STORAGE-ZONE' units 'TAF'}
