@@ -7,9 +7,9 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="11/07/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="debugging why Oroville releases are very high: OUTPUT RELCAP_OROVL"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_20211107.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="11/09/2021"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Modified Dec and Jan Oroville level 5 timeseries"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_oro_level5.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
