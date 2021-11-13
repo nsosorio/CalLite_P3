@@ -1,6 +1,6 @@
-define I_Trnty {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Trinity Lake inflow
-define I_Lewiston {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Inflow to Lewiston node
-define I_Wkytn {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Wiskeytown Lake Infolw
+!define I_Trnty {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Trinity Lake inflow
+!define I_Lewiston {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Inflow to Lewiston node
+!define I_Wkytn {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Wiskeytown Lake Infolw
 define I_Shsta {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Shasta Lake Inflow
 define I_Orovl {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Oroville Lake Inflow
 define I_KellyRidge {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Local inflow at Kelly Ridge (I200), NEEDED FOR COA ONLY
