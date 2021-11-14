@@ -14,14 +14,14 @@ define C_YOLOBP_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
 goal setYoloBPflows {
 	lhs C_YOLOBP
 	rhs C_YOLOBP_ts
-	lhs>rhs penalty 2010
-	lhs<rhs penalty 0.
+	lhs>rhs penalty 99999
+	lhs<rhs penalty 99999
 }
 
 
 goal setHoodflows {
 	lhs C_HOOD
 	rhs C_HOOD_ts
-	lhs>rhs penalty 2010
-	lhs<rhs penalty 0.
+	lhs>rhs penalty 99999
+	lhs<rhs penalty 99999
 }

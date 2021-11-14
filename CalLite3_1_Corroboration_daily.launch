@@ -8,8 +8,8 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="11/13/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Freeze TRNTY and WKYTN using historical data"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_no_TRNTY_WKYTN.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value=""/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_debug.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
