@@ -8,7 +8,7 @@ This is the top level include file for general logic for Delta
 Richard Chen 4/20/2011 add User Defined Qwest constrain (C_SJRVI-Venice Island)
 *************************************/
 
-define C_HOOD_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
+define C_SACAME_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
 define C_YOLOBP_ts {timeseries kind 'FLOW-CHANNEL' units 'cfs'}
 
 goal setYoloBPflows {
@@ -20,8 +20,8 @@ goal setYoloBPflows {
 
 
 goal setHoodflows {
-	lhs C_HOOD
-	rhs C_HOOD_ts
+	lhs C_SACAME
+	rhs C_SACAME_ts
 	lhs>rhs penalty 99999
 	lhs<rhs penalty 99999
 }
