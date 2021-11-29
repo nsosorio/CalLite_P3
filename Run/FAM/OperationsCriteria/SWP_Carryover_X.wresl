@@ -11,23 +11,24 @@
 define S6_Sep_hi {std kind 'Penalty' units 'TAF'}
 define S6_Sep_lo {std kind 'Penalty' units 'TAF'} 
 define S6Septarget {std kind 'Storage' units 'TAF'}
+define EOS_target_Oro {value 2000.}
 goal setS6Sep {
   lhs S6Septarget
   case a {
-    condition S_Orovl(PrevSep) < 1000.
-    rhs 1000.}
+    condition S_Orovl(PrevSep) < EOS_target_Oro
+    rhs EOS_target_Oro}
   case b {
     condition always
-    rhs 1000. + 0.5*SWP_Delivery/4191.061*(S_Orovl(PrevSep)-1000.)}   
+    rhs EOS_target_Oro + 0.5*SWP_Delivery/4191.061*(S_Orovl(PrevSep)-EOS_target_Oro)}   
 }
 goal(fm) sS6_EOS_Sep {
   lhs S_Orovl($m)
   case a {
-    condition mv($m)==Sep .and. S_Orovl(PrevSep) < 1000.
-    rhs 1000. + S6_Sep_hi - S6_Sep_lo}
+    condition mv($m)==Sep .and. S_Orovl(PrevSep) < EOS_target_Oro
+    rhs EOS_target_Oro + S6_Sep_hi - S6_Sep_lo}
   case b {
     condition mv($m)==Sep
-    rhs 1000. + 0.5*SWP_Delivery/4191.061*(S_Orovl(PrevSep)-1000.) + S6_Sep_hi - S6_Sep_lo}   
+    rhs EOS_target_Oro + 0.5*SWP_Delivery/4191.061*(S_Orovl(PrevSep)-EOS_target_Oro) + S6_Sep_hi - S6_Sep_lo}   
 }
 
 goal(fm) S6_Aug_EOM {

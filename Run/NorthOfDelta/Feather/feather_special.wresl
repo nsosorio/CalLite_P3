@@ -29,42 +29,42 @@ define minflow_C_Therm {
   }
   case November1 {                     
     condition   month == NOV .AND.
-        int(C_Therm(prevOCT)) <= oct_trigger_cfs
+        int(C_Therm(prevOCT*daysin)) <= oct_trigger_cfs
     value   0.
   }
   case November2 {              
     condition month == NOV .AND.
-        S_Orovl(prevOCT)+1. >= s_OrovlLevel5(prevOCT)
+        S_Orovl(prevOCT*daysin)+1. >= s_OrovlLevel5(prevOCT*daysin)
     value   0.
   }
   case November3 {
-    condition month == NOV .and. D_Banks_exp1(prevOCT) < 300.1
+    condition month == NOV .and. D_Banks_exp1(prevOCT*daysin) < 300.1
     value  0.
   }
-  case November4 {                         !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
+  case November4 {                         !minflow_C_Therm + 500 = C_Therm(prevOCT*daysin) cfs
     condition month == NOV
-    value   C_Therm(prevOCT) - 500
+    value   C_Therm(prevOCT*daysin) - 500
   }
 
-  case DecemberToMarch1 {                  !minflow_C_Therm + 500 = max(C_Therm(prevOCT),C_Therm(prevNOV))
+  case DecemberToMarch1 {                  !minflow_C_Therm + 500 = max(C_Therm(prevOCT*daysin),C_Therm(prevNOV*daysin))
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevOCT)) > oct_trigger_cfs .AND.
-        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT) .AND. D_Banks_exp1(prevOct) > 300.1 .and.
-        int(C_Therm(prevNOV)) > nov_trigger_cfs .AND. D_Banks_exp1(prevNov) > 300.1 .and.
-        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
-    value   max(C_Therm(prevOCT) - 500, C_Therm(prevNOV) - 500)
+        int(C_Therm(prevOCT*daysin)) > oct_trigger_cfs .AND.
+        S_Orovl(prevOCT*daysin)+1. < s_OrovlLevel5(prevOCT*daysin) .AND. D_Banks_exp1(prevOct*daysin) > 300.1 .and.
+        int(C_Therm(prevNOV*daysin)) > nov_trigger_cfs .AND. D_Banks_exp1(prevNov*daysin) > 300.1 .and.
+        S_Orovl(prevNOV*daysin)+1. < s_OrovlLevel5(prevNOV*daysin)
+    value   max(C_Therm(prevOCT*daysin) - 500, C_Therm(prevNOV*daysin) - 500)
   }
   case DecemberToMarch2 {                  !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevOCT)) > oct_trigger_cfs .AND. D_Banks_exp1(prevOct) > 300.1 .and.
-        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT)
-    value   C_Therm(prevOCT) - 500
+        int(C_Therm(prevOCT*daysin)) > oct_trigger_cfs .AND. D_Banks_exp1(prevOct*daysin) > 300.1 .and.
+        S_Orovl(prevOCT*daysin)+1. < s_OrovlLevel5(prevOCT*daysin)
+    value   C_Therm(prevOCT*daysin) - 500
   }
   case DecemberToMarch3 {                  !minflow_C_Therm + 500 = C_Therm(prevNOV) cfs
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevNOV)) > nov_trigger_cfs .AND. D_Banks_exp1(prevNov) > 300.1 .and.
-        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
-    value   C_Therm(prevNOV) - 500
+        int(C_Therm(prevNOV*daysin)) > nov_trigger_cfs .AND. D_Banks_exp1(prevNov*daysin) > 300.1 .and.
+        S_Orovl(prevNOV*daysin)+1. < s_OrovlLevel5(prevNOV*daysin)
+    value   C_Therm(prevNOV*daysin) - 500
   }
   case otherwise {                         !minflow_C_Therm + 500 = 500 cfs
     condition always
@@ -81,12 +81,12 @@ define minflow_C_Therm {
   }
   case November1 {                     
     condition   month == NOV .AND.
-        int(C_Therm(prevOCT)) <= oct_trigger_cfs
+        int(C_Therm(prevOCT*daysin)) <= oct_trigger_cfs
     value   0.
   }
   case November2 {              
     condition month == NOV .AND.
-        S_Orovl(prevOCT)+1. >= s_OrovlLevel5(prevOCT)
+        S_Orovl(prevOCT*daysin)+1. >= s_OrovlLevel5(prevOCT*daysin)
     value   0.
   }
 !  case November3 {
@@ -95,28 +95,28 @@ define minflow_C_Therm {
 !  }
   case November4 {                         !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
     condition month == NOV
-    value   C_Therm(prevOCT) - 500
+    value   C_Therm(prevOCT*daysin) - 500
   }
 
   case DecemberToMarch1 {                  !minflow_C_Therm + 500 = max(C_Therm(prevOCT),C_Therm(prevNOV))
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevOCT)) > oct_trigger_cfs .AND.
-        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT) /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
-        int(C_Therm(prevNOV)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
-        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
-    value   max(C_Therm(prevOCT) - 500, C_Therm(prevNOV) - 500)
+        int(C_Therm(prevOCT*daysin)) > oct_trigger_cfs .AND.
+        S_Orovl(prevOCT*daysin)+1. < s_OrovlLevel5(prevOCT*daysin) /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
+        int(C_Therm(prevNOV*daysin)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
+        S_Orovl(prevNOV*daysin)+1. < s_OrovlLevel5(prevNOV*daysin)
+    value   max(C_Therm(prevOCT*daysin) - 500, C_Therm(prevNOV*daysin) - 500)
   }
   case DecemberToMarch2 {                  !minflow_C_Therm + 500 = C_Therm(prevOCT) cfs
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevOCT)) > oct_trigger_cfs /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
-        S_Orovl(prevOCT)+1. < s_OrovlLevel5(prevOCT)
-    value   C_Therm(prevOCT) - 500
+        int(C_Therm(prevOCT*daysin)) > oct_trigger_cfs /* .AND. D_Banks_exp1(prevOct) > 300.1*/ .and.
+        S_Orovl(prevOCT*daysin)+1. < s_OrovlLevel5(prevOCT*daysin)
+    value   C_Therm(prevOCT*daysin) - 500
   }
   case DecemberToMarch3 {                  !minflow_C_Therm + 500 = C_Therm(prevNOV) cfs
     condition month >= DEC .AND. month <= MAR .AND.
-        int(C_Therm(prevNOV)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
-        S_Orovl(prevNOV)+1. < s_OrovlLevel5(prevNOV)
-    value   C_Therm(prevNOV) - 500
+        int(C_Therm(prevNOV*daysin)) > nov_trigger_cfs /*.AND. D_Banks_exp1(prevNov) > 300.1*/ .and.
+        S_Orovl(prevNOV*daysin)+1. < s_OrovlLevel5(prevNOV*daysin)
+    value   C_Therm(prevNOV*daysin) - 500
   }
   case otherwise {                         !minflow_C_Therm + 500 = 500 cfs
     condition always
@@ -180,7 +180,7 @@ goal avoidTrigger {
 !=========================================================================
  
 define minflow_C_YubFea {timeseries kind 'FLOW-MIN-REQUIRED' units 'CFS'}
-goal meetC_Therm_Minflow {C_Therm_MIF < max(minflow_C_Therm, minflow_c_YubFea)}
+goal meetC_Therm_Minflow {C_Therm_MIF < /*max(minflow_C_Therm,*/ minflow_c_YubFea/*)*/} ! Remove the DFG and DWR 1983 agreement for now
 
 !=========================================================================
 ! DWR maintains flow at the "Mouth of Feather River" based on requirements of diversion 
@@ -225,7 +225,9 @@ define DrainTar_buffer {
         value 0.  }
 }
 }
-define C_Orovl_EXP_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1000. - DrainTar_buffer)*taf_cfs)}
+define EOS_target_Oro {value 2000.}
+define OroInfMonCum {timeseries kind 'FORECAST' units 'TAF'} ! Sums up total inflow in a month and sets it the same for each day timestep.
+define C_Orovl_EXP_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - EOS_target_Oro - DrainTar_buffer)/daysin)*taf_cfs)}
 
 goal lim_C_Orovl_EXP {C_Orovl_EXP < C_Orovl_EXP_max_}
 
@@ -235,7 +237,7 @@ define C_Orovl_EXP_max {alias C_Orovl_EXP_max_ kind 'upper-bound' units 'cfs'}
 /*goal oro_releases {
     lhs C_Orovl
     case low_storage {
-        condition S_Orovl(-1) < 1000. + DrainTar_buffer ! DrainTar_buffer = 0 when int(OMRBOON)==1 as defined in delcar_swp.wresl
+        condition S_Orovl(-1) < EOS_target_Oro + DrainTar_buffer ! DrainTar_buffer = 0 when int(OMRBOON)==1 as defined in delcar_swp.wresl
             rhs minflow_C_Therm
             lhs>rhs penalty 3000.
             lhs<rhs penalty 0 }
@@ -258,8 +260,8 @@ define C_Orovl_PP135 {upper 7200 kind 'flow-channel' units 'cfs'}
 define C_Orovl_Rem {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl2 {C_Orovl = C_Orovl_valve + C_Orovl_PP135 + C_Orovl_Rem}
 
-define C_Orovl_Rem_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 1250.)*taf_cfs)}
-define C_Orovl_PP135_max_ {value max(0., I_Orovl + (S_Orovl(-1) - 850.)*taf_cfs)}
+define C_Orovl_Rem_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - 1250.)/daysin)*taf_cfs)}
+define C_Orovl_PP135_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - 850.)/daysin)*taf_cfs)}
 
 goal lim_C_Orovl_Rem {C_Orovl_Rem < C_Orovl_Rem_max_}
 !goal lim_C_Orovl_PP135 {C_Orovl_PP135 < C_Orovl_PP135_max_}

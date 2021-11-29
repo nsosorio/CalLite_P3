@@ -104,6 +104,10 @@ group Tdomain {
                          case other{
                               condition always
                               value     daysindv(-1) * 86400.0 } }
+    define daysToEOWY {timeseries kind 'COUNTER' units 'NONE'}
+    define daysToEOWYInt {value int(daysToEOWY)}
+    !define daysin_iter {timeseries kind 'DAYS' units 'DAYS'}
+    !define daysin_iterInt {value int(daysin_iter)}
     }   
     
 model block1 { ! Called in the SJR cycles if Dynamic_SJR enabled

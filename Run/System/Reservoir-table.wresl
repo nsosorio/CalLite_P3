@@ -126,14 +126,14 @@ goal maxrelease_ShstaE {C_ShstaE_02<relcap_ShstaE}
 define S_Orovllevel1 {value 29.6}
 define S_Orovl_1 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_OrovlZone1 {S_Orovl_1 < S_Orovllevel1}
-define S_Orovllevel2 {value 825.}
+define S_Orovllevel2 {value 852.}
 define S_Orovl_2 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_OrovlZone2 {S_Orovl_2 < S_Orovllevel2-S_Orovllevel1}
 define S_Orovl_3 {std kind 'STORAGE-ZONE' units 'TAF'}
 define S_Orovl_4 {std kind 'STORAGE-ZONE' units 'TAF'}
 define S_Orovllevel5 {timeseries kind 'STORAGE-LEVEL' units 'TAF'}
 define S_Orovl_5 {std kind 'STORAGE-ZONE' units 'TAF'}
-define S_Orovllevel6 {value 3558.}
+define S_Orovllevel6 {value 3538.}
 define S_Orovl_6 {std kind 'STORAGE-ZONE' units 'TAF'}
 define S_Orovl {std kind 'STORAGE' units 'TAF'} !OROVILLE LAKE AKA RES_NUM = 6
 goal storage_Orovl {S_Orovl=S_Orovl_1+S_Orovl_2+S_Orovl_3+S_Orovl_4+S_Orovl_5+S_Orovl_6}
