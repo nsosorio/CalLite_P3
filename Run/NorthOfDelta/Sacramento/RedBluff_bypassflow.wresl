@@ -13,14 +13,14 @@ define Rd_min {select RedMin
 }
 
 define HC_min {
-    case WBA8NNDemand {
+    /*case WBA8NNDemand {
         condition con_114GCID > 100.     !if there is a significant diversion
-        value 4000. }                    !require the bypass flow
+        value 4000. }*/                    !require the bypass flow
     case other {
         condition always
         value 0. }
 }
 
-goal meet_RedBluffQ {C_RedBlf_MIF < max(Rd_min,HC_min)}
+goal meet_RedBluffQ {C_RedBlf_MIF < max(Rd_min,HC_min)} ! HC_min disabled in DCR 2017.
 
 

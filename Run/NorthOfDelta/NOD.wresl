@@ -13,7 +13,7 @@ Include 'American\Americanmin.wresl'
 !INCLUDE 'american\NimbusHistMinQ.wresl'
 !INCLUDE 'american\HSt_base.wresl'
 !INCLUDE 'american\FMPInput.wresl'
-INCLUDE 'american\FMStandard.wresl'
+!INCLUDE 'american\FMStandard.wresl' ! minflowFMPAmer fixed to DCR 2017 CSII values to simplify
 Include 'American\NimbusPower.wresl'  
  
 Include 'Clear_Creek\clear_ck_min.wresl'  

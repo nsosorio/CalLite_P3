@@ -19,8 +19,11 @@ define S_FolsmLevel3 {
 }
 
 define FolInf {value (I_Folsm  + AD_Nimbus)*cfs_taf }   !AD_Nimbus used here since Calsim combined together Folsom and Nimbus inflows for this term too
+define FolInfdv {alias FolInf kind 'FORECAST' units 'TAF'}
 
-define FolInfEst {sum(i=0,SEP-month,1) (I_Folsm(i)+ AD_Nimbus(i))*cfs_taf(i) }
+!define FolInfEst {sum(i=0,SEP-month,1) (I_Folsm(i)+ AD_Nimbus(i))*cfs_taf(i) }
+define FolInfEst {timeseries kind 'FORECAST' units 'TAF'}
+define FolInfEstdv {alias FolInfEst kind 'FORECAST' units 'TAF'}
 
 define FolDiv {value  demand_D_Nimbus_NP*cfs_taf + demand_D_Folsm_NP*cfs_taf +
 		      DEM_D8B_PMI_ANN * perdem_70fol +
@@ -31,8 +34,9 @@ define FolDiv {value  demand_D_Nimbus_NP*cfs_taf + demand_D_Folsm_NP*cfs_taf +
                       DEM_D8i_PMI_ANN * perdem_70eldorco +
                       DEM_D9AB_PMI_ANN * perdem_70carec +
                       DEM_D9B_PMI_ANN * perdem_70smud}
+define FolDivdv {alias FolDiv kind 'FORECAST' units 'TAF'}
 
-define FolDivEst {sum(i=0,SEP-month,1)
+/*define FolDivEst {sum(i=0,SEP-month,1)
             	     (demand_D_Nimbus_NP(i)*cfs_taf(i) + demand_D_Folsm_NP(i)*cfs_taf(i) +
 		      DEM_D8B_PMI_ANN(i) * perdem_70fol(i) +
                       DEM_D8E_PMI_ANN(i) * perdem_70sjwds(i) +
@@ -41,13 +45,17 @@ define FolDivEst {sum(i=0,SEP-month,1)
                       DEM_D8h_PMI_ANN(i) * perdem_70pcwa(i) +
                       DEM_D8i_PMI_ANN(i) * perdem_70eldorco(i) +
                       DEM_D9AB_PMI_ANN(i) * perdem_70carec(i) +
-                      DEM_D9B_PMI_ANN(i) * perdem_70smud(i)) }
+                      DEM_D9B_PMI_ANN(i) * perdem_70smud(i)) }*/
+define FolDivEst {timeseries kind 'FORECAST' units 'TAF'}
+define FolDivEstdv {alias FolDivEst kind 'FORECAST' units 'TAF'}
 
 define FolSupEst {value max(0.0,FolInfEst - FolDivEst + S_Folsm(-1) - S_FolsmLevel3)}
 
 define FolSupEstdv {alias FolSupEst kind 'FORECAST' units 'TAF'}
 
-define FolFlowTarg {value (FolSupEst/cfs_taf)/(Sep-month+1.) }
+!define FolFlowTarg {value (FolSupEst/cfs_taf)/(Sep-month+1.) }
+define FolFlowTarg {value (FolSupEst*taf_cfs)/(daysToEOWYInt+1.) }
+define FolFlowTargdv {alias FolFlowTarg kind 'FORECAST' units 'TAF'}
 
 define FolRuleCalc {
     case MaythruSep {

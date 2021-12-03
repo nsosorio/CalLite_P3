@@ -11,6 +11,7 @@ These time series is taken from CalSim B2 study.
 define C_Wkytn_MIF_b2 {timeseries kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_Kswck_MIF_b2 {timeseries kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_Nimbus_mif_b2 {timeseries kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define minflowFMPAmer {timeseries kind 'INIT-FLOW' units 'CFS'}
 
 ! B2 action triggers
 define B2Action2On {timeseries kind 'TRIGGER' units 'NONE'}
