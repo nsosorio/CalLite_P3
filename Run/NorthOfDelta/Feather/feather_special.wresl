@@ -227,7 +227,7 @@ define DrainTar_buffer {
 }
 define EOS_target_Oro {value 2000.}
 define OroInfMonCum {timeseries kind 'FORECAST' units 'TAF'} ! Sums up total inflow in a month and sets it the same for each day timestep.
-define C_Orovl_EXP_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - EOS_target_Oro - DrainTar_buffer)/daysin)*taf_cfs)}
+define C_Orovl_EXP_max_ {value max(0., I_OROVL + ((S_Orovl(-1) - EOS_target_Oro/daysin - DrainTar_buffer/daysin))*taf_cfs)}
 
 goal lim_C_Orovl_EXP {C_Orovl_EXP < C_Orovl_EXP_max_}
 
@@ -260,8 +260,8 @@ define C_Orovl_PP135 {upper 7200 kind 'flow-channel' units 'cfs'}
 define C_Orovl_Rem {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl2 {C_Orovl = C_Orovl_valve + C_Orovl_PP135 + C_Orovl_Rem}
 
-define C_Orovl_Rem_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - 1250.)/daysin)*taf_cfs)}
-define C_Orovl_PP135_max_ {value max(0., ((OroInfMonCum + S_Orovl(-1*daysin) - 850.)/daysin)*taf_cfs)}
+define C_Orovl_Rem_max_ {value max(0., I_OROVL + ((S_Orovl(-1) - 1250./daysin))*taf_cfs)}
+define C_Orovl_PP135_max_ {value max(0., I_OROVL + ((S_Orovl(-1) - 850./daysin))*taf_cfs)}
 
 goal lim_C_Orovl_Rem {C_Orovl_Rem < C_Orovl_Rem_max_}
 !goal lim_C_Orovl_PP135 {C_Orovl_PP135 < C_Orovl_PP135_max_}
