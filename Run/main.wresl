@@ -479,9 +479,9 @@ if int(Dynamic_Delta) == 1 {
 	INCLUDE [LOCAL] 'Delta\IF_off.wresl'
 
 }
-else {
-	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-}
+!else {
+!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+!}
 
 if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
@@ -528,9 +528,9 @@ if int(Dynamic_Delta) == 1 {
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 }
-else {
-	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-}
+!else {
+!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+!}
 
 
 
@@ -602,9 +602,9 @@ INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'
 INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
 
 }
-else {
-	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-}
+!else {
+!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+!}
 
 
 
@@ -669,9 +669,9 @@ INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 INCLUDE [LOCAL] 'Delta\IF_off.wresl'	
 
 }
-else {
-	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-}
+!else {
+!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+!}
 if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
