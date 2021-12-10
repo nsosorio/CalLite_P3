@@ -1,0 +1,27 @@
+! Lookup table is used to grab the design flows from flood control systems.
+! The goal is to keep flows at each control point below the value by using a very high penalty
+! Data obtained from Dustin Jones 1999 thesis
+define ShaFldFlowPrevent {select DesignFlow from flood_flow_reqs where Index = 1}
+define OroFldFlowPrevent {select DesignFlow from flood_flow_reqs where Index = 2}
+define FolFldFlowPrevent {select DesignFlow from flood_flow_reqs where Index = 5}
+
+goal keepOrofloodflow {
+	lhs C_OROVL
+	rhs OroFldFlowPrevent
+	lhs<rhs penalty 0.
+	lhs>rhs penalty 9999
+}
+
+goal keepShafloodflow {
+	lhs C_SHSTA
+	rhs ShaFldFlowPrevent
+	lhs<rhs penalty 0.
+	lhs>rhs penalty 9999
+}
+
+goal keepFolfloodflow {
+	lhs C_FOLSM
+	rhs FolFldFlowPrevent
+	lhs<rhs penalty 0.
+	lhs>rhs penalty 9999
+}

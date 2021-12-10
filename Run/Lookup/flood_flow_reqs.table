@@ -1,0 +1,8 @@
+flood_flow_reqs
+Index	DesignFlow	
+1	100000	! C_Kswck; originally for Bend Bridge
+2	150000	! C_Orovl
+3	180000	! C_Therm; Feather above Yuba
+4	300000	! C_YubFea; Feather below Yuba
+5	115000	! C_Nimbus; American River at Fair Oaks
+

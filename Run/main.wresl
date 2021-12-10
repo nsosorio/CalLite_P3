@@ -27,6 +27,7 @@ initial {
 	svar CCWDIFSwitch    {value 0}
 	svar LVEM_switch	 {select Option from GUI_LosVaqueros where Index = 1}
 	svar AllocationSwitch   {select Option from GUI_Operations where Index=5} !Allocation method
+	svar predeterminedDeltaTS {value 0.}
 }
 
 SEQUENCE CYCLE1 {
@@ -281,6 +282,7 @@ MODEL block4 { ! Called in Upstream, Base, B2_BO, WHEELING
     INCLUDE 'swp_dellogic\conveyance_limits.wresl'}
     INCLUDE 'hydrology\demands\demands.wresl'
     INCLUDE 'NorthofDelta\NOD.wresl'
+    INCLUDE 'NorthofDelta\flood_flow_penalties.wresl'
     if int(Dynamic_Delta) == 1 {INCLUDE 'Rulecurve\cvp_delivery_rule_curve.wresl'}
 
     if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1  {
@@ -479,9 +481,9 @@ if int(Dynamic_Delta) == 1 {
 	INCLUDE [LOCAL] 'Delta\IF_off.wresl'
 
 }
-!else {
-!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-!}
+elseif int(predeterminedDeltaTS) == 1 {
+	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+}
 
 if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
@@ -528,9 +530,9 @@ if int(Dynamic_Delta) == 1 {
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 }
-!else {
-!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-!}
+elseif int(predeterminedDeltaTS) == 1 {
+	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+}
 
 
 
@@ -602,9 +604,9 @@ INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'
 INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
 
 }
-!else {
-!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-!}
+elseif int(predeterminedDeltaTS) == 1 {
+	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+}
 
 
 
@@ -669,9 +671,9 @@ INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 INCLUDE [LOCAL] 'Delta\IF_off.wresl'	
 
 }
-!else {
-!	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
-!}
+elseif int(predeterminedDeltaTS) == 1 {
+	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
+}
 if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
