@@ -224,8 +224,8 @@ goal short_ADYoloBP {short_AD_YoloBP=AD_YoloBP_Actual-AD_YoloBP}
 
 
 !Feather River
-!define AD_Therm {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}
-define AD_Therm {value 0.}
+define AD_Therm {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}
+!define AD_Therm {value 0.}
 define AD_Therm_Actual {lower unbounded upper unbounded kind 'FLOW-ACCRDEPL' units 'CFS'}
 goal setAD_Therm_Actual1{
 	lhs AD_Therm_Actual
