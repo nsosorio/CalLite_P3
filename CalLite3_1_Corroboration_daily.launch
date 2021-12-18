@@ -7,9 +7,9 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="12/17/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Turn on AD_Therm"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_CT_1217_AD_therm_on.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="12/18/2021"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Make AD_Wilkns zero in early April 1997"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_CT_1218_AD_wilkns_zero.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
