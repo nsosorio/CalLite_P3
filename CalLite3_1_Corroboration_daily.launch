@@ -7,9 +7,9 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="12/19/2021"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Tweak AD_Redblf using BND CDEC data"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_YB_HOOD_CT_1218_AD__redblf_update.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="12/31/2021"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Debug Shasta releases"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_upd_ad_redblf_wilkns_CVOdata_20220101.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
