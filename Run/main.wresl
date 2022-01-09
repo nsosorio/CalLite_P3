@@ -18,10 +18,13 @@ initial {
 	svar AN_DLTSW {select OPTION from GUI_Regs where Index = 12}  !D-1485
 	svar CH_DLTSW {select OPTION from GUI_Regs where Index = 13}  !D-1485
     svar Dynamic_SJR {select Option from GUI_SJR where Index=7} !Turns on dynamic SJR   
-    svar Dynamic_Delta {select Option from GUI_DailyModel where Index=1} !Turns on dynamic SJR           
+    !svar Dynamic_DeltaOps_Exports {select Option from GUI_DailyModel where Index=1} !Turns on dynamic Delta ops     
+    !svar Dynamic_SOD {select Option from GUI_DailyModel where Index=2} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
+    svar Dynamic_DeltaOps_Exports {value 1.} !Turns on dynamic Delta ops     
+    svar Dynamic_SOD {value 0.} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
     svar LOD_DLTSW {select Option from GUI_HydroClimate where Index=1} 
     svar SLR_DLTSW {select Option from GUI_HydroClimate where Index=3}
-	
+	svar Gmodel_sal {value 1} ! Use G-model instead of ANN to estimate salinity at individual locations
 	svar JonesIFSwitch   {value 0}
 	svar BanksIFSwitch   {value 0}
 	svar CCWDIFSwitch    {value 0}
@@ -38,27 +41,27 @@ SEQUENCE CYCLE1 {
  
 SEQUENCE CYCLE2 {
     model   SJRBASE
-    condition int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1
+    condition int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1
     order   2
     }
 SEQUENCE CYCLE3 {
     model   SJR_WQ1
-    condition int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1
+    condition int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1
     order   3
     }
 SEQUENCE CYCLE4 {
     model   SJR_PULSE
-    condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1
+    condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1
     order   4
     }
 SEQUENCE CYCLE5 {
     model   SJR_WQ2
-     condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1
+     condition (month==APR .or. month==MAY) .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1
     order   5
     }
 SEQUENCE CYCLE6 {
     model   VAMP_AND_DO
-    condition month>=APR .and. month<=SEP .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1
+    condition month>=APR .and. month<=SEP .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1
     order   6
     }   
 SEQUENCE CYCLE7 {
@@ -130,7 +133,7 @@ model block1 { ! Called in the SJR cycles if Dynamic_SJR enabled
 
     INCLUDE '\sanjoaquin\Various\definitions\SJR_ChannelSplits.wresl'
 
-    if int(Dynamic_Delta) == 1 {INCLUDE '\cvp_dellogic\CvpSDeliveryLogicCycle1.wresl'}        
+    if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Dynamic_SOD) == 1 {INCLUDE '\cvp_dellogic\CvpSDeliveryLogicCycle1.wresl'}        
     
 !    INCLUDE '\sanjoaquin\Friant\SJRR_Rest_off.wresl'
     INCLUDE '\sanjoaquin\Friant\SJRR_Rest.wresl'                     !Turns on SJRR Operations
@@ -158,7 +161,7 @@ model block1 { ! Called in the SJR cycles if Dynamic_SJR enabled
     elseif int(LOD_DLTSW)==0 {
         INCLUDE '\sanjoaquin\Delta\COSMA_zeroset.wresl'
     }   
-    if int(Dynamic_Delta) == 1 {INCLUDE '\System_SJR\SystemTables_SJR\weight-table.wresl'}        
+    if int(Dynamic_SJR) == 1 .and. int(Dynamic_DeltaOps_Exports) == 1 {INCLUDE '\System_SJR\SystemTables_SJR\weight-table.wresl'}        
 
     INCLUDE '\sanjoaquin\IntegratedOperations\IntegratedOperationsCommon2.wresl'
     INCLUDE '\sanjoaquin\IntegratedOperations\IntegratedOperationsCyc1.wresl'
@@ -186,10 +189,10 @@ MODEL block2 { ! Called in Upstream, Base, B2_BO, WHEELING
 
     INCLUDE '\Assumptions\Options_Switches.wresl'
     
-    if int(Dynamic_SJR)==0 .and. int(Dynamic_Delta) == 1 { INCLUDE '\sanjoaquin\Timeseries_SJR_Setup.wresl' }     
+    if int(Dynamic_SJR)==0 .and. int(Dynamic_DeltaOps_Exports) == 1 { INCLUDE '\sanjoaquin\Timeseries_SJR_Setup.wresl' }     
 
 	INCLUDE '\System_SJR\SystemTables_SJR\DMC_MP.wresl'
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Dynamic_SJR_Setup_cyc6.wresl'
         INCLUDE '\sanjoaquin\Various\definitions\SJR_GWPumpingSplits.wresl'
         INCLUDE '\Restoration\AprPartInflow.wresl'
@@ -199,36 +202,36 @@ MODEL block2 { ! Called in Upstream, Base, B2_BO, WHEELING
 
     INCLUDE 'wytypes\wytypes.wresl'  
 
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {   
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {   
         INCLUDE '\sanjoaquin\Various\definitions\SJR_ChannelSplits.wresl'
 !        INCLUDE '\sanjoaquin\Friant\SJRR_Rest_off.wresl'    
         INCLUDE '\sanjoaquin\Friant\SJRR_Rest.wresl'                     !Turns on SJRR Operations
         INCLUDE '\sanjoaquin\SanJoaquinCoreA.wresl'
     }
 
-    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Delta\COSMA_dmd.wresl' 
     } 
 
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {    INCLUDE '\sanjoaquin\SanJoaquinCoreB.wresl'}
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {    INCLUDE '\sanjoaquin\SanJoaquinCoreB.wresl'}
 
-    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Calaveras\Calaveras_Dems_StocktonDWSP.wresl' 
     } 
-    elseif int(LOD_DLTSW)==0 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    elseif int(LOD_DLTSW)==0 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Calaveras\Calaveras_Dems.wresl' 
     }   
 
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {    INCLUDE '\sanjoaquin\Delta\DWSP_arc_split.wresl' }
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {    INCLUDE '\sanjoaquin\Delta\DWSP_arc_split.wresl' }
 
-    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    if int(LOD_DLTSW)>=1 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Delta\cosma_restrict.wresl' 
     } 
-    elseif int(LOD_DLTSW)==0 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {
+    elseif int(LOD_DLTSW)==0 .and. int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {
         INCLUDE '\sanjoaquin\Delta\COSMA_zeroset.wresl'
     }   
 
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1 {          
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1 {          
         INCLUDE '\System_SJR\SystemTables_SJR\weight-table.wresl'
         INCLUDE '\sanjoaquin\IntegratedOperations\IntegratedOperationsCommon2.wresl'
         INCLUDE '\sanjoaquin\IntegratedOperations\IntegratedOperationsCyc1.wresl'
@@ -258,13 +261,13 @@ MODEL block2 { ! Called in Upstream, Base, B2_BO, WHEELING
 MODEL block3 { ! Called in Upstream, Base, B2_BO, WHEELING
     define getFinalMrdo {EXTERNAL f90}  ! OBJ code file must be located in run\external directory for compilation
 
-    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 .and. int(Dynamic_Delta) == 1 {
+    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa25_slr0.wresl'}
-	elseif int(SLR_DLTSW)==0 .and. int(Dynamic_Delta) == 1{
+	elseif int(SLR_DLTSW)==0 .and. int(Dynamic_DeltaOps_Exports) == 1{
 		INCLUDE  'Delta\DeltaExtFuncs_7inpANN_roa0_slr0.wresl'}
-	elseif int(SLR_DLTSW) == 1 .and. int(Dynamic_Delta) == 1{
+	elseif int(SLR_DLTSW) == 1 .and. int(Dynamic_DeltaOps_Exports) == 1{
     	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr15cm.wresl'}
-    elseif int(SLR_DLTSW) == 2 .and. int(Dynamic_Delta) == 1{
+    elseif int(SLR_DLTSW) == 2 .and. int(Dynamic_DeltaOps_Exports) == 1{
     	INCLUDE  'Delta\DeltaExtFuncs_7inpANNslr45cm.wresl'}
 
     INCLUDE  'swp_dellogic\allocation\co_extfcn.wresl'
@@ -278,23 +281,32 @@ MODEL block4 { ! Called in Upstream, Base, B2_BO, WHEELING
     INCLUDE 'hydrology\demands\demands_defs.wresl'
     INCLUDE 'cvp_dellogic\CVP_delivery_Logic_system.wresl'
     INCLUDE 'swp_dellogic\SwpDeliveryLogic.wresl'
-    if int(Dynamic_Delta) == 1 {
+    if int(Dynamic_DeltaOps_Exports) == 1 {
     INCLUDE 'swp_dellogic\conveyance_limits.wresl'}
     INCLUDE 'hydrology\demands\demands.wresl'
     INCLUDE 'NorthofDelta\NOD.wresl'
     INCLUDE 'NorthofDelta\flood_flow_penalties.wresl'
-    if int(Dynamic_Delta) == 1 {INCLUDE 'Rulecurve\cvp_delivery_rule_curve.wresl'}
+    if int(Dynamic_SOD) == 1 {INCLUDE 'Rulecurve\cvp_delivery_rule_curve.wresl'}
 
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1  {
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1  {
         INCLUDE '\sanjoaquin\IntegratedOperations\IntegratedOperationsCyc6.wresl'
         INCLUDE '\sanjoaquin\SanJoaquinAddCyc6.wresl'
     }
-	if int(Dynamic_Delta)==1  {
+	if int(Dynamic_DeltaOps_Exports)==1. .and. int(Dynamic_SOD)==1.  {
     INCLUDE 'cvp_dellogic\CVP_delivery_Logic_south.wresl' 
     INCLUDE 'Delta\Chips_days.wresl'
     
     INCLUDE 'Rulecurve\rulecurve.wresl'
     INCLUDE 'Rulecurve\San_Luis_Levels.wresl'
+    INCLUDE 'Export_Ops\export_ops.wresl'
+    INCLUDE 'Wheeling\WheelOpsVarDefines.wresl'
+    }
+	elseif int(Dynamic_DeltaOps_Exports)==1. .and. int(Dynamic_SOD)==0.  {
+	INCLUDE 'cvp_dellogic\CVP_delivery_logic_south\VAMP_export_rest_DynSODoff.wresl'
+    INCLUDE 'Delta\Chips_days.wresl'
+    
+    !INCLUDE 'Rulecurve\rulecurve.wresl'
+    !INCLUDE 'Rulecurve\San_Luis_Levels.wresl'
     INCLUDE 'Export_Ops\export_ops.wresl'
     INCLUDE 'Wheeling\WheelOpsVarDefines.wresl'
     }
@@ -304,7 +316,7 @@ MODEL block4 { ! Called in Upstream, Base, B2_BO, WHEELING
     INCLUDE 'System\Connectivity-table.wresl'
 	
     INCLUDE 'system\weight-table.wresl'
-    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 .and. int(Dynamic_Delta) == 1 {
+    if banksifswitch > 0.5 .or. jonesifswitch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
     	INCLUDE 'system\weight-table-BDCP.wresl'
     }
 }
@@ -434,13 +446,13 @@ MODEL SJR_WQ2 {         !CYCLE 5
 MODEL VAMP_AND_DO {           !CYCLE 6
 	include group Tdomain
     INCLUDE model block1
-	if int(Dynamic_SJR)==0 .and. int(Dynamic_Delta) == 1 {define VAMP_reqdv {std kind 'flow-requirement' units 'cfs'}}
+	if int(Dynamic_SJR)==0 .and. int(Dynamic_DeltaOps_Exports) == 1 {define VAMP_reqdv {std kind 'flow-requirement' units 'cfs'}}
 
 !    INCLUDE 'sanjoaquin\Friant\SJR_Rest_Req_Off_Local.wresl'  
     INCLUDE '\sanjoaquin\Friant\SJR_Rest_Pulse_Local.wresl'     !Turns on SJRR Operations
     INCLUDE '\SanJoaquin\Delta\ZeroAOWater.wresl'
     INCLUDE '\sanjoaquin\various\SetWSReturns\SetWSRetcycle1thru5.wresl' !fixing return flows into SJR by fixing associated deliveries
-    if int(Dynamic_Delta) == 1 {
+    if int(Dynamic_DeltaOps_Exports) == 1 {
     INCLUDE '\SANJOAQUIN\VAMP\VAMP_REQ.WRESL'
     INCLUDE '\SANJOAQUIN\VAMP\VAMP_ALLOC.WRESL'
     	
@@ -459,18 +471,18 @@ INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_monthops.wresl'
 
 INCLUDE model Block4
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
 }
-elseif LVEM_switch < 0.5 .and. int(Dynamic_Delta) == 1 {
+elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
 
 
-if int(DCC_DLTSW)==3 .and. int(Dynamic_Delta) == 1 {INCLUDE 'Delta\xc-gates_D1485_Up.wresl'}
+if int(DCC_DLTSW)==3 .and. int(Dynamic_DeltaOps_Exports) == 1 {INCLUDE 'Delta\xc-gates_D1485_Up.wresl'}
 
-if int(Dynamic_Delta) == 1 {
+if int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 	INCLUDE [LOCAL] 'COA\coa_Up.wresl'
@@ -485,7 +497,7 @@ elseif int(predeterminedDeltaTS) == 1 {
 	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
 }
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
@@ -495,7 +507,7 @@ if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
    
 INCLUDE [LOCAL] 'Shortage\shortage.wresl'
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_BASE.wresl'
 	INCLUDE 'CCWD\LVM_Ops2.wresl'
 	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'
@@ -513,16 +525,25 @@ INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_UPSTREAM.wresl'
 
 INCLUDE model Block4
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
 }
-elseif LVEM_switch < 0.5 .and. int(Dynamic_Delta) == 1 {
+elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
-if int(Dynamic_Delta) == 1 {
+if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 0 {
 	INCLUDE [LOCAL] 'COA\coa.wresl'
 	INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
+	INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
+	INCLUDE [LOCAL] 'Delta\Delta.wresl'
+	INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
+	INCLUDE [LOCAL] 'Delta\IF_off.wresl'   
+	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
+	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
+}
+elseif int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 1 {
+	INCLUDE [LOCAL] 'COA\coa.wresl'
 	INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
 	INCLUDE [LOCAL] 'Delta\Delta.wresl'
 	INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
@@ -535,16 +556,15 @@ elseif int(predeterminedDeltaTS) == 1 {
 }
 
 
+if int(DCC_DLTSW)==3 .and. int(Dynamic_DeltaOps_Exports)==1 {INCLUDE 'Delta\xc-gates.wresl'}
 
-if int(DCC_DLTSW)==3 .and. int(DYnamic_Delta)==1 {INCLUDE 'Delta\xc-gates.wresl'}
-
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 INCLUDE [LOCAL] 'Shortage\shortage.wresl'
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_BASE.wresl'
 	INCLUDE 'CCWD\LVM_Ops2.wresl'
 	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'
@@ -562,20 +582,26 @@ INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_BASE.wresl'
 
 INCLUDE model Block4
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
 }
-elseif LVEM_switch < 0.5 .and. int(Dynamic_Delta) == 1 {
+elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
-if int(Dynamic_Delta) == 1 {
+if int(Gmodel_sal) == 0 {
 INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
+}
+if int(Dynamic_DeltaOps_Exports) == 1 {
+INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
+INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl'
+INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
+INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
+INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl'  
 INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
 INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
 INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
-INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
-INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
+
 ! BO Code
 INCLUDE [LOCAL] 'Export_Ops\OMR\DELTA_RPA_init.wresl'
 INCLUDE [LOCAL] 'Export_Ops\FWS_SMELT_BO_FallX2check.wresl'
@@ -589,34 +615,28 @@ INCLUDE [LOCAL] 'Export_Ops\OMR\OMR_constraint.wresl'
 INCLUDE [LOCAL] 'COA\coa_BO.wresl'
 
 INCLUDE [LOCAL] 'Delta\xc-gates.wresl'                 
-!INCLUDE[LOCAL] 'output\cycle_output.wresl'
-!INCLUDE[LOCAL] 'Shortage\ShortWarning.wresl'
 INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
 
 INCLUDE [LOCAL] 'Delta\IF_off.wresl'   
 
-!INCLUDE 'output\DV_output.wresl'
+INCLUDE [LOCAL] 'output\DV_output.wresl'
 !INCLUDE [LOCAL] 'Export_Ops\JUL_AUG_PREFER_TD_EXP_BASE.wresl'
-INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
-INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
-INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
+
 
 }
 elseif int(predeterminedDeltaTS) == 1 {
 	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
 }
 
-
-
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 INCLUDE [LOCAL] 'Shortage\shortage.wresl'
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_B2_BO.wresl'
 	INCLUDE 'CCWD\LVM_Ops2.wresl'
 	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'
@@ -631,23 +651,24 @@ INCLUDE model Block2
 INCLUDE model Block3
 INCLUDE model Block4
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_System.wresl'
 	INCLUDE 'CCWD\UserInput.wresl'
 }
-elseif LVEM_switch < 0.5 .and. int(Dynamic_Delta) == 1 {
+elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
 
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_B2_BO.wresl'  
 
+if int(Gmodel_sal) == 0 {
+INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
+}
 
-
-if int(Dynamic_Delta) == 1 {
+if int(Dynamic_DeltaOps_Exports) == 1 {
 INCLUDE [LOCAL] 'B2Actions\B2SetBaseline.wresl'                    
 INCLUDE [LOCAL] 'B2Actions\B2ActionsDeltaRepeat.wresl'      
 INCLUDE [LOCAL] 'B2Actions\B2BanksFix.wresl' 
-INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
 INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
 INCLUDE [LOCAL] 'Delta\Delta_reduced_calls.wresl'
 INCLUDE [LOCAL] 'Delta\X2_BO_WQ.wresl'
@@ -668,21 +689,23 @@ INCLUDE [LOCAL] 'Delta\xc-gates.wresl'
 INCLUDE [LOCAL] 'Wheeling\Wheelcap.wresl'
 
 INCLUDE [LOCAL] 'FlowCriteria\FlowCriteria.wresl'
-INCLUDE [LOCAL] 'Delta\IF_off.wresl'	
-
+INCLUDE [LOCAL] 'Delta\IF_off.wresl'
+	
+!INCLUDE [LOCAL] 'output\cycle_output.wresl' ! REENABLE LATER! NSO
+INCLUDE [LOCAL] 'output\DV_output.wresl' ! REENABLE LATER! NSO
 }
 elseif int(predeterminedDeltaTS) == 1 {
 	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
 }
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\LVM_Ops1.wresl'
 }
 
 if int(PBwheel_ON)==1 {INCLUDE 'Wheeling\wheelfixes_D1485.wresl'}
-elseif int(Dynamic_Delta) == 1 {INCLUDE 'Wheeling\wheelfixes.wresl'}
+elseif int(Dynamic_DeltaOps_Exports) == 1 {INCLUDE 'Wheeling\wheelfixes.wresl'}
 
 ! Output Processing
-    if int(Dynamic_SJR)==1 .and. int(Dynamic_Delta) == 1  {
+    if int(Dynamic_SJR)==1 .and. int(Dynamic_DeltaOps_Exports) == 1  {
         INCLUDE '\output\SJR_cycle_output.wresl'
     }
 
@@ -690,14 +713,11 @@ elseif int(Dynamic_Delta) == 1 {INCLUDE 'Wheeling\wheelfixes.wresl'}
 
 !INCLUDE [LOCAL] 'Export_Ops\JUL_NOV_PREFER_TD_EXP.wresl'
                                                   
-!INCLUDE [LOCAL] 'output\cycle_output.wresl' ! REENABLE LATER! NSO
-
-!INCLUDE [LOCAL] 'output\DV_output.wresl' ! REENABLE LATER! NSO
 !INCLUDE [LOCAL] 'Export_Ops\JUL_AUG_PREFER_TD_EXP_BASE.wresl'
 
 INCLUDE [LOCAL] 'Shortage\shortage.wresl'
 
-if LVEM_switch > 0.5 .and. int(Dynamic_Delta) == 1 {
+if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\CCWD_Ops\CCWD_LVFill_OMR_B2_BO.wresl'
 	INCLUDE 'CCWD\LVM_Ops2.wresl'
 	INCLUDE 'CCWD\LVE\Wheeling_off.wresl'

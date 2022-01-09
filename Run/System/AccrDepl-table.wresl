@@ -375,7 +375,7 @@ define short_AD_Hst {lower unbounded upper unbounded kind 'Shortage-Flow' units 
 goal short_ADHst {short_AD_Hst=AD_Hst_Actual-AD_Hst}
 
 !Delta
-if int(Dynamic_Delta)==0 {define AD_Mokelumne {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}}
+if int(Dynamic_DeltaOps_Exports)==0 {define AD_Mokelumne {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}}
 
 !South of Delta
 if int(Dynamic_SJR)==0 {define AD_JamesBP {timeseries kind 'FLOW-ACCRDEPL' units 'CFS'}} !James Bypass flows into the Mendota Pool

@@ -1,0 +1,3 @@
+define PulseHidv {std kind 'counter' UNITS 'NONE'}
+define SJR_ANN     {std kind 'FLOW-CHANNEL'  units 'CFS'}
+goal setSJR_ANN {SJR_ANN = C_SJRVER}

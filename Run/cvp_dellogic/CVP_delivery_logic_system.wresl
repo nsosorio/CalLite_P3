@@ -11,7 +11,7 @@ INCLUDE '\CVP_delivery_logic_south\cvp_demands_south.wresl'  ! sets upper bounds
 INCLUDE '\CVP_delivery_logic_system\JamesBypass_BanksCVPcapacity.wresl' ! sets James bypass flow and also dedicated 
                                                                         ! CVP capacity at Banks
 INCLUDE '\CVP_delivery_logic_system\sum_cvp_demands_system.wresl'  ! reads in timeseries for annual demands
-if int(Dynamic_Delta)== 1. {
+if int(Dynamic_DeltaOps_Exports)== 1. .and. int(Dynamic_SOD)== 1. {
 INCLUDE '\CVP_delivery_logic_system\WSIandDI_CVP_system.wresl'  ! defines WSI and DI
 INCLUDE '\CVP_delivery_logic_system\Delivery_carryover_split_CVP_system.wresl' ! splits DI into delivery target  
 INCLUDE '\CVP_delivery_logic_system\CVPcut_system.wresl' ! Develops system wide cutback numbers, and Cuts back NOD deliveries based on difference between 

@@ -4,3 +4,4 @@ define perdel_cvpmi_sys { timeseries kind 'percent-delivery' units 'none'}
 define perdel_cvpex_sys { timeseries kind 'percent-delivery' units 'none'}
 define perdel_cvpsc_sys { timeseries kind 'percent-delivery' units 'none'}
 define perdel_cvprf_sys { timeseries kind 'percent-delivery' units 'none'}
+define perdel_cvpag_s	{ timeseries 'PERDV_CVPAG_S' kind 'percent-delivery' units 'none'}

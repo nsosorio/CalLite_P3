@@ -125,7 +125,7 @@ goal limit_d204_pomi {d204_pomi < target_d204_pomi}
 
 
 !*** For the South of Delta *************************************************************
-if int(Dynamic_Delta)==1. {
+if int(Dynamic_SOD)==1. {
 !mwd demands
 goal maxD27PMIdeliv   {D27_PMI   < dem_d27_PMI*SWP_mwd_ratio*taf_cfs*perdel_21}
 goal maxD851BPMIdeliv {D851B_PMI < dem_D851B_PMI*SWP_mwd_ratio*taf_cfs*perdel_22}

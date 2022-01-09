@@ -10,7 +10,25 @@ to separate subarcs to ensure the proper delivery pattern.
 ****/
 
 !splits SWP Demand arc (ie. PMI, PAG, MWD, OTH, PLS, PIN, and PCO) in CalLite
+define D403B_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403B_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403B_PLS     {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403B_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403B_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
+goal totalD403B_PRJ { D403B_PRJ = D403B_PMI + D403B_PLS + D403B_PIN + D403B_PCO}
 
+define D403C_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403C_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
+define D403C_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
+goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO}
+
+/**** CalLite Replacements:*****/
+goal totalD_Napa         { D_Napa         = D403B_PRJ}                                              !1
+goal totalD_Solano       { D_Solano       = D403C_PRJ}                                              !1
+/*goal totalD_Sbay         { D_Sbay         = D810_PRJ+D813_PRJ+D814_PRJ+D815_PRJ
+                                           +D816_PRJ}   */ !Implemented in connectivity-table.wresl 
+
+if int(Dynamic_SOD)==1. {
 define D25_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D25_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D25_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
@@ -31,18 +49,6 @@ define D29_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D29_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D29_PCO    {std kind 'FLOW-DELIVERY' units 'CFS' }
 goal totalD29_prj { D29_PRJ = D29_PMI + D29_PCO}
-
-define D403B_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403B_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403B_PLS     {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403B_PIN    {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403B_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD403B_PRJ { D403B_PRJ = D403B_PMI + D403B_PLS + D403B_PIN + D403B_PCO}
-
-define D403C_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403C_PMI    {std kind 'FLOW-DELIVERY' units 'CFS' }
-define D403C_PCO     {std kind 'FLOW-DELIVERY' units 'CFS' }
-goal totalD403C_PRJ { D403C_PRJ = D403C_PMI + D403C_PCO}
 
 define D802A_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D802A_PAG    {std kind 'FLOW-DELIVERY' units 'CFS' }
@@ -269,13 +275,7 @@ goal totalD815_prj { D815_PRJ = D815_PMI + D815_PIN + D815_PCO}
 define D816_PRJ    {std kind 'FLOW-DELIVERY' units 'CFS' }
 define D816_PLS    {std kind 'FLOW-DELIVERY' units 'CFS' }
 goal totalD816_prj { D816_PRJ = D816_PLS }
-
-
-/**** CalLite Replacements:*****/
-goal totalD_Napa         { D_Napa         = D403B_PRJ}                                              !1
-goal totalD_Solano       { D_Solano       = D403C_PRJ}                                              !1
-/*goal totalD_Sbay         { D_Sbay         = D810_PRJ+D813_PRJ+D814_PRJ+D815_PRJ
-                                           +D816_PRJ}   */ !Implemented in connectivity-table.wresl  
+ 
 goal totalD_ONeillFBSWP  { D_ONeillFBSWP  = D803_PRJ+D802A_PRJ}   
 goal totalD_DosAmigosSWP { D_DosAmigosSWP = D824_PRJ+D826_PRJ+D827_PRJ+D828_PRJ+D829_PRJ }          !5+ D821=0
 goal totalD_Emp2Dud      { D_Emp2Dud      = D846_PRJ+D847_PRJ+D848_PRJ+D849_PRJ}                    !4
@@ -288,6 +288,7 @@ goal totalD_WarnePP      { D_WarnePP      =  D28_PRJ+D893_PRJ+D894_PRJ+ D29_PRJ+
 goal totalD_Alamo        { D_Alamo        = D877_PRJ+D878_PRJ+D879_PRJ+D880_PRJ}                    !4
 goal totalD_PearBlPP     { D_PearBlPP     = D881_PRJ+D882_PRJ+ D25_PRJ+D883_PRJ+D884_PRJ+D885_PRJ   
                                            +D886_PRJ+D887_PRJ+D888_PRJ+D889_PRJ+D899_PRJ+ D27_PRJ}  !12
+}
 !===end===
 
 /****The following CalSim deliveries are replaced with CalLite deliveries ****/

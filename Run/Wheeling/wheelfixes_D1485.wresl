@@ -93,58 +93,6 @@ goal fixfeatherinflow {
   lhs>rhs penalty 99999
   lhs<rhs penalty 99999}
 }
-goal fixcvprefuge {
-  lhs     D_CVPJUSWP
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_CVPJUSWP[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
-goal fixsouthbay {
-  lhs     D_Sbay
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_Sbay[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
-
-goal fixONeillFBSWP {
-  lhs     D_ONeillFBSWP
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_ONeillFBSWP[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
-
-goal fixSL {
-  lhs     S_SLSWP
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     S_SLSWP[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
-
-goal fixSLin {
-  lhs     D_OFBSWP
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     D_OFBSWP[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
-
-goal fixterminals {
-  lhs     C_CVC
-  case Wheeling {
-  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
-  rhs     C_CVC[B2_BO]
-  lhs>rhs penalty 99999
-  lhs<rhs penalty 99999}
-}
 
 goal fixUNUSEDFS {
   lhs     UNUSED_FS
@@ -231,28 +179,82 @@ goal fixPB1 {
      rhs     D_Banks_whlpb[BASE]
      lhs>rhs penalty 99999
      lhs<rhs penalty 99999}
-}
+
 goal fixPB3 {
      lhs     C_Kswck_whlPB
      rhs     C_Kswck_whlPB[BASE]
      lhs>rhs penalty 99999
      lhs<rhs penalty 99999}
-}
+
 goal fixPB4 {
      lhs     C_Nimbus_whlPB
      rhs     C_Nimbus_whlPB[BASE]
      lhs>rhs penalty 99999
      lhs<rhs penalty 99999}
-}
+
 goal fixPB5 {
      lhs     C_wkytn_whlPB
      rhs     C_wkytn_whlPB[BASE]
      lhs>rhs penalty 99999
      lhs<rhs penalty 99999}
-}
+
 goal fixPB6 {
      lhs     D_spring_whlPB
      rhs     D_spring_whlPB[BASE]
      lhs>rhs penalty 99999
      lhs<rhs penalty 99999}
+
+if int(Dynamic_SOD) == 1. { ! Dynamic Delta switch already considered in main.wresl include
+goal fixcvprefuge {
+  lhs     D_CVPJUSWP
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     D_CVPJUSWP[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
+goal fixsouthbay {
+  lhs     D_Sbay
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     D_Sbay[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
+
+goal fixONeillFBSWP {
+  lhs     D_ONeillFBSWP
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     D_ONeillFBSWP[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
+
+goal fixSL {
+  lhs     S_SLSWP
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     S_SLSWP[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
+
+goal fixSLin {
+  lhs     D_OFBSWP
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     D_OFBSWP[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
+
+goal fixterminals {
+  lhs     C_CVC
+  case Wheeling {
+  condition always !wheeling_ctrl > .1 .and. (CVC_ON + JPOD_ON)>.1
+  rhs     C_CVC[B2_BO]
+  lhs>rhs penalty 99999
+  lhs<rhs penalty 99999}
+}
 }

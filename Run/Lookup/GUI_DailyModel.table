@@ -1,5 +1,6 @@
 ! Daily Model switches
 GUI_DailyModel
 Index	Option
-1	0	!"DYNAMIC_HOOD_YOLOBP - Sac R at Hood and Yolo Bypass flows. 1=on, 0=off"
+1	0	!"Dynamic_delta - Simulate Delta CVP/SWP ops. 1=on, 0=off"
+2	0	!"Dynamic_SOD - Simulate South of Delta CVP/SWP ops beyond pumps. 1=on, 0=off"
 

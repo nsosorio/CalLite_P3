@@ -12,7 +12,7 @@ define EM_MaxExport {lower unbounded upper unbounded kind 'FLOW' units 'CFS'}
 goal setEMMax {
   lhs EM_MaxExport
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     rhs 999999.}
   case NoSalinityControlPossible{
     condition abs(EM_m_sv) <= 0.001 .and. int(EM_b_sv) == 0
@@ -41,6 +41,9 @@ goal setEMmrdo {
   case DRegsOff{
     condition EM_DLTSW == 0
     rhs 0.}  
+  case Gmodel {
+    condition int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+    rhs POW((-LOG((EM_EC_std_sv - EM_Sb)/(EM_So - EM_Sb))/EM_alpha), 1/EM_n) }  
   case NoSalinityControlPossible{
     condition abs(EM_m_sv) <= 0.001 .and. int(EM_b_sv) == 0
     rhs 0.}
@@ -66,7 +69,7 @@ define EM_ReqSac {lower unbounded upper unbounded kind 'FLOW' units 'cfs'}
 goal set_EM_ReqSac {
   lhs EM_ReqSac
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     rhs 0.}  
   case NoSalinityControlPossible{
     condition abs(EM_m_sv) <= 0.001 .and. int(EM_b_sv) == 0

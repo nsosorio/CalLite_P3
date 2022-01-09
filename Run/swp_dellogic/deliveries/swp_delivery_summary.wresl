@@ -49,13 +49,33 @@ define swp_IN_Yuba   {alias 0. kind 'swp_delivery' units 'cfs'} !City of Yuba Ci
 define swp_IN_Feath  {alias swp_IN_Butte + swp_IN_Yuba kind 'swp_delivery' units 'cfs'} !sub-total
 !********************************************************************************
 ! Delta and South of Delta
+! Summary deliveries are activated through dynamic Delta or SOD switch.
 !********************************************************************************
-if int(Dynamic_Delta)== 1 {
+if int(Dynamic_DeltaOps_Exports)== 1 {
 !North Bay
 define swp_TA_Napa   {alias D403B_PMI kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
 define swp_TA_Solano {alias D403C_PMI kind 'swp_delivery' units 'cfs'} !Solano County WA
 define swp_TA_NBay   {alias swp_TA_Napa + swp_TA_Solano kind 'swp_delivery' units 'cfs'} !sub-total
 
+!********************************************************************************
+!article 56 carryover deliveries (allocated in previous year)
+
+!North Bay
+define swp_CO_Napa   {alias D403B_PCO kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
+define swp_CO_Solano {alias D403C_PCO kind 'swp_delivery' units 'cfs'} !Solano County WA
+define swp_CO_NBay   {alias swp_CO_Napa + swp_CO_Solano kind 'swp_delivery' units 'cfs'} !sub-total
+
+!********************************************************************************
+!Article 21 interruptable deliveries
+
+!North Bay
+define swp_IN_Napa   {alias D403B_PIN kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
+define swp_IN_Solano {alias 0. kind 'swp_delivery' units 'cfs'} !Solano County WA
+define swp_IN_NBay   {alias swp_IN_Napa + swp_IN_Solano kind 'swp_delivery' units 'cfs'} !sub-total
+
+}
+
+if int(Dynamic_SOD)== 1 {
 !South Bay
 define swp_TA_ACFC {alias D810_PMI + D813_PMI kind 'swp_delivery' units 'cfs'} !Alameda County FC&WCD, Zone 7
 define swp_TA_ACWD {alias D814_PMI kind 'swp_delivery' units 'cfs'} !Alameda County WD
@@ -159,12 +179,6 @@ define swp_TA_total {alias swp_TA_Feath  +
 
 !********************************************************************************
 !article 56 carryover deliveries (allocated in previous year)
-
-!North Bay
-define swp_CO_Napa   {alias D403B_PCO kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
-define swp_CO_Solano {alias D403C_PCO kind 'swp_delivery' units 'cfs'} !Solano County WA
-define swp_CO_NBay   {alias swp_CO_Napa + swp_CO_Solano kind 'swp_delivery' units 'cfs'} !sub-total
-
 !South Bay
 define swp_CO_ACFC {alias D810_PCO + D813_PCO kind 'swp_delivery' units 'cfs'} !Alameda County FC&WCD, Zone 7
 define swp_CO_ACWD {alias D814_PCO kind 'swp_delivery' units 'cfs'} !Alameda County WD
@@ -230,15 +244,8 @@ goal set_swp_CO_total {swp_CO_total = swp_CO_Feath  +
                            swp_CO_CCoast +
                            swp_CO_SoCal}
 
-
 !********************************************************************************
 !Article 21 interruptable deliveries
-
-!North Bay
-define swp_IN_Napa   {alias D403B_PIN kind 'swp_delivery' units 'cfs'} !Napa County FC&WCD
-define swp_IN_Solano {alias 0. kind 'swp_delivery' units 'cfs'} !Solano County WA
-define swp_IN_NBay   {alias swp_IN_Napa + swp_IN_Solano kind 'swp_delivery' units 'cfs'} !sub-total
-
 !South Bay
 define swp_IN_ACFC {alias D810_PIN kind 'swp_delivery' units 'cfs'} !Alameda County FC&WCD, Zone 7
 define swp_IN_ACWD {alias D814_PIN kind 'swp_delivery' units 'cfs'} !Alameda County WD
@@ -314,5 +321,4 @@ goal set_swp_IN_total {swp_IN_total =
                            swp_IN_SJV    +
                            swp_IN_CCoast +
                            swp_IN_SoCal }
-
 }

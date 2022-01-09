@@ -133,7 +133,7 @@ define maxJonescalcDV {alias maxJonescalc kind 'output' units 'cfs'}
 	! Allow JPOD Wheeling only when Tracy is running at its capacity
 	define Jones_int {
 	    case JonesMax {
-	      condition D_Jones[B2_BO] + 0.5 > maxJonesCalc
+	      condition D_Jones[B2_BO] + 0.5 > JonesCapPermit ! Changed from maxJonescalc because the limits are the same, NSO 01/08/2022
 	      value 1.0}
 	    case Rest {
 	      condition always

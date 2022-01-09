@@ -10,7 +10,7 @@ Z.Q. Richard Chen; DWR; (02/07/2011)
 
 define JPReqSac {
       case DRegsOff{
-        condition JP_DLTSW == 0
+        condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
         value 0.}
   case NoSalinityControlPossible{
     condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0

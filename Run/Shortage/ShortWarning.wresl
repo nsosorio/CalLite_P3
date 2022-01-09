@@ -1,5 +1,5 @@
 define ShortWarning {EXTERNAL f90}
-if int(Dynamic_Delta)==1. { 
+if int(Dynamic_DeltaOps_Exports)==1. { 
 define Warning_ON { case FirstMonth {condition WaterYear==BgnWY .and. Month==1
                   value 1.0}  !Warning for shortages over 0.01 cfs
                   

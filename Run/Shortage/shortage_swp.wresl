@@ -39,7 +39,7 @@ define short_swp_pmi_n {alias short_d201_pimi + short_d201_pomi + short_d204_pim
 define del_swp_pmi_n {alias d201_pimi + d201_pomi + d204_pimi + d204_pomi kind 'delivery-swp' units 'cfs'}
 
 !*** For the South of Delta *************************************************************
-if int(Dynamic_Delta) == 1 { 
+if int(Dynamic_DeltaOps_Exports) == 1 { 
 
 ! AG Shortage
 define short_D802A_PAG {alias dem_D802A_PAG*taf_cfs*perdel_28 - D802A_PAG kind 'delivery-shortage' units 'cfs'}

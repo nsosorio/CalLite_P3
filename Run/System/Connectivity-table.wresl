@@ -29,7 +29,7 @@ goal continuityFreeport {C_SacAme-C_Freeport=0.} !
 goal continuityHOOD {C_Freeport+I_Hood-C_Hood-D_Hood =0.} !
 goal continuityHoodIF {D_HoodIF - D_CCWDIF -D_SODIF = 0.} !Delta Isolated Facility 
 
-if int(Dynamic_Delta) == 1 { 
+if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Dynamic_SOD) == 1. { 
 	goal continuityDxc {C_Hood-C_SacDXC-C_DXC=0.} !Delta Cross Channel
 	goal continuityNDelta {C_YoloBP+C_SacDXC-C_SacND-C_NBA=0.} !North Delta node (Yolo
 	goal continuityNBA {C_NBA-D_Solano-D_Napa-D_Vallejo-D_FVB=0.} !North Bay Aqueduct
@@ -81,4 +81,27 @@ if int(Dynamic_Delta) == 1 {
 	goal continuityWarnePP {C_OSO-C_WarnePP-D_OSO=0.} !West Branch at Warne Power Plant node
 	goal continuityWestBR {C_WarnePP/*+AD_Castaic*/-D_WarnePP-D_WarnePP_Spill-D_Pyramid+I_Pyramid-D_Castaic+I_Castaic=0.} !Rest of CalSim West Branch (End of CA)
 }
-if int(Dynamic_SJR)==0 .and. int(Dynamic_Delta)==1 {goal continuityMPool {C_CVPDMC+AD_JamesBP-D_MENDOTAPL-C_Mdota=0}} !Mendota Pool
+elseif int(Dynamic_DeltaOps_Exports) == 1 .and. int(Dynamic_SOD) == 0. { 
+	goal continuityDxc {C_Hood-C_SacDXC-C_DXC=0.} !Delta Cross Channel
+	goal continuityNDelta {C_YoloBP+C_SacDXC-C_SacND-C_NBA=0.} !North Delta node (Yolo
+	goal continuityNBA {C_NBA-D_Solano-D_Napa-D_Vallejo-D_FVB=0.} !North Bay Aqueduct
+	goal continuityBrananIS {C_SacND+I_BrananIS-D_BrananIS-C_SacBI=0.} !Brannan Island
+	goal continuitySacRV {C_SacBI-C_SacRV=0.} !Rio Vista
+	goal continuitySacSJR {C_SacRV+C_SJRVI+I_MarshCr+I_SacSJR-C_SacSJR-D_Antioch-D_SacSJR=0.} !Confluence of Sacramento River and San Joaquin River
+	goal continuityDelta {C_SacSJR-C_Delta-D_DeltaReqd=0.} !Delta Outflow node
+	goal continuityMoklmn {C_DXC+AD_Mokelumne-C_Moklmn=0.} !Mokelumne River
+	goal continuityTrmns {C_Moklmn+I_Terminous-C_Trmns-D_Terminous=0.} !Terminous
+	goal continuitySJRCD {C_SJRSto+C_Trmns-C_SJRCD=0.} !San Joaquin River and Central Delta Junction
+	goal continuitySJRMI {C_SJRCD+I_MedfordIS-C_SJRMI-D_MedfordIS=0.} !San Joaquin River at Medford Island
+	goal continuitySJRVI {C_SJRMI+C_OMR-C_SJRVI-C_IndnSl-D_CCWDINTK=0.} !San Joaquin River at Venice Island
+	goal continuitySJRSto {C_SJRCal+I_Stockton-C_SJRSto-D_Stockton=0.} !San Joaquin River at Stockton
+	goal continuitySJRCal {C_SJROldR+AD_SJRCalALL-C_SJRCal=0.} !Calaveras River
+	goal continuitySJRDelta {C_SJRVer-C_OldRiver-C_SJROldR=0.} !San Joaquin entering Delta
+	goal continuityConeyIs {C_OldRiver+I_ConeyIS-D_ExpTD-C_ConyIS-D_ConeyIs=0.} !Coney Island
+	
+	goal continuityOMR {C_ConyIS+C_IndnSl+D_CCWDIF-C_OMR-D_CCWDVCOR=0.} !Conta Costa Water District diversion and West Delta flow
+	goal continuityJones {D_ExpTD+D_SODIF-D_Jones-C_BnkExp=0.} !Jones PP (Fedural)
+	
+	goal continuityBanks {C_BnkExp-D_Banks=0.} !Banks PP (State)
+}
+if int(Dynamic_SJR)==0 .and. int(Dynamic_DeltaOps_Exports)==1 .and. int(Dynamic_SOD)==1. {goal continuityMPool {C_CVPDMC+AD_JamesBP-D_MENDOTAPL-C_Mdota=0}} !Mendota Pool

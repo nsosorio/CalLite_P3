@@ -29,7 +29,7 @@ define max_ba {
 }
 goal max_ba2 {D_Banks < max_ba} ! {D419 < max_ba}
 !Gianelli
-
+if int(Dynamic_SOD) == 1 {
 !Aqueduct
 !Dos Amigos Pumping Plant - split swp=54.2%; cvp=45.8%
 !(per 1981 "Operating procedure between DWR-OCO & USBR CVO for
@@ -140,4 +140,4 @@ define max_mj {
 		select data from swp_limits where plant=9,month=month}
 }
 goal max_mj2 {C_PearBlPP - D881_PRJ - D882_PRJ < max_mj}   !{C882 < max_mj}
-
+}

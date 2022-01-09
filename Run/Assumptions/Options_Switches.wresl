@@ -18,7 +18,6 @@ define  X2_ANN_KM {                                                           !D
     case SLR { 
     condition always 
     value 0}}
-
 define CC_Scenario {select Option from GUI_HydroClimate where Index = 4}
 
 define Climate_Proj {

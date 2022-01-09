@@ -11,7 +11,7 @@ Sets Oroville rule curve (Oroville Storage Level 3 and Level 4 values)
     Set June to September Target Storage as "OroNextMonTarg" as min of 
     Level 5 value and OroSepTarg plus the average available storage above "OroSepTarg"
 ***/
-if int(Dynamic_Delta) == 0 {
+if int(Dynamic_SOD) == 0 {
 	define tableA_loss {select LOSS  from TableA where Factor=1}
 	! define max Table A deliveries
 ! need to add NOD TA amounts onto user-defined calculation
@@ -28,7 +28,7 @@ define OroSepTarg { ! DrainTar_buffer = 0 when int(OMRBOON)==1 as defined in del
     condition wateryear==BgnWY .and. month<=dec
     value min(EOS_target_Oro + 0.5*max(S_Orovl(prevSep*daysin) - EOS_target_Oro - DrainTar_buffer ,0.), S_OrovlLevel5) }
 !  case b_X{
-!    condition int(Dynamic_Delta)==0
+!    condition int(Dynamic_DeltaOps_Exports)==0
 !    value min(EOS_target_Oro + 0.5 * (swp_allocation-tableA_loss)/SWP_TableA
 !                          * max(S_Orovl(prevSep*daysin) - EOS_target_Oro - DrainTar_buffer ,0.), S_OrovlLevel5) }
   case b_X{

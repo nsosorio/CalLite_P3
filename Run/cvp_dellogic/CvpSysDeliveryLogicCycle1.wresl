@@ -3,7 +3,7 @@ INCLUDE '\CVP_delivery_logic_system\JamesBypass_BanksCVPcapacity.wresl'
 
 INCLUDE '\CVP_delivery_logic_system\sum_cvp_demands_system.wresl'
 
-if int(Dynamic_Delta)== 1. {
+if int(Dynamic_DeltaOps_Exports)== 1. .and. int(Dynamic_SOD)== 1. {
 INCLUDE '\CVP_delivery_logic_system\WSIandDI_CVP_system.wresl'  ! defines WSI and DI
 INCLUDE '\CVP_delivery_logic_system\Delivery_carryover_split_CVP_system.wresl'
 INCLUDE '\CVP_delivery_logic_system\CVPcut_system.wresl'

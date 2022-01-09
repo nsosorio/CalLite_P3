@@ -135,7 +135,7 @@ define solano_demprofile {
         condition always
         value  100}
 }
-if int(Dynamic_Delta)== 1 {
+if int(Dynamic_SOD)== 1 {
 define dem_D810_PMI  {select demand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=1, month=month}
 define dem_D813_PMI  {select demand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=2, month=month}
 define dem_D814_PMI  {select demand from swp_3pattern_demands given percent=swp_demprofile use linear where contractor=3, month=month}

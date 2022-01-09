@@ -154,7 +154,7 @@ define Qexp_pulseperiod  {
                 value PulseExpRes}
        case None {
                 condition always
-                value BanksCapPermit + maxJonescalc}
+                value BanksCapPermit + JonesCapPermit} ! Changed from maxJonescalc because the limits are the same, NSO 01/08/2022
 }
 
 ! Special calcs for NMFS Action

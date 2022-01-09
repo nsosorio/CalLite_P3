@@ -22,9 +22,9 @@ goal setNDO {NDO = D_DeltaReqd + C_Delta}
 define X2_prv {std kind 'X2-POSITION-PREV' units 'KM'}
 
 ! coefficients used in K-M equation
-define a_x2_coef {value 122.2}
-define b_x2_coef {value 0.3278}
-define c_x2_coef {value 17.65}
+define a_x2_coef {value 10.16}
+define b_x2_coef {value 0.945}
+define c_x2_coef {value 1.487}
 
 define X2_last {
 

@@ -25,7 +25,7 @@ Z.Q. Richard Chen; DWR; (02/07/2011)
 ! calculate previous month's value of salinity
 define EM_EC_Month_sv {
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     value 99000.}
   case lastWaterYear {
     condition  month == Oct
@@ -79,16 +79,37 @@ define EM_EC_STD_lookup {
     condition         always
     value             99.0}
 }
-define EM_EC_std_sv {value EM_EC_STD_lookup*1000.0}
+!define EM_EC_std_sv {value EM_EC_STD_lookup*1000.0}
+define EM_EC_std_sv {
+  case Gmodel {
+    condition int(Gmodel_sal) == 1
+    value EM_EC_STD_lookup} ! mmhos/cm
+  case other {
+  	condition always
+  	value EM_EC_STD_lookup*1000.0}
+}
+if int(Gmodel_sal) == 1 {
+define EM_EC_STD {std kind 'SALINITY' units 'MMHOS/CM'}	
+}
+else {
 define EM_EC_STD {std kind 'SALINITY' units 'UMHOS/CM'}
+}
 goal EMECstandout {EM_EC_std = EM_EC_std_sv}
+
+!*************************************************************************************************************
+
+! Setup G-model parameters
+define EM_So {value 43.}
+define EM_Sb {value 0.205}
+define EM_alpha {value 0.0005}
+define EM_n {value 1.01}
 
 !*************************************************************************************************************
 !get slope and intercept for constraint exp<=m*sac+b
 
 define EM_b_sv {
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     value 999999.}
   case control{
     condition month >= Apr .and. month <= Aug
@@ -109,7 +130,7 @@ define EM_b_sv {
 }
 define EM_m_sv {
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     value 0.}
   case reducecalls {
     condition  EM_b_sv >= 999990.
@@ -139,7 +160,7 @@ goal setEM_b {EM_b = EM_b_sv}
 !********************************************************************
 define EM_Sac_ZeroExp_sv1 {
   case DRegsOff{
-    condition EM_DLTSW == 0
+    condition EM_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     value 0.}
   case NoSalinityControlPossible{
     condition abs(EM_m_sv) <= 0.001 .and. int(EM_b_sv) == 0

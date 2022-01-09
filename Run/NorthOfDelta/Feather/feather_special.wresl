@@ -21,7 +21,7 @@ define nov_trigger_cfs {                    !2500 cfs
         from      feather_fish_203
         where   month = NOV}
 
-if int(Dynamic_Delta)==1 {
+if int(Dynamic_DeltaOps_Exports)==1 {
 define minflow_C_Therm {        
   case October {                            !minflow_C_Therm + 500 = 500 cfs
     condition month == OCT
@@ -73,7 +73,7 @@ define minflow_C_Therm {
 }
 }
 
-if int(Dynamic_Delta)==0 {
+if int(Dynamic_DeltaOps_Exports)==0 {
 define minflow_C_Therm {        
   case October {                            !minflow_C_Therm + 500 = 500 cfs
     condition month == OCT
@@ -134,7 +134,7 @@ define minflow_C_Therm {
 */
 
 !Ensure that the state can release sufficient water to meet it's IBU obligations and H&S
-if int(Dynamic_Delta)==1. {
+if int(Dynamic_DeltaOps_Exports)==1. {
 define D_Banks_0 {upper 300 kind 'flow-delivery' units 'cfs'}
 define D_Banks_1 {std kind 'flow-delivery' units 'cfs'}
 goal split_D_Banks_EXP1 {D_Banks_Exp1 = D_Banks_0 + D_Banks_1}
@@ -146,25 +146,25 @@ goal boundN_D_Banks_1 {D_Banks_1 < int_HandS * 99999}
 goal avoidTrigger {
   lhs C_Therm
   case October1 {
-    condition month == OCT .and. int(Dynamic_Delta) == 1
+    condition month == OCT .and. int(Dynamic_DeltaOps_Exports) == 1
     rhs   oct_trigger_cfs + 99999 - 99999*int_HandS
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
   }
   case October2 {
-    condition month == OCT .and. int(Dynamic_Delta) == 0
+    condition month == OCT .and. int(Dynamic_DeltaOps_Exports) == 0
     rhs   oct_trigger_cfs
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
   }
   case November1 {
-    condition month == NOV .and. int(Dynamic_Delta) == 1
+    condition month == NOV .and. int(Dynamic_DeltaOps_Exports) == 1
     rhs   max(nov_trigger_cfs, minflow_C_Therm + 500) + 99999 - 99999*int_HandS
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
   }
   case November2 {
-    condition month == NOV .and. int(Dynamic_Delta) == 0
+    condition month == NOV .and. int(Dynamic_DeltaOps_Exports) == 0
     rhs   max(nov_trigger_cfs, minflow_C_Therm + 500)
     lhs>rhs   penalty 4600
     lhs<rhs   penalty 0
@@ -215,7 +215,7 @@ define C_Orovl_IBU {std kind 'flow-channel' units 'cfs'}  !Weight with -3000 to 
 define C_Orovl_EXP {std kind 'flow-channel' units 'cfs'}
 goal split_C_Orovl {C_Orovl = C_Orovl_IBU + C_Orovl_EXP}
 
-if int(Dynamic_Delta)== 0 {
+if int(Dynamic_SOD)== 0 {
 define DrainTar_buffer {
     case BOSWITCHON {
         condition int(OMRBOON)==1

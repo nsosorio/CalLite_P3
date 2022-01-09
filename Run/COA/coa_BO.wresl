@@ -199,8 +199,8 @@ goal No_EI_split_swp1 {
 
 goal No_EI_split_swp2 {
     lhs     C_Delta_SWP
-    case no_ei_control {
-    condition   EI_control_on < 0.5 .and. S_SLSWP[Upstream] > swprulecv[Upstream] + 0.01 .and. 
+    case no_ei_control { ! Currently commenting out S_SLSWP for Dynamic Delta and Export Ops only
+    condition   EI_control_on < 0.5 /* .and. S_SLSWP[Upstream] > swprulecv[Upstream] + 0.01*/ .and. 
                 C_OMR[base] > C408_Limit .and. MAXEXP_RPA > d_exptd[base]
     rhs        C_Delta_SWP[Upstream]
     lhs<rhs    penalty 0
@@ -220,7 +220,7 @@ goal No_EI_split_cvp1 {
 goal No_EI_split_cvp2 {
     lhs     C_Delta_CVP
     case no_ei_control {
-    condition   EI_control_on < 0.5 .and. S_SLCVP[Upstream] > cvprulecv[Upstream] + 0.01 .and. 
+    condition   EI_control_on < 0.5 /* .and. S_SLCVP[Upstream] > cvprulecv[Upstream] + 0.01*/ .and. 
                 C_OMR[base] > C408_Limit .and. MAXEXP_RPA > d_exptd[base]
     rhs        C_Delta_CVP[Upstream]
     lhs<rhs    penalty 0

@@ -125,10 +125,15 @@ define I_Mokelumne {timeseries kind 'FLOW-INFLOW' units 'CFS'} !Mokelumne inflow
 define C_Calaveras_vamp {timeseries kind 'FLOW-CHANNEL'  units 'CFS'}
 define R_Mokelumne {timeseries kind 'FLOW' UNITS 'CFS'} ! El Dorado ID and El Dorado County Water Agency Returns to Cosumnes
 
+if int(Gmodel_sal) == 0 {
 define sac_oth_est { value C_cosumnes_VAMP + I_Mokelumne + R_Mokelumne + C_Calaveras_vamp             
         - demand_d_Vallejo*taf_cfs - dem_D403B_PMI*taf_cfs*perdel_27 - dem_D403C_PMI*taf_cfs*perdel_36}
 define sac_oth_est_ { alias sac_oth_est kind 'FLOW-INFLOW' units 'CFS'}
-
+}
+else {
+define sac_oth_est { value C_cosumnes_VAMP + I_Mokelumne + R_Mokelumne + C_Calaveras_vamp             
+        /*- demand_d_Vallejo*taf_cfs - dem_D403B_PMI*taf_cfs*perdel_27 - dem_D403C_PMI*taf_cfs*perdel_36*/} ! Ignore NBA related arcs for sac_oth_est for now, NSO 01/08/2022
+define sac_oth_est_ { alias sac_oth_est kind 'FLOW-INFLOW' units 'CFS'}}
 !*************************************************************************************************************
 ! define the other flows that go into making the export component
 define D514A {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Riparian Diversion from Delta for COSMA Ag DWSP
