@@ -1,13 +1,12 @@
-/*define C_Trnty {lower 0. upper 1845.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !DOWNSTREAM OF TRINITY LAKE
+define C_Trnty {lower 0. upper 1845.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !DOWNSTREAM OF TRINITY LAKE
 define C_Lwstn {lower 0. upper 6000. kind 'FLOW-CHANNEL' units 'CFS'} !TRINITY RIVER (C100)
 define C_Lwstn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_Lwstn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
-goal C_Lwstntotal {C_Lwstn=C_Lwstn_MIF+C_Lwstn_EXC}*/
-!define C_Wkytn {lower 0. upper 3000. kind 'FLOW-CHANNEL' units 'CFS'} !CLEAR CREEK (C3)
-define C_WKYTN {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !CLEAR CREEK (C3)
-!define C_Wkytn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
-!define C_Wkytn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
-!goal C_Wkytntotal {C_Wkytn=C_Wkytn_MIF+C_Wkytn_EXC}
+goal C_Lwstntotal {C_Lwstn=C_Lwstn_MIF+C_Lwstn_EXC}
+define C_Wkytn {lower 0. upper 3000. kind 'FLOW-CHANNEL' units 'CFS'} !CLEAR CREEK (C3)
+define C_Wkytn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Wkytn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
+goal C_Wkytntotal {C_Wkytn=C_Wkytn_MIF+C_Wkytn_EXC}
 define C_Shsta {lower 0. upper 4858.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !SACRAMENTO RIVER DOWNSTREAM OF SHASTA LAKE
 define C_ShstaE_01 {lower 0. upper 900000 kind 'FLOW-CHANNEL' units 'CFS'} !Enlarged Shasta Fills
 define C_ShstaE_02 {lower 0. upper 900000 kind 'FLOW-CHANNEL' units 'CFS'} !Enlarged Shasta Releases
@@ -54,9 +53,9 @@ goal C_HSttotal {C_HSt=C_HSt_MIF+C_HSt_EXC}
 
 define C_Freeport {lower 0. upper 11000.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !Sacramento River at Freeport
 
-!define D_ClearTu {lower 0. upper 3300. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
-!define D_Spring {lower 0. upper 4200. kind 'FLOW-TUNNEL' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
-define D_Spring {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
+define D_ClearTu {lower 0. upper 3300. kind 'FLOW-TUNNEL' units 'CFS'} !Clear Creek Turnnel (D100) with a capacity of 3300 cfs and it is split into _import  <trin_imorts2
+define D_Spring {lower 0. upper 4200. kind 'FLOW-TUNNEL' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
+!define D_Spring {timeseries kind 'FLOW-DELIVERY' units 'CFS'} !Spring Creek Tunnel (D3) with a  capacity of 4200 cfs and D3 = D3_m + D3_whlcv + D3_whljp
 
 define C_YoloBP {std kind 'FLOW-CHANNEL' units 'CFS'} !YOLO BYPASS
 define C_Hood {lower 0. upper 11000.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !Sacramento River at Hood

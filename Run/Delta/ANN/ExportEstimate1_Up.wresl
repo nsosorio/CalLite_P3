@@ -57,6 +57,7 @@ define JonesMinPumpLevel {
                      4200+perdel_cvpag_s*CVP_pag_ratio_s*dem_D700_pag*taf_cfs+perdel_cvpag_s*CVP_pag_ratio_s*dem_D701_pag*taf_cfs+dem_D702_pls*taf_cfs) }
 
 define maxJonescalc {value min(maxJonescalc1 + Intertie_Cap, JonesMaxAllow)}
+define maxJonescalcDV {alias maxJonescalc kind 'output' units 'cfs'}
 
 define CVPexportcap {value maxJonescalc + CVPDedBanksSwitch*BanksMaxAllowCVP}
 

@@ -14,7 +14,7 @@ goal wheel_Sp_1 {D_Spring_whlcv = 0.0}
 goal wheel_Ks_1 {C_Kswck_whlcv = 0.0}
 goal wheel_Nm_1 {C_Nimbus_whlcv = 0.0}
 
-goal wheeling3 {D_CVP_CVC=0.0}
+if int(Dynamic_SOD) == 1 {goal wheeling3 {D_CVP_CVC=0.0}}
 
 !Zero out Sac Flow Reop adjustment
 goal zeroC400_whlcv {C_Hood_whlcv = 0.0}

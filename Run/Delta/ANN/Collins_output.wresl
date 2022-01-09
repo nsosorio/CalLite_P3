@@ -30,6 +30,13 @@ goal setCOMax {
     condition always
     rhs CO_m_sv*C_Hood_ANN + CO_m_sv*C_YoloBP + CO_b_sv}
 }
+!*************************************************************************************************************
+
+! Setup G-model parameters
+define CO_So {value 32.}
+define CO_Sb {value 0.15}
+define CO_alpha {value 0.00036}
+define CO_n {value 1.}
 
 !****************************************************************************************
 

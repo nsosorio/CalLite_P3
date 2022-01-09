@@ -115,7 +115,7 @@ goal Wheeling2 {
              rhs 0.0}
              }
 
-goal Wheeling3 {D_CVP_CVC=D_Banks_cvc}
+if int(Dynamic_SOD) == 1 {goal Wheeling3 {D_CVP_CVC=D_Banks_cvc}}
 
 
 goal CVCReleaseCont {C_Wkytn_whlcv + C_Kswck_whlcv + C_Nimbus_whlcv = C_Delta_whlcv + D_Banks_cvcrels}  
@@ -123,7 +123,6 @@ goal CVCReleaseCont {C_Wkytn_whlcv + C_Kswck_whlcv + C_Nimbus_whlcv = C_Delta_wh
 ! For output only
 define CVC_AllocDv {alias CVC_Alloc Units 'taf'}
 define remaincvc_dv {alias RemainWheelCVC kind 'output' units 'taf'}
-define maxJonescalcDV {alias maxJonescalc kind 'output' units 'cfs'}
 
 !---------------------- JPOD ----------------------
 

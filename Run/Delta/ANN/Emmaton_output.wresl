@@ -31,6 +31,14 @@ goal setEMMax {
     rhs EM_m_sv*C_Hood_ANN + EM_m_sv*C_YoloBP + EM_b_sv}
 }
 
+!*************************************************************************************************************
+
+! Setup G-model parameters
+define EM_So {value 43.}
+define EM_Sb {value 0.205}
+define EM_alpha {value 0.0005}
+define EM_n {value 1.01}
+
 !****************************************************************************************
 
 ! required delta outflow given exports

@@ -86,14 +86,6 @@ define CO_EC_STD {std kind 'SALINITY' units 'UMHOS/CM'}
 }
 goal COECstandout {CO_EC_STD = CO_EC_STD_sv}
 
-!*************************************************************************************************************
-
-! Setup G-model parameters
-define CO_So {value 32.}
-define CO_Sb {value 0.15}
-define CO_alpha {value 0.00036}
-define CO_n {value 1.}
-
 !****************************************************************************************
 !get slope and intercept for constraint exp<=m*sac+b
 

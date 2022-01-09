@@ -22,6 +22,14 @@ goal JPECstandout {JP_EC_STD = JP_EC_STD_sv}
 
 !****************************************************************************************
 
+! Setup G-model parameters
+define JP_So {value JP_So[BASE]}
+define JP_Sb {value JP_Sb[BASE]}
+define JP_alpha {value JP_alpha[BASE]}
+define JP_n {value JP_n[BASE]}
+
+!****************************************************************************************
+
 !get slope and intercept for constraint exp<=m*sac+b
 define JP_m {lower unbounded upper unbounded kind 'SLOPE' units 'NONE'}
 define JP_b {lower unbounded upper unbounded kind 'INTERCEPT' units 'NONE'}

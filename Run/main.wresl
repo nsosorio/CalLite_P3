@@ -542,7 +542,7 @@ if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 0 {
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 }
-elseif int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 1 {
+else {
 	INCLUDE [LOCAL] 'COA\coa.wresl'
 	INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
 	INCLUDE [LOCAL] 'Delta\Delta.wresl'
@@ -551,7 +551,7 @@ elseif int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 1 {
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroCVC.wresl'
 	INCLUDE [LOCAL] 'Wheeling\WheelzeroJPOD.wresl' 
 }
-elseif int(predeterminedDeltaTS) == 1 {
+if int(predeterminedDeltaTS) == 1 {
 	INCLUDE 'Delta\Delta_YB_HOOD_TS.wresl'
 }
 

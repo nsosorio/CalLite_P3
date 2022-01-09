@@ -88,6 +88,7 @@ define maxJonescalc1 {value min(JonesMaxAllow,
 
 define maxJonescalc {value min(maxJonescalc1 + Intertie_Cap, JonesMaxAllow)}
 }
+define maxJonescalcDV {alias maxJonescalc kind 'output' units 'cfs'}
 
 define CVPexportcap {value maxJonescalc+ CVPDedBanksSwitch*BanksMaxAllowCVP}
 

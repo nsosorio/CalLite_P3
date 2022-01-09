@@ -6,7 +6,7 @@
 !********************************************************
 
 !include 'shortage_cvp_n.wresl'
-if int(Dynamic_DeltaOps_Exports) == 1 {include 'shortage_cvp_s.wresl'}
+if int(Dynamic_SOD) == 1 {include 'shortage_cvp_s.wresl'}
 include 'shortage_swp.wresl'
 !include 'shortage_prf_n.wresl'
 

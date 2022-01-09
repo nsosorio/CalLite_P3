@@ -89,6 +89,14 @@ goal setRSMax3 {
     rhs RS_m_3_sv*C_Hood_ANN + RS_m_3_sv*C_YoloBP + RS_b_3_sv}
 }
 
+!*************************************************************************************************************
+
+! Setup G-model parameters
+define RS_S {value RS_CL_STD_sv/0.11}
+define RS_So {value 20000.}
+define RS_Sb {value 200.}
+define RS_alpha {value 0.000515}
+define RS_n {value 1.}
 
 !****************************************************************************************
 

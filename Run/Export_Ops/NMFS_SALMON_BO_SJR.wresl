@@ -31,7 +31,12 @@ define SJRatio_MaxExp{
 ! Phase II: Export restriction under Action 4.2.1
 !
 ! Determine year typing as defined in the NMFS BO
-
+/* Exception procedure for multiple dry years:
+ * If the previous 2 years plus current year of San Joaquin Valley “60-20-20” Water Year Hydrologic Classification and Indicator
+ * as defined in D-1641 and provided in following table, is 6 or less,
+ * AND the New Melones Index is less than 1 MAF,
+ * exports shall be limited to a 1:1 ratio with San Joaquin River inflow, as measured at Vernalis.
+ */
 define SJR_indicator  {value 6. - wyt_SJR}
 define SJR_indicator1 {value 6. - wyt_SJR_prv1}
 define SJR_indicator2 {value 6. - wyt_SJR_prv2}
@@ -44,7 +49,7 @@ define SJRatio_MaxExp{
          value 999999. 
          }
     case Flood_flow{
-        condition Vernalis > 21750.    !daily flow condition - should use an equivalent monthly for this level of peak flow
+        condition Vernalis >= 21750.    !daily flow condition - should use an equivalent monthly for this level of peak flow
         value 999999.
         }
     case mult_drought{
