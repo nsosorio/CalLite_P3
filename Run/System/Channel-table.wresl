@@ -3,10 +3,17 @@ define C_Lwstn {lower 0. upper 6000. kind 'FLOW-CHANNEL' units 'CFS'} !TRINITY R
 define C_Lwstn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_Lwstn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
 goal C_Lwstntotal {C_Lwstn=C_Lwstn_MIF+C_Lwstn_EXC}
+if int(Dynamic_Trn_Wky) == 1 {
 define C_Wkytn {lower 0. upper 3000. kind 'FLOW-CHANNEL' units 'CFS'} !CLEAR CREEK (C3)
 define C_Wkytn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
 define C_Wkytn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
 goal C_Wkytntotal {C_Wkytn=C_Wkytn_MIF+C_Wkytn_EXC}
+}
+elseif int(Dynamic_Trn_Wky) == 0 {
+define C_WKYTN {timeseries kind 'FLOW-CHANNEL' units 'CFS'} !CLEAR CREEK (C3)]	
+define C_Wkytn_MIF {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
+define C_Wkytn_EXC {std kind 'FLOW-EXCESS-INSTREAM' units 'CFS'}
+}
 define C_Shsta {lower 0. upper 4858.*taf_cfs kind 'FLOW-CHANNEL' units 'CFS'} !SACRAMENTO RIVER DOWNSTREAM OF SHASTA LAKE
 define C_ShstaE_01 {lower 0. upper 900000 kind 'FLOW-CHANNEL' units 'CFS'} !Enlarged Shasta Fills
 define C_ShstaE_02 {lower 0. upper 900000 kind 'FLOW-CHANNEL' units 'CFS'} !Enlarged Shasta Releases

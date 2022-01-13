@@ -18,19 +18,21 @@ initial {
 	svar AN_DLTSW {select OPTION from GUI_Regs where Index = 12}  !D-1485
 	svar CH_DLTSW {select OPTION from GUI_Regs where Index = 13}  !D-1485
     svar Dynamic_SJR {select Option from GUI_SJR where Index=7} !Turns on dynamic SJR   
-    !svar Dynamic_DeltaOps_Exports {select Option from GUI_DailyModel where Index=1} !Turns on dynamic Delta ops     
-    !svar Dynamic_SOD {select Option from GUI_DailyModel where Index=2} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
-    svar Dynamic_DeltaOps_Exports {value 1.} !Turns on dynamic Delta ops     
-    svar Dynamic_SOD {value 0.} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
     svar LOD_DLTSW {select Option from GUI_HydroClimate where Index=1} 
     svar SLR_DLTSW {select Option from GUI_HydroClimate where Index=3}
-	svar Gmodel_sal {value 1} ! Use G-model instead of ANN to estimate salinity at individual locations
 	svar JonesIFSwitch   {value 0}
 	svar BanksIFSwitch   {value 0}
 	svar CCWDIFSwitch    {value 0}
 	svar LVEM_switch	 {select Option from GUI_LosVaqueros where Index = 1}
 	svar AllocationSwitch   {select Option from GUI_Operations where Index=5} !Allocation method
-	svar predeterminedDeltaTS {value 0.}
+    !svar Dynamic_DeltaOps_Exports {select Option from GUI_DailyModel where Index=1} !Turns on dynamic Delta ops     
+    !svar Dynamic_SOD {select Option from GUI_DailyModel where Index=2} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    svar Dynamic_Trn_Wky {value 0} !Turn on or off dynamic simulation of Trinity and Whiskeytown. If off, historical Spring Cr Tunnel and Clear Creek Wkytn releases are used as inflows to Sac River, NSO 01/13/2022
+    svar Dynamic_DeltaOps_Exports {value 1} !Turns on dynamic Delta ops     
+    svar Dynamic_SOD {value 0} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
+	svar Gmodel_sal {value 1} ! Use G-model instead of ANN to estimate salinity at individual locations	
+	svar predeterminedDeltaTS {value 0}
 }
 
 SEQUENCE CYCLE1 {

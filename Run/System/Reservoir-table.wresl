@@ -51,7 +51,8 @@ define coefev_Wkytn {value (A_Wkytnforward - A_Wkytnback)/(100*max(0.01,S_Wkytn(
 goal area_Wkytn {A_Wkytn=A_Wkytnlast+1000*coefev_Wkytn*S_Wkytn-1000*coefev_Wkytn*S_Wkytn(-1)}
 goal evap_Wkytn {E_Wkytn*cfs_af=(evap_S_Wkytn/24)*A_Wkytnlast+(evap_S_Wkytn/24)*A_Wkytn}
 define relcap_Wkytn {select discharge from res_info given storage=1000*S_Wkytn(-1) use linear where res_num=3}
-goal maxrelease_Wkytn {C_Wkytn<relcap_Wkytn}
+if int(Dynamic_Trn_Wky) == 1 {goal maxrelease_Wkytn {C_Wkytn<relcap_Wkytn}}
+
 define S_Shstalevel1 {value 550.}
 define S_Shsta_1 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_ShstaZone1 {S_Shsta_1 < S_Shstalevel1}

@@ -10,13 +10,17 @@ on supply estimate through September.
 define S_TrntyLevel3 {timeseries kind 'STORAGE-LEVEL' units 'TAF'}
 
 define TrnInf {value (I_Trnty)*cfs_taf }
-define TrnInfEst {sum(i=0,SEP-month,1) (I_Trnty(i))*cfs_taf(i) }
+!define TrnInfEst {sum(i=0,SEP-month,1) (I_Trnty(i))*cfs_taf(i) }
+define TrnInfEst {timeseries kind 'FORECAST' units 'TAF'} ! Precalculated this as SV since not sure how to change from monthly to daily syntax
+define TrnInfEstDV {alias TrnInfEst kind 'FORECAST' units 'TAF'}
 
-define TrnSupEst {value max(0.0,TrnInfEst + S_Trnty(-1) - S_TrntyLevel3(Sep-month))}
+define TrnSupEst {value max(0.0,TrnInfEst + S_Trnty(-1) - S_TrntyLevel3)}
 
 define TrnSupEstdv {alias TrnSupEst kind 'FORECAST' units 'TAF'}
 
-define TrnFlowTarg {value (TrnSupEst/cfs_taf)/(Sep-month+1.) }
+!define TrnFlowTarg {value (TrnSupEst/cfs_taf)/(Sep-month+1.) }
+define TrnFlowTarg {value (TrnSupEst*taf_cfs)/(daysToEOWYInt+1.) }
+define TrnFlowTargdv {alias TrnFlowTarg kind 'FORECAST' units 'TAF'}
 
 define TrnRuleCalc {
     case MaythruSep {

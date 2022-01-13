@@ -1,0 +1,17 @@
+/*************************************
+Trn_Wky_stub.wresl
+ 
+Nicole Osorio DWR 01/13/2022
+
+Set Trinity and Whiskeytown variables to zero when dynamic simulation is off
+D_Spring and C_Wkytn are driven by historical input timeseries to serve as inflow to the Upper Sac R.
+*************************************/
+goal zeroC_TRNTY {C_Trnty=0}
+goal zeroI_TRNTY {F_Trnty=0}
+goal zeroS_TRNTY {S_Trnty=0}
+goal zeroD_ClearTu {D_ClearTu=0}
+goal zeroC_Lwstn {C_Lwstn=0}
+goal zeroC_Wkytn_MIF {C_Wkytn_MIF=0}
+goal zeroC_Wkytn_EXC {C_Wkytn_EXC=0}
+goal zeroI_WKYTN {F_WKYTN=0}
+goal zeroS_WKYTN {S_WKYTN=0}
