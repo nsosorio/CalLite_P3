@@ -13,7 +13,7 @@ define exp_ann_relax {std kind 'soft-constraint' units 'cfs'}
 goal meetJP {
   lhs D_ExpTD - exp_ann_relax
        case DRegsOff{
-         condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+         condition JP_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
          rhs ExportCapacity
          lhs<rhs penalty 0}  
   case NoSalinityControlPossible{

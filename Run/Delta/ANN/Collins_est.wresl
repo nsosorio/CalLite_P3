@@ -9,7 +9,7 @@ Z.Q. Richard Chen; DWR; (02/07/2011)
 **************************/
 define COReqSac {
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             value 0.}
   case NoSalinityControlPossible{
     condition abs(CO_m_sv) <= 0.001 .and. int(CO_b_sv) == 0

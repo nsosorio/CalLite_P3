@@ -28,7 +28,7 @@ define JP_EC_Month_sv {
     condition JP_DLTSW == 0
       value 99000.} 
   case Gmodel{
-    condition int(Gmodel_sal) == 1 ! Don't calculate ANN parameters when G-model is used.
+    condition int(Gmodel) == 1 ! Don't calculate ANN parameters when G-model is used.
       value 99000.} 
   case lastWaterYear {
     condition  month == Oct
@@ -80,13 +80,13 @@ define JP_EC_STD_lookup {
 !define JP_EC_STD_sv {value JP_EC_STD_lookup*1000.0}
 define JP_EC_STD_sv {
   case Gmodel {
-    condition int(Gmodel_sal) == 1
+    condition int(Gmodel) == 1
     value JP_EC_STD_lookup} ! mmhos/cm
   case other {
   	condition always
   	value JP_EC_STD_lookup*1000.0}
 }
-if int(Gmodel_sal) == 1 {
+if int(Gmodel) == 1 {
 define JP_EC_STD {std kind 'SALINITY' units 'MMHOS/CM'}	
 }
 else {
@@ -107,7 +107,7 @@ define JP_n {value 1.}
 
 define JP_b_sv {
          case DRegsOff{
-          condition JP_DLTSW == 0. .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters when G-model is used.
+          condition JP_DLTSW == 0. .or. int(Gmodel) == 1 ! Don't calculate ANN parameters when G-model is used.
           value 999999.} 
   case control{
     condition month >= Apr .and. month <= Aug
@@ -128,7 +128,7 @@ define JP_b_sv {
 }
 define JP_m_sv {
          case DRegsOff{
-          condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters when G-model is used.
+          condition JP_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters when G-model is used.
           value 0.} 
   case reducecalls {
     condition  JP_b_sv >= 999990.
@@ -159,7 +159,7 @@ goal setJP_b {JP_b = JP_b_sv}
 !Get the required Sac flow for ZERO exports
 define JP_Sac_ZeroExp_sv1 {
          case DRegsOff{
-          condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters when G-model is used.
+          condition JP_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters when G-model is used.
           value 0.} 
   case NoSalinityControlPossible{
     condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0

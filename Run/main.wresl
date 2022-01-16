@@ -31,7 +31,7 @@ initial {
     svar Dynamic_Trn_Wky {value 0} !Turn on or off dynamic simulation of Trinity and Whiskeytown. If off, historical Spring Cr Tunnel and Clear Creek Wkytn releases are used as inflows to Sac River, NSO 01/13/2022
     svar Dynamic_DeltaOps_Exports {value 1} !Turns on dynamic Delta ops     
     svar Dynamic_SOD {value 0} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
-	svar Gmodel_sal {value 1} ! Use G-model instead of ANN to estimate salinity at individual locations	
+	svar Gmodel {value 1} ! Use G-model instead of ANN to estimate salinity and outflow requirements at individual locations	
 	svar predeterminedDeltaTS {value 0}
 }
 
@@ -534,7 +534,7 @@ if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
-if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel_sal) == 0 {
+if int(Dynamic_DeltaOps_Exports) == 1 .and. int(Gmodel) == 0 {
 	INCLUDE [LOCAL] 'COA\coa.wresl'
 	INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1.wresl'
 	INCLUDE [LOCAL] 'Delta\Split_IFTD.wresl'
@@ -591,7 +591,7 @@ if LVEM_switch > 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 	INCLUDE 'CCWD\STATIC_LVEM.WRESL'
 }
-if int(Gmodel_sal) == 0 {
+if int(Gmodel) == 0 {
 INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
 }
 if int(Dynamic_DeltaOps_Exports) == 1 {
@@ -663,7 +663,7 @@ elseif LVEM_switch < 0.5 .and. int(Dynamic_DeltaOps_Exports) == 1 {
 
 INCLUDE [LOCAL] 'hydrology\WEIRS\weir_steps_dailyops_B2_BO.wresl'  
 
-if int(Gmodel_sal) == 0 {
+if int(Gmodel) == 0 {
 INCLUDE [LOCAL] 'Delta\Ann\ExportEstimate1_B2.wresl'
 }
 

@@ -15,7 +15,7 @@ define JP_MaxExport {lower unbounded upper unbounded kind 'FLOW' units 'CFS'}
 goal setJPMax {
   lhs JP_MaxExport
           case DRegsOff{
-            condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition JP_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
           rhs 999999. }
   case NoSalinityControlPossible{
     condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0
@@ -46,7 +46,7 @@ goal setJPmrdo {
             condition JP_DLTSW == 0
           rhs 0.} 
   case Gmodel {
-    condition int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+    condition int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     rhs POW((-LOG((JP_EC_std_sv - JP_Sb)/(JP_So - JP_Sb))/JP_alpha), 1/JP_n) }  
   case NoSalinityControlPossible{
     condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0
@@ -73,7 +73,7 @@ define JP_ReqSac {lower unbounded upper unbounded kind 'FLOW' units 'cfs'}
 goal set_JP_ReqSac {
   lhs JP_ReqSac
            case DRegsOff{
-            condition JP_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition JP_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             rhs 0.}   
   case NoSalinityControlPossible{
     condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0

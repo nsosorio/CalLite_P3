@@ -23,7 +23,7 @@ Z.Q. Richard Chen; DWR; (02/07/2011)
 ! calculate previous month's value of salinity
 define CO_EC_Month_sv {
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             value 99000.}
   case lastWaterYear {
     condition  month == Oct
@@ -72,13 +72,13 @@ define CO_EC_STD_lookup {
 !define CO_EC_STD_sv { value CO_EC_STD_lookup * 1000.0 }
 define CO_EC_STD_sv {
   case Gmodel {
-    condition int(Gmodel_sal) == 1
+    condition int(Gmodel) == 1
     value CO_EC_STD_lookup} ! mmhos/cm
   case other {
   	condition always
   	value CO_EC_STD_lookup*1000.0}
 }
-if int(Gmodel_sal) == 1 {
+if int(Gmodel) == 1 {
 define CO_EC_STD {std kind 'SALINITY' units 'MMHOS/CM'}	
 }
 else {
@@ -91,7 +91,7 @@ goal COECstandout {CO_EC_STD = CO_EC_STD_sv}
 
 define CO_b_sv {
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             value 999999.}
   case control{
     condition month >= Oct .and. month <= May
@@ -112,7 +112,7 @@ define CO_b_sv {
 }
 define CO_m_sv {
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             value 0.}
   case reducecalls {
     condition  CO_b_sv >= 999990.
@@ -143,7 +143,7 @@ goal setCO_b {CO_b = CO_b_sv}
 !Get the required Sac flow for ZERO exports
 define CO_Sac_ZeroExp_sv1 {
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             value 0.}
   case NoSalinityControlPossible{
     condition abs(CO_m_sv) <= 0.001 .and. int(CO_b_sv) == 0

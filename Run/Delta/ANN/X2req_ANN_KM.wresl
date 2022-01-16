@@ -104,7 +104,7 @@ define DO_req_X2roe_nocap {
           condition     X2_Select == 1  .and. X2_ANN_KM == 1
           value POW(10.0, (a_x2_coef + b_x2_coef*X2_last - km_roe)/c_x2_coef) }               
      case StandardOn_KM {
-          condition      month >= FEB .and. month <= JUN .and. X2_ANN_KM == 1
+          condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_roe_mod > 0.5 .and. X2_ANN_KM == 1
           value POW(10.0, (a_x2_coef + b_x2_coef*X2_last - km_roe)/c_x2_coef) }
      case StandardOn_ANN {
           condition      daysX2_roe_mod > 0.5 .and. X2_ANN_KM == 0
@@ -165,7 +165,7 @@ define DO_req_X2chs_nocap {
           condition X2_Select == 1  .or. X2_DLTSW == 0  
           value 0 }  
      case StandardOn_KM {
-          condition      month >= FEB .and. month <= JUN .and. daysX2_chs_mod > 0.5 .and. X2_ANN_KM == 1
+          condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_chs_mod > 0.5 .and. X2_ANN_KM == 1
           value          POW(10.0, (a_x2_coef + b_x2_coef*X2_roe - km_chs)/c_x2_coef)  }
      case StandardOn_ANN {
           condition      daysX2_chs_mod > 0.5 .and. X2_ANN_KM == 0
@@ -234,10 +234,10 @@ define DO_req_X2cnf_nocap {
           condition X2_Select == 1  .or. X2_DLTSW == 0  
           value 0 }    
      case StandardOn_KM {
-          condition      month >= FEB .and. month <= JUN .and. daysX2_cnf_mod > 0.5 .and. X2_ANN_KM == 1
+          condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_cnf_mod > 0.5 .and. X2_ANN_KM == 1
           value          POW(10.0, (a_x2_coef + b_x2_coef*X2_chs - km_cnf)/c_x2_coef) }
      case SpecFlowStd_KM {
-          condition       month >= FEB .and. month <= JUN .and. daysX2_cnf < 0.5 .and. X2_ANN_KM == 1     ! if no days at confluence
+          condition       /*month >= FEB .and. month <= JUN .and.*/ daysX2_cnf < 0.5 .and. X2_ANN_KM == 1     ! if no days at confluence
           value           flowmin_specX2 }
      case StandardOn_ANN {
           condition      daysX2_cnf_mod > 0.5 .and. X2_ANN_KM == 0

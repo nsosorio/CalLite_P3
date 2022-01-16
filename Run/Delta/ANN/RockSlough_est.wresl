@@ -6,7 +6,7 @@ Get the required Sac flow for ESTIMATED exports
 **************************/
 define RSReqSac1 {
                     case DRegsOff{
-                      condition RS_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+                      condition RS_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
                       value 0.0}
   case LowCL{
     condition C_Hood_ANN(-1) >= 40000.

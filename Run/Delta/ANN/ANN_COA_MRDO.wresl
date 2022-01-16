@@ -8,7 +8,7 @@ ANN required outflow in excess of D407 needs to be removed from COA project acco
 define mrdo_ann_relax {std kind 'soft-constraint' units 'cfs'}
 
 !determine excess required outflow (can be negative due to ANN_MRDO calcs)
-if  int(Gmodel_sal) == 1 {
+if  int(Gmodel) == 1 {
 	define RS_Z {lower unbounded upper unbounded kind 'FLOW' units 'CFS'}
 	goal aRSZ {RS_Z  = RS_MRDO - D_DeltaReqd}
 	define RS_X {std kind 'FLOW' units 'CFS'}

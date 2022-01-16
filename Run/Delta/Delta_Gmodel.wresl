@@ -1,0 +1,23 @@
+! code by A. Munevar 7/8/98
+!
+! THIS IS THE MAIN MINIMUM REQUIRED DELTA OUTFLOW FILE
+! It includes all the files that contain MRDO constraints
+
+if int(Dynamic_SJR)==0  {INCLUDE 'Ann\AnnSJRTimeseries.wresl'}
+if int(Dynamic_SJR)==1  {INCLUDE 'Ann\AnnSJRDynamic.wresl'}
+
+! Contains files for implementation of Artifical Neural Network's for salinity control.
+INCLUDE 'Ann\AnnCommon.wresl'
+
+INCLUDE 'Ann\AnnSacFlow.wresl'
+
+INCLUDE 'gmodel\gmodel-main.wresl'
+!INCLUDE 'x2\x2req.wresl'
+!INCLUDE 'delta-outflow\delta-outflow.wresl'
+
+define exp_ann_relax {std kind 'soft-constraint' units 'cfs'}
+goal nullexp_ann_relax {exp_ann_relax = 0.} ! This DV is defined in Jerseypoint_constrain.wresl which is not called during G-model
+define mrdo_ann_relax {std kind 'soft-constraint' units 'cfs'}
+goal nullmrdo_ann_relax {mrdo_ann_relax = 0.} ! This DV is defined in ANN_COA_MRDO.wresl which is not called during G-model
+
+!INCLUDE 'final-mrdo\final-mrdo.wresl'

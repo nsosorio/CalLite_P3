@@ -32,7 +32,7 @@ INCLUDE 'Ann\LosVaqueros_data_reduced_calls.wresl'
 INCLUDE 'Ann\CVP_intake_data_reduced_calls.wresl'*/
 
 !INCLUDE 'Ann\ExportEstimate1.wresl'
-if int(Gmodel_sal)==0 {INCLUDE 'Ann\ExportEstimate2.wresl'
+if int(Gmodel)==0 {INCLUDE 'Ann\ExportEstimate2.wresl'
 
 !These files change delta outflow to reflect each station:
 INCLUDE 'Ann\JerseyPoint_est.wresl'
@@ -52,7 +52,7 @@ INCLUDE 'Ann\Emmaton_constrain.wresl'
 INCLUDE 'Ann\Collins_constrain.wresl'
 if int(AN_DLTSW)==3 {INCLUDE 'Ann\Antioch_constrain.wresl'}
 if int(CH_DLTSW)==3 {INCLUDE 'Ann\Chipps_constrain.wresl'}
-if int(Gmodel_sal)==0 {INCLUDE 'Ann\NegCarriageOpsLimit.wresl'}
+if int(Gmodel)==0 {INCLUDE 'Ann\NegCarriageOpsLimit.wresl'}
 
 !These files calculate additional output for analysis:
 INCLUDE 'Ann\JerseyPoint_output.wresl'

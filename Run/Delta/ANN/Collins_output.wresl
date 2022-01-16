@@ -12,7 +12,7 @@ define CO_MaxExport {lower unbounded upper unbounded kind 'FLOW' units 'CFS'}
 goal setCOMax {
   lhs CO_MaxExport
           case DRegsOff{
-            condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+            condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
             rhs 999999.}  
   case NoSalinityControlPossible{
     condition abs(CO_m_sv) <= 0.001 .and. int(CO_b_sv) == 0
@@ -49,7 +49,7 @@ goal setCOmrdo {
               condition CO_DLTSW == 0
               rhs 0.}  
   case Gmodel {
-    condition int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+    condition int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
     rhs POW((-LOG((CO_EC_std_sv - CO_Sb)/(CO_So - CO_Sb))/CO_alpha), 1/CO_n) } 
   case NoSalinityControlPossible{
     condition abs(CO_m_sv) <= 0.001 .and. int(CO_b_sv) == 0
@@ -76,7 +76,7 @@ define CO_ReqSac {lower unbounded upper unbounded kind 'FLOW' units 'cfs'}
 goal set_CO_ReqSac {
   lhs CO_ReqSac
             case DRegsOff{
-              condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+              condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
               rhs 0.}  
   case NoSalinityControlPossible{
     condition abs(CO_m_sv) <= 0.001 .and. int(CO_b_sv) == 0

@@ -28,7 +28,7 @@ define pulse_cap {
 if int(AN_DLTSW)==3 .and. int(CH_DLTSW)==3 {
 	define EstTotExp {
 !		case GmodelOn {
-!		condition int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+!		condition int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
 !		value ExportCap}
 	  case NoSalinityControlPossible{
 	    condition abs(JP_m_sv) <= 0.001 .and. int(JP_b_sv) == 0 .or.

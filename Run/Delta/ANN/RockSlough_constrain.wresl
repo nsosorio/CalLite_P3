@@ -8,7 +8,7 @@ Set constraints for exports not to exceed the limit
 goal meetRS_1 {
   lhs D_ExpTD - exp_ann_relax
                  case DRegsOff{
-                   condition RS_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+                   condition RS_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
                    rhs ExportCapacity
                    lhs<rhs penalty 0}  
   case LowCL{
@@ -41,7 +41,7 @@ goal meetRS_1 {
 goal meetRS_2 {
   lhs D_ExpTD - exp_ann_relax
                    case DRegsOff{
-                     condition RS_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+                     condition RS_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
                      rhs ExportCapacity
                      lhs<rhs penalty 0}    
   case LowCL{
@@ -78,7 +78,7 @@ goal meetRS_2 {
 goal meetRS_3 {
   lhs D_ExpTD - exp_ann_relax
                      case DRegsOff{
-                       condition RS_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+                       condition RS_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
                        rhs ExportCapacity
                      lhs<rhs penalty 0}  
   case LowCL{

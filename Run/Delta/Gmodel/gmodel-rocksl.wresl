@@ -1,0 +1,90 @@
+! Armin Munevar 7/8/98
+
+! G-MODEL BELOW IS FOR CONTRA COSTA CANAL INTAKE AT ROCK SLOUGH (RSL)
+! THIS MODEL MUST BE RUN IN CONJUNCTION WITH JERSEY POINT DUE TO THEIR CORRELATION
+! ****************************************************************************
+! ****************************************************************************
+! Rock Slough salinities (mg/l) are actually converted to Jersey Point salinities (mmhos/cm)
+! and the constraint is at JPT.  The parameters used are then from the Jersey point
+! module.
+
+! The following additonal parameters are for the Rock Slough - Jersey Point correlation
+!
+! RSL chloride (mg/l) is related to JPT EC (millimhos/cm) by the following weighted scheme
+! Note that the '1000' is to convert to Weighted JPT EC to micromhos/cm
+!         RSL cloride = lag*1000*Weighted JPT EC
+!  where  Weighted JPT EC = A*JPT(t) + B*JPT(t-1)
+!
+! Thus RSL chloride standard can be translated into a JPT EC standard as:
+!         JPT(t) = (RSL/lag*1000 - B*JPT(t-1))/A
+! The weighting coefficients correspond to a salinity transport time lag of about 14 days between Jersey point and Rock Slough
+! That's for the monthly model ^ according to Denton and Sullivan (1993).
+! The parameters below may not be as appropriate when using a daily timestep. NSO 01/15/2022
+
+define g_lagparm_rsl  {value 0.11     }        ! lag parameter==> RSL = lagparm*WJP
+define g_wjpt_parmA   {value 0.55     }        ! WJP parameter A
+define g_wjpt_parmB   {value 0.45     }        ! WJP parameter B
+
+! *************************************************************************************
+! We already know the antecedent flow at Jersey Point (see Jersey Point module). No
+! need to calculate again.
+
+! *************************************************************************************
+! Get salinity standard for this particular station.
+! define the CL standard for Contra Costa Canal
+define RS_CL_STD_sv {select CLstandard1
+                     from   salinity_std_rsl
+                     where  month=month,wyt=wyt_ann}
+define RS_CL_STD {std kind 'SALINITY' units 'MG/L'}
+goal setRS_CL_STD {RS_CL_STD = RS_CL_STD_sv}
+
+! This is DWR's equation used previously
+!define RS_EC_STD_sv {value (RS_CL_STD_sv + 23.6)/0.268 }
+
+! This is CCWD's first approximation (Matt Moses, July 2006)
+! Use Maximum of the following two equations:
+!   Cl = 0.285*EC - 50    (this is the 'seawater' line)
+!   Cl = 0.15*EC - 12      (this is the 'ag. drainage' line)
+! These two equations intercept at Cl=30.222... and EC=281.481481481...
+define RS_EC_STD_sv {
+    case low {
+    condition RS_CL_STD_sv <= 30.222
+    value (RS_CL_STD_sv + 12)/0.15}
+    case high {
+    condition always
+    value (RS_CL_STD_sv + 50)/0.285}
+}
+
+define RS_EC_STD {std kind 'SALINITY' units 'UMHOS/CM'}
+goal setRS_EC_STD {RS_EC_STD = RS_EC_STD_sv}
+
+!sometimes used for #2&3 if #1 is infeasible (always try to meet the 225 mg/l std)
+! This is DWR's equation used previously
+!define RS_EC_STD_225 {value (225. + 23.6)/0.268}
+! This is CCWD's first approximation (Matt Moses, July 2006) - see notes above
+define RS_EC_STD_225 {value (225. + 50)/0.285}
+! *************************************************************************************
+! GET THE DELTA OUTFLOW REQUIRED TO MEET SALINITY STANDARD
+
+! Calculate the JPT EC (millmhos/cm) which corresponds to the RSL chloride standard (mg/l)
+
+define EC_std_rsl_jpt {value (RS_CL_STD_sv/(g_lagparm_rsl*1000.) - g_wjpt_parmB*salin_prv_jpt)/g_wjpt_parmA }
+
+! Compute the required Delta outflow for each standard
+! Place cap on required flow.
+
+!define DO_req_rsl {value min(flowcap_salt, GET_REQ_DO(Go_hist_jpt,EC_std_rsl_jpt,g_So_jpt,
+!													   g_Sb_jpt,g_alpha_jpt,g_beta_jpt,g_n_jpt) ) }
+! Using steady-state equation obtained from Greg Gartrell's PPIC Delta Water Accoungint spreadhsheet in G-model sheet. NSO 01/15/2022
+define DO_req_rsl {value min(flowcap_salt, -LOG((EC_std_rsl_jpt - g_Sb_jpt)/(g_So_jpt - g_Sb_jpt))/g_alpha_jpt) }
+! ********** PREVIOUS PERIOD SALINITY *****************************************************
+! Get Salinity at this location at the end of last period (beginning of this period).
+! This is included only to verify that the salinity standards have been met.
+
+define salinity_prv_rsl {std kind 'SALINITY-PREV-RSL' units 'MG/L'}
+
+define wghted_JPT_prv {value g_wjpt_parmA*salin_prv_jpt + g_wjpt_parmB*salinity_prv_jpt(-1)}
+
+define salin_prv_rsl    {value g_lagparm_rsl*wghted_JPT_prv*1000} ! units are now mg/l Cl
+
+goal setsalinity_prv_rsl {salinity_prv_rsl = salin_prv_rsl}

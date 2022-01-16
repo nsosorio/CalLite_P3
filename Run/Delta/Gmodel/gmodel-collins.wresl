@@ -1,0 +1,72 @@
+! Armin Munevar 7/8/98
+
+! G-MODEL BELOW IS FOR COLLINSVILLE (COL)
+! ****************************************************************************
+! ****************************************************************************
+! Coefficients for Collinsville  
+define g_So_col     {value 32.0     }        ! millimhos/cm
+define g_Sb_col     {value 0.150    }        ! millimhos/cm
+define g_alpha_col  {value 0.00036  }        ! 1/cfs
+define g_beta_col   {value 475.0    }        ! ft^3
+define g_n_col      {value 1.0      }        ! no units
+
+! define Dvars needed for this station's G model
+
+define Go_col {std kind 'GMODEL-PARAM' units 'CFS'}
+
+! **************************************************************************************
+! Calculate Go for the current period. This is the beginning of period G value based upon
+! last month's flow and beginning of last month's G value, Go(-1). Units are cfs
+
+define Go_hist_col {value	NDO(-1)/(1 + (NDO(-1)/Go_col(-1) - 1)
+                          *EXP(-NDO(-1)*g_delT/g_beta_col))           }
+
+goal setGo_col {Go_col = Go_hist_col}
+
+! *************************************************************************************
+! Get salinity standard for this particular station.
+
+! define the EC standard for Jersey Point (millimhos/cm)
+define CO_EC_STD_lookup {
+  case AprToAug {
+    condition  month >=OCT .and. month <=MAY
+    select     ECstandard1
+    from       salinity_std_col
+    where      month=month}
+  case NoStandard {
+    condition  always
+    value  99.0}
+}
+define CO_EC_STD_sv { value CO_EC_STD_lookup * 1000.0 }
+define CO_EC_STD {std kind 'SALINITY' units 'UMHOS/CM'}
+goal COECstandout {CO_EC_STD = CO_EC_STD_sv}
+
+! *************************************************************************************
+! Get required Delta Outflow to meet this salinity standard
+
+define DO_req_col { ! Currently using G-model formulation from PPIC Delta Water Accounting spreadsheet
+					! GET_REQ_DO not working
+     /*case standardON {
+          condition      month >=OCT .and. month <=MAY 
+          value          min(flowcap_salt, GET_REQ_DO(Go_hist_col,CO_EC_STD_lookup,g_So_col,
+          											  g_Sb_col,g_alpha_col,g_beta_col,g_n_col) ) }*/
+     case standardOn {
+          condition      month >=OCT .and. month <=MAY 
+          value min(flowcap_salt, -LOG((CO_EC_STD_lookup - g_Sb_col)/(g_So_col - g_Sb_col))/g_alpha_col) }
+          
+     case standardOFF {
+          condition      always
+          value          0.0      }    }
+
+! *****************************************************************************************
+! Get Salinity at this location at the end of last period (beginning of this period).  
+! This is for output purposes only.
+
+define salinity_prv_col {std kind 'SALINITY-PREV-COL' units 'MMHOS/CM'}
+
+define Gavg_prv_col {value	NDO(-1) + (g_beta_col/g_delT)*log((1+(NDO(-1)/Go_col(-1) - 1)*
+                         		EXP(-NDO(-1)*g_delT/g_beta_col))/(NDO(-1)/Go_col(-1)))   }
+                          
+goal setsalinity_prv_col {salinity_prv_col = (g_So_col - g_Sb_col)*EXP(-g_alpha_col*POW(Gavg_prv_col,g_n_col)) 
+                                    + g_Sb_col}
+          

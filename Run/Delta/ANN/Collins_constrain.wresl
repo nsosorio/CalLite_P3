@@ -10,7 +10,7 @@ Z.Q. Richard Chen; DWR; (02/07/2011)
 goal meetCO {
   lhs D_ExpTD - exp_ann_relax
   case DRegsOff{
-           condition CO_DLTSW == 0 .or. int(Gmodel_sal) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
+           condition CO_DLTSW == 0 .or. int(Gmodel) == 1 ! Don't calculate ANN parameters or previous month salinity when G-model is used.
            rhs ExportCapacity
            lhs<rhs penalty 0}  
   case NoSalinityControlPossible{

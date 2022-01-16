@@ -37,8 +37,18 @@ if int(NDO_DLTSW)==3 {
 						wateryear, month, daysin )
 	}
 }
-
-else {
+elseif int(Gmodel) == 1 {
+	define MRDO_final {value max(DO_req_X2roe,	! Feb-Jun Spring X2 D1641
+								DO_req_X2roe,	! Feb-Jun Spring X2 D1641
+								DO_req_X2cnf,	! Feb-Jun Spring X2 D1641
+								DO_req_flow,	! Jul-Jan Minimum Delta Outflow D1641
+								DO_req_emt,		! Ag Water Quality Standards D1641
+								DO_req_jpt,		! Ag Water Quality Standards D1641
+								DO_req_col,		! F&W Water Quality Standards D1641
+								DO_req_rsl		! M&I Water Quality Standards D1641
+	)}
+}
+else { ! ANN is used
 	define MRDO_final {value getFinalMrdo ( DO_req_X2roe, int(begday_roe),  int(endday_roe),
                                        	 	DO_req_X2chs, int(begday_chs),  int(endday_chs),
                                         	DO_req_X2cnf, int(begday_cnf),  int(endday_cnf),
@@ -57,7 +67,19 @@ else {
 
 define MRDO_finaldv {alias MRDO_final KIND 'FLOW-REQ-MRDO' UNITS 'CFS'}
 
-define MRDO_X2nocap  {value getFinalMrdo ( DO_req_X2roe_nocap, int(begday_roe),  int(endday_roe),
+if int(Gmodel) == 1 {
+	define MRDO_X2nocap {value max(DO_req_X2roe_nocap, ! Feb-Jun Spring X2 D1641
+									DO_req_X2chs_nocap, ! Feb-Jun Spring X2 D1641
+									DO_req_X2cnf_nocap, ! Feb-Jun Spring X2 D1641
+									DO_req_flow, 		! Jul-Jan Minimum Delta Outflow D1641
+									DO_req_emt,			! Ag Water Quality Standards D1641
+									DO_req_jpt,			! Ag Water Quality Standards D1641
+									DO_req_col,			! F&W Water Quality Standards D1641
+									DO_req_rsl			! M&I Water Quality Standards D1641
+	)}
+} 
+else {
+	define MRDO_X2nocap  {value getFinalMrdo ( DO_req_X2roe_nocap, int(begday_roe),  int(endday_roe),
                                         DO_req_X2chs_nocap, int(begday_chs),  int(endday_chs),
                                         DO_req_X2cnf_nocap, int(begday_cnf),  int(endday_cnf),
                                         0., int(1), int(daysin), ! DO_req_emt1,  int(begday_emt1), int(endday_emt1),
@@ -70,8 +92,9 @@ define MRDO_X2nocap  {value getFinalMrdo ( DO_req_X2roe_nocap, int(begday_roe), 
                                         0., int(1), int(daysin), ! DO_req_rsl2,  int(begday_rsl2), int(endday_rsl2),
                                         DO_req_flow,  int(begday_flw),  int(endday_flw),
                                         wateryear, month, daysin )
-
+                                        }	
 }
+
 
 define MRDO_X2nocapdv {std KIND 'FLOW-REQ-MRDO' UNITS 'CFS'}
 goal saveMRDO_X2nocap {MRDO_X2nocapdv = MRDO_X2nocap }
@@ -81,6 +104,13 @@ goal saveMRDO_X2nocap {MRDO_X2nocapdv = MRDO_X2nocap }
 define DO_req_X2roe_out {alias DO_req_X2roe KIND 'FLOW-REQ-X2ROE' UNITS 'CFS'}
 define DO_req_X2chs_out {alias DO_req_X2chs KIND 'FLOW-REQ-X2CHS' UNITS 'CFS'}
 define DO_req_X2cnf_out {alias DO_req_X2cnf KIND 'FLOW-REQ-X2CNF' UNITS 'CFS'}
+
+if int(Gmodel) == 1 {
+define DO_req_emt_out {alias DO_req_emt KIND 'FLOW-REQ-EMT1' UNITS 'CFS'}
+define DO_req_jpt_out {alias DO_req_jpt KIND 'FLOW-REQ-JPT1' UNITS 'CFS' }
+define DO_req_col_out {alias DO_req_col KIND 'FLOW-REQ-COL1' UNITS 'CFS' }
+define DO_req_rsl_out {alias DO_req_rsl KIND 'FLOW-REQ-RSL1' UNITS 'CFS' }
+}
 !define DO_req_emt1_out {alias DO_req_emt1 KIND 'FLOW-REQ-EMT1' UNITS 'CFS'}
 !define DO_req_emt2_out {alias DO_req_emt2 KIND 'FLOW-REQ-EMT2' UNITS 'CFS' }
 !define DO_req_jpt1_out {alias DO_req_jpt1 KIND 'FLOW-REQ-JPT1' UNITS 'CFS' }
