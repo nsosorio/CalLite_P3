@@ -16,11 +16,11 @@
 !15	0   !B2Action7: Off=0; On=1
 GUI_RPAsOtherRegs
 Index	Option
-1	1	!Fall_X2
-2	1	!Action_4_1_2
-3	1	!Action_4_2_1
-4	1	!ORMROON;
-5	1	!ClearCrkBOswitch
+1	0	!Fall_X2
+2	0	!Action_4_1_2
+3	0	!Action_4_2_1
+4	0	!ORMROON;
+5	0	!ClearCrkBOswitch
 6	0	!QOMR_DLTSW
 7	0	!QWEST_DLTSW
 8	0	!EISJR_DLTSW

@@ -74,4 +74,8 @@ goal setAnnSacFlow {
   	condition Gmodel == 0.
   	rhs AnnSacReq
   	lhs<rhs penalty 0.}
+  case otherwise {
+  	condition always
+  	rhs MRDO_final
+  	lhs<rhs penalty 0.}
   }
