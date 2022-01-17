@@ -101,6 +101,7 @@ group Tdomain {
     
     ! Conversion factors   
     define daysindv    { alias daysin    kind 'DAYS'          units 'days'}
+    define daydv {alias day kind 'DAY' units 'DAY'}
     define cfs_cfm     { value daysin * 86400.0}
     define taf_cfm {value 43560*1000}  !AF/month to ft^3/month
     !define af_cfs {value 43560/(86400*daysin)} !3600*24=86400
