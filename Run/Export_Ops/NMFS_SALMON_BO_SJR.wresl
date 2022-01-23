@@ -36,12 +36,17 @@ define SJRatio_MaxExp{
  * as defined in D-1641 and provided in following table, is 6 or less,
  * AND the New Melones Index is less than 1 MAF,
  * exports shall be limited to a 1:1 ratio with San Joaquin River inflow, as measured at Vernalis.
+ * Reclamation and DWR shall implement the Vernalis flow-to-combined export ratios based on a 14-day running average.
  */
 define SJR_indicator  {value 6. - wyt_SJR}
 define SJR_indicator1 {value 6. - wyt_SJR_prv1}
 define SJR_indicator2 {value 6. - wyt_SJR_prv2}
 
 define NMforecast1SV {timeseries kind 'forecast' units 'taf'}
+
+define Vernalis_14daysum {sum(i=-13,0,1) Vernalis(i)} ! Vernalis is currently state variable so this is possible.
+! If SJR becomes dynamic, will have to update this equation because current Vernalis flow is a DV, not SV.
+define Vernalis_14dayavg {value Vernalis_14daysum/14}
 
 define SJRatio_MaxExp{
     case EISJR_UDEF {                             
@@ -54,23 +59,23 @@ define SJRatio_MaxExp{
         }
     case mult_drought{
         condition (SJR_indicator + SJR_indicator1 + SJR_indicator2) <= 6.  .AND. NMforecast1SV <= 1000
-        value Vernalis
+        value Vernalis_14dayavg
         }
     case critical{
         condition wyt_SJR == 5
-        value Vernalis
+        value Vernalis_14dayavg
         }
         case dry{
         condition wyt_SJR == 4
-        value Vernalis / 2.
+        value Vernalis_14dayavg / 2.
         }
     case BelowN{
         condition wyt_SJR == 3
-        value Vernalis / 3.
+        value Vernalis_14dayavg / 3.
             }
     case AN_Wet{
         condition always !wyt_SJR 2 and 1
-        value Vernalis / 4.
+        value Vernalis_14dayavg / 4.
         }
 }
 

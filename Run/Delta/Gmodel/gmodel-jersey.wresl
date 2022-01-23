@@ -71,3 +71,5 @@ define salin_prv_jpt {value (g_So_jpt - g_Sb_jpt)*EXP(-g_alpha_jpt*POW(Gavg_prv_
                              + g_Sb_jpt}
                           
 goal setsalinity_prv_jpt {salinity_prv_jpt = salin_prv_jpt}
+define salinity_prv_jpt_14daysum {sum(i=-13,0,1) salinity_prv_jpt(i)}          
+define salinity_prv_jpt_14dayavg {value salinity_prv_jpt_14daysum/14}

@@ -72,7 +72,7 @@ define WQCP_days_open   {       !DCC_DLTSW switch added 10/04/2010 by Z.Q. Richa
         select days_open from gui_xchanneldays where month=month}
     case D1641 {
         condition DCC_DLTSW == 1  
-        select days_open_D1641 from xchanneldays where month=month}  ! Number of days in each month that the DXC gate is open
+        select days_open_D1641 from xchanneldays_daily where month=month}  ! Days that the DXC gate is open
     case D1485_Normal{
     	condition DCC_DLTSW == 3	!
     	select days_open_D1485 from xchanneldays where month=month}  
@@ -121,7 +121,7 @@ else {
 	define DaysOpenStd {alias numberofdaysopen kind 'GATE-DAYS-OPEN' units 'NONE'}
 	
 	! The following variables are zero or one if their corresponding condition is false or true, respectively
-	define fract_open   {value numberofdaysopen/daysin }   ! Fraction of month gates are open
+	define fract_open   {value numberofdaysopen/*/daysin */}   ! Fraction of month gates are open
 	define SAC_threshold  { value 25000.0} ! Sac flow at which gates will be closed
 	define int_SAC_below  {INTEGER std kind 'INTEGER' units 'NONE'}                  ! 0: high flow; 1:  low flow
 	define int_SAC_above  {alias 1. - int_SAC_below kind 'INTEGER' units 'NONE'}     ! 1: high flow; 0:  low flow

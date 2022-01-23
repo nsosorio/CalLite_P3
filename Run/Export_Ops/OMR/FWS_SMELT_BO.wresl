@@ -23,6 +23,12 @@ FWS BO actions implementations
 ! of or separate from B2 and EWA accounting.
 !
 ! **********************************************************************************************
+/* From 5.A.A.6.1.2 Action 1 Assumptions for CalSim II Modeling Purposes:
+ * In the month of December in which Action 1 does not begin until December 21, for monthly
+ * analysis, a background OMR flow must be assumed for the purpose of calculating a day-weighted
+ * average for implementing a partial-month action condition. When necessary, the background
+ * OMR flow for December was assumed to be -8,000 cfs.
+ */
 define OMR_background {        ! this is used as the background OMR condition in computing monthly values for partial month conditions
         case noA1{
                 condition month>=JAN .and. month<=MAR
@@ -31,7 +37,6 @@ define OMR_background {        ! this is used as the background OMR condition in
                 condition always
                 value -8000.}
 }
-
 ! **********************************************************************************************
 ! Define triggers and offramps and target OMR flows for all Actions
 !***********************************************************************************************
@@ -41,7 +46,7 @@ define OMR_background {        ! this is used as the background OMR condition in
 !but conservative indicator of turbidty (12NTU) at the three turbidity stations defined in the FWS BO ( Holland Cut, Prisoner's Point, and Victoria Canal).
 define TurbT_Thresh {value 20000.}
 define SAC_RI {timeseries kind 'SRI_FLOW' units 'CFS'}
-!define SRIdv {alias SAC_RI kind 'FLOW-CHANNEL' units 'CFS'}
+define SRIdv {alias SAC_RI kind 'FLOW-CHANNEL' units 'CFS'}
 
 define A1_TurbTdv {std kind 'RPA-A1' units 'NONE'}
 define A1_TurbT {
@@ -109,7 +114,7 @@ goal setA1_TurbTCdv {A1_TurbTCdv = A1_TurbTC}
 
 
 define A1_OMR_Targ { value -2000.}
-!define A1_OMR_Targdv {alias A1_OMR_Targ kind 'FLOW' units 'CFS'}
+define A1_OMR_Targdv {alias A1_OMR_Targ kind 'FLOW' units 'CFS'}
 
 !************************************************************************************************
 ! ACTION 2
@@ -125,35 +130,38 @@ define X2_A2 {
         condition always
         value 2}
 }
-!define X2_A2dv {alias X2_A2 kind 'X2-POSITION-A2' units 'KM'}
+define X2_A2dv {alias X2_A2 kind 'X2-POSITION-A2' units 'KM'}
 
 ! Hutton's methodology(12/16/08 appendix 4)to estimate prob of 3-day average SACR at Rio Vista > 90,000 cfs
 !and 3-day average SJR at Vernalis > 10,000 cfs
-define RioVista_Freq {value min(max((Freeport*0.00289 - 146.)/100.,0.),1.)}
-define Vernalis_Freq {value min(max((Vernalis*0.00901 - 49.)/100.,0.),1.)}
+!define RioVista_Freq {value min(max((Freeport*0.00289 - 146.)/100.,0.),1.)}
+!define Vernalis_Freq {value min(max((Vernalis*0.00901 - 49.)/100.,0.),1.)}
+define RioVista_3DayAvg {value (C_SacRV(-1) + C_SacRV(-2) + C_SacRV(-3))/3}
+define Vernalis_3DayAvg {value (C_SJRVer(-1) + C_SJRVer(-2) + C_SJRVer(-3))/3}
 
-!define RioVista_Freqdv {alias RioVista_Freq kind 'FREQUENCY' units 'NONE'}
-!define Vernalis_Freqdv {alias Vernalis_Freq kind 'FREQUENCY' units 'NONE'}
+!define RioVista_3DayAvgDV {alias RioVista_3DayAvg kind 'ROLLING-AVG' units 'CFS'}
+!define Vernalis_3DayAvgDV {alias Vernalis_3DayAvg kind 'ROLLING-AVG' units 'CFS'}
 
 ! Suspension Trigger
 define Suspen_trig {
     case suspension {
+    	condition RioVista_3DayAvg >= 90000. .and. Vernalis_3DayAvg >= 10000.
 !                condition Riovista_Freq * Vernalis_Freq >= 0.5
-                condition Riovista_Freq>=0.5.and.Vernalis_Freq >= 0.5
+!                condition Riovista_Freq>=0.5.and.Vernalis_Freq >= 0.5
         value 1.}
     case otherwise {
         condition always
         value 0.}
 }
 
-!define Suspen_trigdv {alias Suspen_trig kind 'TRIGGER' units 'NONE'}
+define Suspen_trigdv {alias Suspen_trig kind 'TRIGGER' units 'NONE'}
 
 define A2_OMR_Targ{
-          case Suspension{
-                condition Suspen_trig == 1.
-                value OMR_background}
+      case Suspension{
+        condition Suspen_trig == 1.
+        value OMR_background}
       case E_Roe{
-                condition X2_A2==1.
+        condition X2_A2==1.
         select X2_E_Roe
         from FWS_BO_A2_X2
         where  WYT=wyt_SAC}
@@ -164,7 +172,7 @@ define A2_OMR_Targ{
         where  WYT=wyt_SAC}
 }
 
-!define A2_OMR_Targdv {alias A2_OMR_Targ kind 'FLOW' units 'CFS'}
+define A2_OMR_Targdv {alias A2_OMR_Targ kind 'FLOW' units 'CFS'}
 
 !***************************************************************************************************
 !ACTION 3
@@ -244,16 +252,16 @@ define temp_trig_da    {
     	select Day_10 from FWS_BO_A3_Temp where  YEAR= wateryear}    	    	
    }
 
-!define temp_trig_modv {alias temp_trig_mo kind 'TRIGGER' units 'NONE'}
-!define temp_trig_dadv {alias temp_trig_da kind 'TRIGGER' units 'NONE'}
+define temp_trig_modv {alias temp_trig_mo kind 'TRIGGER' units 'NONE'}
+define temp_trig_dadv {alias temp_trig_da kind 'TRIGGER' units 'NONE'}
 
 !Action 3 biological trigger:
 !Reads the month and the day that it is most likely to observe a spent female smelt in SKT or at pumping facilities.
 define bio_trig_mo    {select Values from FWS_BO_A3_Bio where  Parameter=1}
 define bio_trig_da    {select Values from FWS_BO_A3_Bio where  Parameter=2}
 
-!define bio_trig_modv {alias bio_trig_mo kind 'TRIGGER' units 'NONE'}
-!define bio_trig_dadv {alias bio_trig_da kind 'TRIGGER' units 'NONE'}
+define bio_trig_modv {alias bio_trig_mo kind 'TRIGGER' units 'NONE'}
+define bio_trig_dadv {alias bio_trig_da kind 'TRIGGER' units 'NONE'}
 
 !Action 3 trigger:
 define A3_trig_da{
@@ -269,8 +277,8 @@ define A3_trig_da{
 }
 define A3_trig_mo{ value min(bio_trig_mo, temp_trig_mo)}
 
-!define A3_trig_dadv {alias A3_trig_da kind 'TRIGGER' units 'NONE'}
-!define A3_trig_modv {alias A3_trig_mo kind 'TRIGGER' units 'NONE'}
+define A3_trig_dadv {alias A3_trig_da kind 'TRIGGER' units 'NONE'}
+define A3_trig_modv {alias A3_trig_mo kind 'TRIGGER' units 'NONE'}
 
 !Action 3 offramp:
 !Determines offramp dates based on the criteria stated in the lookup table.
@@ -290,15 +298,15 @@ define A3_offramp_da{
 
 define A3_offramp_mo{ value min(9., temp_offramp_mo)}
 
-!define temp_offrmp_modv {alias temp_offramp_mo kind 'TRIGGER' units 'NONE'}
-!define temp_offrmp_dadv {alias temp_offramp_da kind 'TRIGGER' units 'NONE'}
-!define A3_offramp_dadv {alias A3_offramp_da kind 'TRIGGER' units 'NONE'}
-!define A3_offramp_modv {alias A3_offramp_mo kind 'TRIGGER' units 'NONE'}
+define temp_offrmp_modv {alias temp_offramp_mo kind 'TRIGGER' units 'NONE'}
+define temp_offrmp_dadv {alias temp_offramp_da kind 'TRIGGER' units 'NONE'}
+define A3_offramp_dadv {alias A3_offramp_da kind 'TRIGGER' units 'NONE'}
+define A3_offramp_modv {alias A3_offramp_mo kind 'TRIGGER' units 'NONE'}
 define X2_lastdv {alias X2_last kind 'X2-POSITION-PREV' units 'KM'}
 
 
 ! Action 3 - X2 Threshold for OMR flows
-define X2_A3 {
+define X2_A3 { ! REPLACE THIS EQUATION, NSO 01/17/2022
     case Initialize {
             condition month==OCT .and. wateryear==BgnWY .or. OMRBOON == 0
                 value 3.}
@@ -322,9 +330,9 @@ define X2_A3 {
         value 3.}
 }
 
-!define X2_A3dv {alias X2_A3 kind 'X2-POSITION-A3' units 'KM'}
+define X2_A3dv {alias X2_A3 kind 'X2-POSITION-A3' units 'KM'}
 
-define A3_OMR_Targ{
+define A3_OMR_Targ{ ! REPLACE THIS EQUATION, NSO 01/17/2022
       case E_Roe{
                 condition X2_A3==1.
         select X2_E_Roe
@@ -342,10 +350,10 @@ define A3_OMR_Targ{
         where  WYT=wyt_SAC}
 }
 
-! define A3_OMR_Targdv {alias A3_OMR_Targ kind 'FLOW' units 'CFS'}
+define A3_OMR_Targdv {alias A3_OMR_Targ kind 'FLOW' units 'CFS'}
 
 !OMR FWS RPA 14 day average
-define OMR_RPA_1{
+define OMR_RPA_1{ ! REPLACE THIS EQUATION, NSO 01/17/2022
     case Initialize {
             condition month==OCT .and. wateryear==BgnWY .or. OMRBOON == 0
                 value -99999.}
@@ -466,10 +474,9 @@ define OMR_RPA_1{
                 value -99999.}
 }
 
-!define OMR_RPA_1dv {alias OMR_RPA_1 kind 'FLOW' units 'CFS'}
+define OMR_RPA_1dv {alias OMR_RPA_1 kind 'FLOW' units 'CFS'}
 
 !Check for QA/QC
-/*
 define OMR_RPA_1con{
     case Initialize {
             condition month==OCT .and. wateryear==BgnWY
@@ -559,7 +566,7 @@ define OMR_RPA_1con{
 }
 
 define OMR_RPA_1condv {alias OMR_RPA_1con kind 'TRIGGER' units 'NONE'}
-*/
+
 
 !define NoA1_OMR_Targ { value -5000.}
 /*define NoA1_con{
@@ -617,8 +624,7 @@ define OMR_RPA_NoA1{
                 value -99999.}
 }
 
-!define OMR_RPA_NoA1dv {alias OMR_RPA_NoA1 kind 'FLOW' units 'CFS'}
-
+define OMR_RPA_NoA1dv {alias OMR_RPA_NoA1 kind 'FLOW' units 'CFS'}
 
 /*define OMR_RPA_NoA1con{
     case JAN {
@@ -666,7 +672,7 @@ define OMR_RPA_5day {
 
 ! Use Paul Hutton's regression equation to determine an aggregate based on a determination of whether
 ! the 5 day or the 14 day will control
-define OMR_RPA_FWS {value max(OMR_RPA_14day,(OMR_RPA_5day+389.)/1.02)}
+define OMR_RPA_FWS {value max(OMR_RPA_14day,(OMR_RPA_5day+389.)/1.02)} ! REPLACE THIS EQUATION, NSO 01/17/2022
 
 !QA/QC
 

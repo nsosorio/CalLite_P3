@@ -22,8 +22,11 @@ define PulseExpCtrl {std kind 'EXPORT-CTRL-PULSE' UNITS 'CFS'}
 ! Total export permissible by pumps and/or permits (TAF) only used in Apr-May
 define ExportCapacity {value JonesCapPermit + BanksCapPermit}
 
-! Limit exports during the pulse periods to the maximum of 1500 cfs or the SJR flow
+! Limit exports during the pulse periods to the maximum of 1500 cfs or 3-day running average of SJR flow at Vernalis
 ! not including the pulse or Vamp flows (C639[SJR_WQ2]).
+define C_SJRVer_3daysum {sum(i=-2,0,1) C_SJRVER(i)} ! C_SJRVer is currently state variable so this is possible.
+define C_SJRVer_3dayavg {value C_SJRVer_3daysum/3}
+
 goal compare_sjrflow {!PulseExpCtrl < max(1500.0, AD_SJR_Pulse)}
 	lhs PulseExpCtrl
         case VAMPexpCtrlOff {
@@ -32,7 +35,7 @@ goal compare_sjrflow {!PulseExpCtrl < max(1500.0, AD_SJR_Pulse)}
             lhs<rhs      penalty 0 }
         case otherwise {
             condition     always
-            rhs           max(1500.0, AD_SJR_PULSE)
+            rhs           max(1500.0, C_SJRVer_3dayavg) ! Using DAYFLOW SJR Vernalis data, NSO 01/20/2022
             lhs<rhs       penalty 0 }
 }
 
@@ -67,14 +70,14 @@ define AprMayExpCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
 ! Monthly export restriction - day weighted
 goal Export_limit_during_pulse_mon {
     lhs    AprMayExpCtrl
-        case April {
-            condition     month == APR
-            rhs           NonPulseExpCtrl*14.0/daysin + PulseExpCtrl*16.0/daysin
+        case AprilMay {
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
+            rhs           NonPulseExpCtrl + PulseExpCtrl
             lhs<rhs       penalty 0 }
-        case May {
-            condition     month == MAY
-            rhs           NonPulseExpCtrl*16.0/daysin + PulseExpCtrl*15.0/daysin
-            lhs<rhs       penalty 0 }
+        /*case May {
+            condition     month == MAY .and. day <= 15
+            rhs           NonPulseExpCtrl + PulseExpCtrl
+            lhs<rhs       penalty 0 }*/
         case otherwise {
 	    condition   always
 	    rhs     99999.
@@ -84,10 +87,14 @@ goal Export_limit_during_pulse_mon {
 ! Limit the actual export to the day weighted average allowable export for each month.
 goal Limit_Exports {
     lhs  ExportActualTD
-        case APR_MAY {
-            condition     range(month,apr,may)
+        case AprilMay {
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayExpCtrl
             lhs<rhs       penalty 0 }
+        /*case May {
+            condition     month == MAY .and. day <= 15
+            rhs           AprMayExpCtrl
+            lhs<rhs       penalty 0 }*/
 }
 
 
@@ -97,14 +104,14 @@ define AprMayJonesCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
 
 goal Export_limit_Jones_pulse_mon {
     lhs    AprMayJonesCtrl
-        case April {
-            condition     month == APR
-            rhs           JonesCapPermit*14.0/daysin + PulseExpCtrl*0.5*16.0/daysin
+        case AprilMay {
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
+            rhs           JonesCapPermit + PulseExpCtrl*0.5
             lhs<rhs       penalty 0 }
-        case May {
-            condition     month == MAY
-            rhs           JonesCapPermit*16.0/daysin + PulseExpCtrl*0.5*15.0/daysin
-            lhs<rhs       penalty 0 }
+        /*case May {
+            condition     month == MAY .and. day <= 15
+            rhs           JonesCapPermit + PulseExpCtrl*0.5
+            lhs<rhs       penalty 0 }*/
         case otherwise {
 	    condition   always
 	    rhs     99999.
@@ -116,13 +123,13 @@ define AprMayBanksCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
 goal Export_limit_Banks_pulse_mon {
     lhs    AprMayBanksCtrl
         case April {
-            condition     month == APR
-            rhs           BanksMaxAllow*14.0/daysin + PulseExpCtrl*0.5*16.0/daysin
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
+            rhs           BanksMaxAllow + PulseExpCtrl*0.5
             lhs<rhs       penalty 0 }
-        case May {
+        /*case May {
             condition     month == MAY
             rhs           BanksMaxAllow*16.0/daysin + PulseExpCtrl*0.5*15.0/daysin
-            lhs<rhs       penalty 0 }
+            lhs<rhs       penalty 0 }*/
         case otherwise {
 	    condition   always
 	    rhs     99999.
@@ -136,7 +143,7 @@ goal Export_limit_D_Jones {  ! Prevents Non-Pulse portion of month from being gr
 !                rhs           JonesCapPermit     
 !                lhs<rhs       penalty 0 }    
         case April {
-            condition     month == APR .or. month == MAY
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayJonesCtrl
             lhs<rhs       penalty 0 }
 }
@@ -148,7 +155,7 @@ goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being gr
 !                rhs           BanksCapPermit     
 !                lhs<rhs       penalty 0 }      
         case April {
-            condition     month == APR .or. month == MAY
+            condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayBanksCtrl
             lhs<rhs       penalty 0 }
 }

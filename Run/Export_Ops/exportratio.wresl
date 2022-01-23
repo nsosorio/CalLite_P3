@@ -22,6 +22,27 @@ define Inflow {alias C_Hood_ANN+D_Hood_NP-I_HOOD+AD_Mokelumne+C_YoloBP+C_SJRVER+
 ! EI allowable export variable - MAXIMUM ALLOWABLE EXPORT due to EXPORT RATIO
 define EiExpCtrl {std kind 'EXPORT-CTRL-EI' units 'CFS'}
 
+define January_PMI {
+		select  pmi_0
+		from    eightriver
+		where   wateryear=wateryear}
+define JanEightRiverIndex {value January_PMI/1000} ! UPDATE ONCE CALCULATED JAN 8RI HISTORICAL DATA, NSO 01/20/2022
+
+define febeiratio {
+	case LTEQ1MAF {
+		condition JanEightRiverIndex <= 1.0
+		value 0.45
+	}
+	case GT {
+		condition JanEightRiverIndex > 1.5
+		value 0.35
+	}
+	case otherwise {
+		condition always
+		value 0.40
+	}
+}
+
 ! EI Ratio dependent on month
 define ExpRatio {     !EI_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DWR
     case NOREGULATION {
@@ -33,7 +54,7 @@ define ExpRatio {     !EI_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DW
         from gui_EiRatio 
         where month=month }
     case feb    {       !.and. EI_DLTSW== 1
-        condition month == FEB 
+        condition month == FEB ! UPDATE ONCE CALCULATED JAN 8RI HISTORICAL DATA, NSO 01/20/2022
           select  ratio
           from    febeiratio
           where   wateryear=wateryear}

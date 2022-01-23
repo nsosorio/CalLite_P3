@@ -16,8 +16,8 @@ define NDO {std kind 'FLOW-NDO' units 'CFS'}
 goal setNDO {NDO = D_DeltaReqd + C_Delta}
 
 ! ******************************************************************************************
-! Get last month's X2 position using ANN
-! calculate previous month's value of X2
+! Get last timestep's X2 position using ANN
+! calculate previous timestep's value of X2
 
 define X2_prv {std kind 'X2-POSITION-PREV' units 'KM'}
 

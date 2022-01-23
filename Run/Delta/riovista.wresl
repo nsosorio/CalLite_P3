@@ -7,6 +7,7 @@ Sets minimum flow for Rio Vista.  Minimum flow required in riovista.table is fro
 
 Z.Q. Richard Chen, DWR 02/07/2010 
 Set RV_DLTSW switch to control the Rio_Vista_req which changes with month and wyt_SAC.
+
 *************************************/
 
 define Rio_Vista_req {
@@ -39,3 +40,10 @@ define Rio_Vista_req {
 define mif_RioVista {alias Rio_Vista_req KIND 'FLOW-REQ-RVISTA' UNITS 'CFS'}
 
 goal minflow_RioVista {C_SacRV_MIF < Rio_Vista_req }
+
+! Calculate 7 day running average
+define C_SacRV_MIF_7daysum {sum(i=-6,0,1) C_SacRV_MIF(i)}
+define C_SacRV_MIF_7dayavg {value C_SacRV_MIF_7daysum/7}
+
+!"The 7-day running average shall not be less than 1,000 cfs below the monthly objective." NSO 01/21/2022
+goal setbuffer {C_SacRV_MIF_7dayavg > Rio_Vista_req - 1000.} 
