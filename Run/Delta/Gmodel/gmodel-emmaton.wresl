@@ -87,5 +87,5 @@ goal setsalinity_prv_emt {salinity_prv_emt = (g_So_emt - g_Sb_emt)*EXP(-g_alpha_
 
 define westq {alias qwest_act KIND 'FLOW-QWEST' UNITS 'CFS'}
 
-define salinity_prv_emt_14daysum {sum(i=-13,0,1) salinity_prv_emt(i)}          
+define salinity_prv_emt_14daysum {sum(i=-14,-1,1) salinity_prv_emt(i)}          
 define salinity_prv_emt_14dayavg {value salinity_prv_emt_14daysum/14}

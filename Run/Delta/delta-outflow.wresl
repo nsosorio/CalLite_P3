@@ -312,5 +312,5 @@ else {
 
 	define begday_flw {value 1}                 ! beginning and ending days of current month            
 	define endday_flw {value daysin}            ! for use in final-mrdo.wresl
-
+	
 }

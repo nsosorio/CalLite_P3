@@ -24,7 +24,7 @@ define ExportCapacity {value JonesCapPermit + BanksCapPermit}
 
 ! Limit exports during the pulse periods to the maximum of 1500 cfs or 3-day running average of SJR flow at Vernalis
 ! not including the pulse or Vamp flows (C639[SJR_WQ2]).
-define C_SJRVer_3daysum {sum(i=-2,0,1) C_SJRVER(i)} ! C_SJRVer is currently state variable so this is possible.
+define C_SJRVer_3daysum {sum(i=-2,0,1) QSJR(i)} ! C_SJRVer=QSJR is currently state variable so this is possible.
 define C_SJRVer_3dayavg {value C_SJRVer_3daysum/3}
 
 goal compare_sjrflow {!PulseExpCtrl < max(1500.0, AD_SJR_Pulse)}

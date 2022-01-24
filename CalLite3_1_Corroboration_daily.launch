@@ -7,9 +7,9 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_AUTHOR" value="NSO"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATABASEURL" value="none"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="01/17/2022"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="01/23/2022"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value=""/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_wiDelta_noBORPAs_HoodMIF_20220117.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_daily_wiDelta_noBORPAs_20220123.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>

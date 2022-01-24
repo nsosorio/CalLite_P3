@@ -44,7 +44,7 @@ define SJR_indicator2 {value 6. - wyt_SJR_prv2}
 
 define NMforecast1SV {timeseries kind 'forecast' units 'taf'}
 
-define Vernalis_14daysum {sum(i=-13,0,1) Vernalis(i)} ! Vernalis is currently state variable so this is possible.
+define Vernalis_14daysum {sum(i=-14,-1,1) QSJR(i)} ! Using QSJR instead of Vernalis variable. They're exactly the same
 ! If SJR becomes dynamic, will have to update this equation because current Vernalis flow is a DV, not SV.
 define Vernalis_14dayavg {value Vernalis_14daysum/14}
 
@@ -54,7 +54,7 @@ define SJRatio_MaxExp{
          value 999999. 
          }
     case Flood_flow{
-        condition Vernalis >= 21750.    !daily flow condition - should use an equivalent monthly for this level of peak flow
+        condition QSJR >= 21750.    !daily flow condition - should use an equivalent monthly for this level of peak flow
         value 999999.
         }
     case mult_drought{
