@@ -16,8 +16,28 @@ Modify Inflow by considering Hood dicu
 define ExportActualTD {alias D_Jones_TD+D_Banks_TD KIND 'EXPORT-PRJ' units 'CFS'  }
 define ExportActualIF {alias D_Jones_IF+D_Banks_IF KIND 'EXPORT-PRJ' units 'CFS'  }
 
+! Calculate 3 day running average
+define ExportActualTD_3daysum {sum(i=-2,-1,1) ExportActualTD(i)}
+define ExportActualTD_3dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
+goal set_ExportActualTD_rollavg { ExportActualTD_3dayavg = (ExportActualTD_3daysum +  ExportActualTD)/3 }
+
 ! Delta Inflow defined as in DWRSIM Algorithm Description for Export Ratio
-define Inflow {alias C_Hood_ANN+D_Hood_NP-I_HOOD+AD_Mokelumne+C_YoloBP+C_SJRVER+AD_SJRCalALL+I_MarshCr kind 'INFLOW-DELTA' UNITS 'CFS'   }
+define Inflow {alias C_Hood_ANN
+					+C_YoloBP
+					+AD_Mokelumne+AD_SJRCalALL
+					+I_MarshCr
+					+C_SJRVER
+					+D_Hood_NP-I_HOOD kind 'INFLOW-DELTA' UNITS 'CFS'
+}
+
+! Calculate 14 day running average
+define Inflow_14daysum {sum(i=-13,-1,1) Inflow(i)}
+define Inflow_14dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
+goal set_Inflow_rollavg { Inflow_14dayavg = (Inflow_14daysum +  Inflow)/14 }
+
+define Inflow_3daysum {sum(i=-2,-1,1) Inflow(i)}
+define Inflow_3dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
+goal set_Inflow_3dayrollavg { Inflow_3dayavg = (Inflow_3daysum +  Inflow)/3 }
 
 ! EI allowable export variable - MAXIMUM ALLOWABLE EXPORT due to EXPORT RATIO
 define EiExpCtrl {std kind 'EXPORT-CTRL-EI' units 'CFS'}
@@ -43,7 +63,7 @@ define febeiratio {
 	}
 }
 
-! EI Ratio dependent on month
+! EI Ratio dependent on month. Only February can vary depending on 8RI
 define ExpRatio {     !EI_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DWR
     case NOREGULATION {
       condition EI_DLTSW == 0
@@ -67,10 +87,23 @@ define ExpRatio {     !EI_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DW
 define ExpRatio_ {alias ExpRatio KIND 'EI-RATIO-STD' UNITS 'NONE'}
 
 ! Compute exports allowable by the EI ratio
-goal find_max_export {EiExpCtrl = ExpRatio*Inflow}
+! Delta inflow is a 14-day running average, except when the CVP or the SWP is making storage withdrawals for export
+! in which case both the export rate and the Delta inflow are 3-day running averages.
+goal find_max_export { lhs EiExpCtrl
+		case first{
+            condition wateryear == BgnWY .and. month == Oct
+            rhs ExpRatio*Inflow_14dayavg}
+		case CVP_SWP_SWD {
+			condition SHADS(-1) > 0.1 .or. FOLDS(-1) > 0.1 .or. SWPDS(-1) > 0.1
+			rhs ExpRatio*Inflow_3dayavg}
+		case otherwise {
+			condition always
+			rhs ExpRatio*Inflow_14dayavg}		
+}
 
 ! Restrict exports to be less than that allowable by EI ratio
-goal export_comply { ExportActualTD < EiExpCtrl }
+! For the calculation of maximum percent Delta inflow diverted, the export rate is a 3-day running average
+goal export_comply { ExportActualTD_3dayavg < EiExpCtrl }
 
 !Export-San Joaquin River Inflow Ratio    added by Richard Chen 4/11/2011
 define esjrir_o    { 

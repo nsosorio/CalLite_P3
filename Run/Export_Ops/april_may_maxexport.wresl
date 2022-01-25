@@ -29,13 +29,13 @@ define C_SJRVer_3dayavg {value C_SJRVer_3daysum/3}
 
 goal compare_sjrflow {!PulseExpCtrl < max(1500.0, AD_SJR_Pulse)}
 	lhs PulseExpCtrl
-        case VAMPexpCtrlOff {
-            condition    VAMP_DLTSW == 0 .and. range(month,apr,may)
-            rhs          99999.
+        case VAMPexpCtrlON {
+            condition    VAMP_DLTSW == 1 .and. (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
+            rhs          max(1500.0, C_SJRVer_3dayavg) ! Using DAYFLOW SJR Vernalis data, NSO 01/20/2022
             lhs<rhs      penalty 0 }
         case otherwise {
             condition     always
-            rhs           max(1500.0, C_SJRVer_3dayavg) ! Using DAYFLOW SJR Vernalis data, NSO 01/20/2022
+            rhs           99999.
             lhs<rhs       penalty 0 }
 }
 
@@ -72,7 +72,7 @@ goal Export_limit_during_pulse_mon {
     lhs    AprMayExpCtrl
         case AprilMay {
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
-            rhs           NonPulseExpCtrl + PulseExpCtrl
+            rhs           PulseExpCtrl
             lhs<rhs       penalty 0 }
         /*case May {
             condition     month == MAY .and. day <= 15
@@ -100,55 +100,55 @@ goal Limit_Exports {
 
 ! Monthly export restriction - day weighted for each project to take individual pump capacities into account
 
-define AprMayJonesCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
+!define AprMayJonesCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
 
-goal Export_limit_Jones_pulse_mon {
+/*goal Export_limit_Jones_pulse_mon {
     lhs    AprMayJonesCtrl
         case AprilMay {
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
-            rhs           JonesCapPermit + PulseExpCtrl*0.5
+            rhs           JonesCapPermit + PulseExpCtrl
             lhs<rhs       penalty 0 }
         /*case May {
             condition     month == MAY .and. day <= 15
             rhs           JonesCapPermit + PulseExpCtrl*0.5
             lhs<rhs       penalty 0 }*/
-        case otherwise {
+/*        case otherwise {
 	    condition   always
 	    rhs     99999.
 	    lhs<rhs     penalty 0}
-}
+}*/
 
-define AprMayBanksCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
+/*define AprMayBanksCtrl {std kind 'EXPORT-CTRL-APRMAY' units 'CFS'}
 
 goal Export_limit_Banks_pulse_mon {
     lhs    AprMayBanksCtrl
         case April {
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
-            rhs           BanksMaxAllow + PulseExpCtrl*0.5
+            rhs           BanksMaxAllow + PulseExpCtrl
             lhs<rhs       penalty 0 }
         /*case May {
             condition     month == MAY
             rhs           BanksMaxAllow*16.0/daysin + PulseExpCtrl*0.5*15.0/daysin
             lhs<rhs       penalty 0 }*/
-        case otherwise {
+/*        case otherwise {
 	    condition   always
 	    rhs     99999.
 	    lhs<rhs     penalty 0}
-}
+}*/
 
-goal Export_limit_D_Jones {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
+/*goal Export_limit_D_Jones {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
     lhs    D_Jones_TD /** Need to change to D_Jones_TD for IF implementation **/
 !        case no_vamp {   !Richard Chen added for VAMP switch
 !                condition     VAMP_DLTSW == 0 .and. range(month,apr,may)
 !                rhs           JonesCapPermit     
 !                lhs<rhs       penalty 0 }    
-        case April {
+/*        case April {
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayJonesCtrl
             lhs<rhs       penalty 0 }
-}
+}*/
 
-goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
+/*goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being greater than Physical Capacity
     lhs    D_Banks_TD
 !        case no_vamp {   !Richard Chen added for VAMP switch
 !                condition     VAMP_DLTSW == 0 .and. range(month,apr,may)
@@ -158,5 +158,5 @@ goal Export_limit_D_Banks {  ! Prevents Non-Pulse portion of month from being gr
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayBanksCtrl
             lhs<rhs       penalty 0 }
-}
+}*/
 
