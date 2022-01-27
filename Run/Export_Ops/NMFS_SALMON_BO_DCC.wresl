@@ -46,7 +46,7 @@ define NMFSMaxExpDCCest {value min(D_ExpTD[Base],FWS_MaxExp_X2) +  min(2000.,D_E
 define NMFSMaxExDCCest_ {alias NMFSMaxExpDCCest kind 'Export-Limit' units 'cfs'} !for output only
 
 ! check Rock Slough salinity conditions if the DXC was closed this month
-! 01/03/2022 - Comment out logic to estimate Rock Slough chloride assuming DCC closure because the ANN is not compatible yet with daily calculation
+! NSO, 01/03/2022 - Comment out logic to estimate Rock Slough chloride assuming DCC closure because the ANN is not compatible yet with daily calculation
 /*define RS_estEC_noDXC {
     value AnnEC(C_Hood(-4),C_Hood(-3),C_Hood(-2),C_Hood(-1),C_Hood[Base],
            D_ExpTD(-4),D_ExpTD(-3),D_ExpTD(-2),D_ExpTD(-1),D_ExpTD[Base],

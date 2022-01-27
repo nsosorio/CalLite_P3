@@ -42,13 +42,13 @@ define mif_RioVista {alias Rio_Vista_req KIND 'FLOW-REQ-RVISTA' UNITS 'CFS'}
 goal minflow_RioVista {C_SacRV_MIF < Rio_Vista_req }
 
 ! Calculate 7 day running average
-define C_SacRV_MIF_7daysum {sum(i=-6,-1,1) C_SacRV_MIF(i)}
+define C_SacRV_MIF_6daysum {sum(i=-6,-1,1) C_SacRV_MIF(i)}
 define C_SacRV_MIF_7dayavg {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
-goal set_RV_MIF_rollavg { C_SacRV_MIF_7dayavg = (C_SacRV_MIF_7daysum +  C_SacRV_MIF)/7 }
+goal set_RV_MIF_rollavg { C_SacRV_MIF_7dayavg = (C_SacRV_MIF_6daysum +  C_SacRV_MIF)/7 }
 
-define C_SacRV_7daysum {sum(i=-6,-1,1) C_SacRV(i)}
+define C_SacRV_6daysum {sum(i=-6,-1,1) C_SacRV(i)}
 define C_SacRV_7dayavg {std kind 'FLOW-MIN-INSTREAM' units 'CFS'}
-goal set_RV_rollavg { C_SacRV_7dayavg = (C_SacRV_7daysum +  C_SacRV)/7 }
+goal set_RV_rollavg { C_SacRV_7dayavg = (C_SacRV_6daysum +  C_SacRV)/7 }
 
 !"The 7-day running average shall not be less than 1,000 cfs below the monthly objective." NSO 01/21/2022
 goal setbuffer {

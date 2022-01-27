@@ -33,7 +33,7 @@ define g_wjpt_parmB   {value 0.45     }        ! WJP parameter B
 ! Get salinity standard for this particular station.
 ! define the CL standard for Contra Costa Canal
 define RS_CL_STD_sv {select CLstandard1
-                     from   salinity_std_rsl
+                     from   salinity_std_rsl_daily
                      where  month=month,wyt=wyt_ann}
 define RS_CL_STD {std kind 'SALINITY' units 'MG/L'}
 goal setRS_CL_STD {RS_CL_STD = RS_CL_STD_sv}
@@ -75,7 +75,7 @@ define EC_std_rsl_jpt {value (RS_CL_STD_sv/(g_lagparm_rsl*1000.) - g_wjpt_parmB*
 
 !define DO_req_rsl {value min(flowcap_salt, GET_REQ_DO(Go_hist_jpt,EC_std_rsl_jpt,g_So_jpt,
 !													   g_Sb_jpt,g_alpha_jpt,g_beta_jpt,g_n_jpt) ) }
-! Using steady-state equation obtained from Greg Gartrell's PPIC Delta Water Accoungint spreadhsheet in G-model sheet. NSO 01/15/2022
+! Using steady-state equation obtained from Greg Gartrell's PPIC Delta Water Accounting spreadsheet in G-model sheet. NSO 01/15/2022
 define DO_req_rsl {value min(flowcap_salt, -LOG((EC_std_rsl_jpt - g_Sb_jpt)/(g_So_jpt - g_Sb_jpt))/g_alpha_jpt) }
 ! ********** PREVIOUS PERIOD SALINITY *****************************************************
 ! Get Salinity at this location at the end of last period (beginning of this period).
@@ -88,3 +88,10 @@ define wghted_JPT_prv {value g_wjpt_parmA*salin_prv_jpt + g_wjpt_parmB*salinity_
 define salin_prv_rsl    {value g_lagparm_rsl*wghted_JPT_prv*1000} ! units are now mg/l Cl
 
 goal setsalinity_prv_rsl {salinity_prv_rsl = salin_prv_rsl}
+
+! Minimum # of days that the mean daily chlorides <= 150 mg/L must be provided in intervals of not less than 2 weeks duration (14-day average)
+! Standard applies at Contra Costa Canal Intake or Antioch Water Works Intake - D1641
+! WYT: W - 240 days, AN - 190 days, BN - 175 days, D - 165 days, C - 155 days
+define salinity_prv_rsl_13daysum {sum(i=-13,-1,1) salinity_prv_rsl(i)}
+define salinity_prv_rsl_14dayavg {std kind 'SALINITY-PREV-rsl' units 'MMHOS/CM'}
+goal set_salinity_prv_rsl_rollavg { salinity_prv_rsl_14dayavg = (salinity_prv_rsl_13daysum +  salinity_prv_rsl)/14 }

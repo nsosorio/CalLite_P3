@@ -72,7 +72,7 @@ define WQCP_days_open   {       !DCC_DLTSW switch added 10/04/2010 by Z.Q. Richa
         select days_open from gui_xchanneldays where month=month}
     case D1641 {
         condition DCC_DLTSW == 1  
-        select day_open_D1641 from xchanneldays_daily where month=month}  ! Days that the DXC gate is open
+        select day_open_D1641 from xchanneldays_daily where month=month, day=day}  ! Days that the DXC gate is open
     case D1485_Normal{
     	condition DCC_DLTSW == 3	!
     	select days_open_D1485 from xchanneldays where month=month}  

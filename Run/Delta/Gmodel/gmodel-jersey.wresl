@@ -27,17 +27,22 @@ goal setGo_jpt {Go_jpt = Go_hist_jpt}
 ! Get salinity standard for this particular station.
 
 define JP_EC_STD_lookup {
-  case AprToAug {
-    condition  month >=APR .and. month <=AUG
-    select  ECstandard
-    from  salinity_std_jpt_new
-    where  month=month,wyt_SAC=wyt_ann}
+  case AprJul {
+    condition  month >=APR .and. month <= JUL
+    select            ECstandard
+    from              salinity_std_jpt_new_daily
+    where             month=month,wyt_SAC=wyt_ann}
+  case August {
+    condition  month == AUG .and. day <= 15
+    select            ECstandard
+    from              salinity_std_jpt_new_daily
+    where             month=month,wyt_SAC=wyt_ann}
   case NoStandard {
     condition  always
     value  99.0}
 }
-define JP_EC_STD_sv {value JP_EC_STD_lookup*1000.0}
-define JP_EC_STD {std kind 'SALINITY' units 'UMHOS/CM'}
+define JP_EC_STD_sv {value JP_EC_STD_lookup}
+define JP_EC_STD {std kind 'SALINITY' units 'MMHOS/CM'}
 goal JPECstandout {JP_EC_STD = JP_EC_STD_sv}
 
 ! *************************************************************************************
@@ -50,8 +55,13 @@ define DO_req_jpt {
           value          min(flowcap_salt, GET_REQ_DO(Go_hist_jpt,JP_EC_STD_lookup,g_So_jpt,
           											  g_Sb_jpt,g_alpha_jpt,g_beta_jpt,g_n_jpt) ) }*/
      case standardON {
-          condition      month >=APR .and. month <=AUG
+          condition      month >=APR .and. month <= JUL
           value min(flowcap_salt, -LOG((JP_EC_STD_lookup - g_Sb_jpt)/(g_So_jpt - g_Sb_jpt))/g_alpha_jpt) }
+
+     case standardON2 {
+          condition       month == AUG .and. day <= 15
+          value min(flowcap_salt, -LOG((JP_EC_STD_lookup - g_Sb_jpt)/(g_So_jpt - g_Sb_jpt))/g_alpha_jpt) }
+
 
      case standardOFF {
           condition      always
@@ -71,5 +81,7 @@ define salin_prv_jpt {value (g_So_jpt - g_Sb_jpt)*EXP(-g_alpha_jpt*POW(Gavg_prv_
                              + g_Sb_jpt}
                           
 goal setsalinity_prv_jpt {salinity_prv_jpt = salin_prv_jpt}
-define salinity_prv_jpt_14daysum {sum(i=-14,-1,1) salinity_prv_jpt(i)}          
-define salinity_prv_jpt_14dayavg {value salinity_prv_jpt_14daysum/14}
+
+define salinity_prv_jpt_13daysum {sum(i=-13,-1,1) salinity_prv_jpt(i)}
+define salinity_prv_jpt_14dayavg {std kind 'SALINITY-PREV-jpt' units 'MMHOS/CM'}
+goal set_salinity_prv_jpt_rollavg { salinity_prv_jpt_14dayavg = (salinity_prv_jpt_13daysum +  salinity_prv_jpt)/14 }
