@@ -51,3 +51,12 @@ define X2_last {
 
 goal X2lastperiod {X2_prv=X2_last}      ! output purposes only
 
+!define X2_prv_2daysum {sum(i=-2,-1,1) X2_prv(i)}
+!define X2_prv_3dayavg {std kind 'X2-POSITION-PREV' units 'KM'}
+!goal set_X2_prv_3rollavg { X2_prv_3dayavg = (X2_prv_2daysum +  X2_prv)/3 }
+
+! Calculate 14-day running average because Spring X2 can be met if X2 position is equal to or further than the Confluence position
+define X2_prv_13daysum {sum(i=-13,-1,1) X2_prv(i)}
+define X2_prv_14dayavg {std kind 'X2-POSITION-PREV' units 'KM'}
+define X2_last_14dayavg {value (X2_prv_13daysum +  X2_last)/14}
+goal set_X2_prv_14rollavg { X2_prv_14dayavg = X2_last_14dayavg}

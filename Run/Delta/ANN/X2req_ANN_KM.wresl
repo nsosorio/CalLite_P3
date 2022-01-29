@@ -72,7 +72,7 @@ define km_cnf {
 ! Set the begin and end day for the standard -- Roe always met first
 define begday_roe {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1 
           value 0 }  
      case StandardOn {
           condition      daysX2_roe_mod > 0.5
@@ -83,7 +83,7 @@ define begday_roe {
 }
 define endday_roe {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1 
           value 0 }  
      case StandardOn {
           condition      daysX2_roe_mod > 0.5
@@ -118,7 +118,6 @@ define DO_req_X2roe_nocap {
           value          0.0  }
 }
 define DO_req_X2roe {value min(flowcap_roe, DO_req_X2roe_nocap) }
-define DO_req_X2roeDV {alias DO_req_X2roe kind 'debug' units 'none'} !Testing
 
 ! Compute the resulting X2 if this flow was the Delta outflow for the entire period for KM X2
 define X2_roe  {
@@ -126,7 +125,7 @@ define X2_roe  {
           condition X2_DLTSW == 0  
           value 0 }  
      case StandardOn {
-          condition      month >= FEB .and. month <= JUN .and. daysX2_roe_mod > 0.5 .and. X2_ANN_KM == 1
+          condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_roe_mod > 0.5 .and. X2_ANN_KM == 1
           value          a_x2_coef + b_x2_coef*X2_last - c_x2_coef*LOG10(DO_req_X2roe)   }
      case StandardOff {
           condition      always
@@ -136,7 +135,7 @@ define X2_roe  {
 ! Set the begin and end day for the standard -- Chipps always met second
 define begday_chs {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1 
           value 0 }  
      case StandardOn {
           condition      daysX2_chs_mod > 0.5
@@ -147,7 +146,7 @@ define begday_chs {
 }
 define endday_chs {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1 
           value 0 }  
      case StandardOn {
           condition      daysX2_chs_mod > 0.5
@@ -180,7 +179,6 @@ define DO_req_X2chs_nocap {
 }
 
 define DO_req_X2chs {value min(flowcap_chs, DO_req_X2chs_nocap)}
-define DO_req_X2chsDV {alias DO_req_X2chs kind 'debug' units 'none'} !Testing
 
 ! Compute the resulting X2 if this flow was the Delta outflow for the entire period for KM X2
 define X2_chs  {
@@ -188,7 +186,7 @@ define X2_chs  {
           condition X2_DLTSW == 0  
           value 0 }  
      case StandardOn {
-          condition      month >= FEB .and. month <= JUN .and. daysX2_chs_mod > 0.5 .and. X2_ANN_KM == 1
+          condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_chs_mod > 0.5 .and. X2_ANN_KM == 1
           value          a_x2_coef + b_x2_coef*X2_last - c_x2_coef*LOG10(DO_req_X2chs)   }
      case StandardOff {
           condition      always
@@ -198,7 +196,7 @@ define x2_chsDV {alias x2_chs kind 'debug' units 'none'} !Testing
 ! Set the begin and end day for the standard -- Confluence always met last
 define begday_cnf {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1
           value 0 }  
      case StandardNone {
           condition      daysX2_cnf < 0.5
@@ -212,7 +210,7 @@ define begday_cnf {
 }
 define endday_cnf {
      case X2_Off {
-          condition X2_DLTSW == 0  
+          condition X2_DLTSW == 0 .or. int(Daily_Timestep) == 1
           value 0 }  
      case StandardNone {
           condition      daysX2_cnf < 0.5
@@ -228,7 +226,11 @@ define begday_cnfdv {alias begday_cnf kind 'debug' units 'none'}
 define endday_cnfdv {alias endday_cnf kind 'debug' units 'none'}
 
 ! Now compute the Delta outflow required to meet the Confluence standard
-
+! daysX2_cnf implicitly already knows if the standard does not apply in May and June. That is inherent in making the x2_days table
+! If that is the case, 4000 cfs is required DO in May and June which is set to flowmin_specX2. NSO, 01/29/2022
+! "The standard does not apply in May and June if the best available May estimate of the Sacramento River Index (described in footnote 5)
+! for the water year is less than 8.1 MAF at the 90% exceedance level.
+! Under this circumstance, a minimum 14-day running average flow of 4,000 cfs is required in May and June."
 define DO_req_X2cnf_nocap {
      case X2_Udef {
           condition X2_Select == 1  .or. X2_DLTSW == 0  
@@ -237,7 +239,7 @@ define DO_req_X2cnf_nocap {
           condition      /*month >= FEB .and. month <= JUN .and.*/ daysX2_cnf_mod > 0.5 .and. X2_ANN_KM == 1
           value          POW(10.0, (a_x2_coef + b_x2_coef*X2_chs - km_cnf)/c_x2_coef) }
      case SpecFlowStd_KM {
-          condition       /*month >= FEB .and. month <= JUN .and.*/ daysX2_cnf < 0.5 .and. X2_ANN_KM == 1     ! if no days at confluence
+          condition       /*month >= FEB .and. month <= JUN .and.*/ daysX2_cnf_mod < 0.5 .and. X2_ANN_KM == 1     ! if no days at confluence
           value           flowmin_specX2 }
      case StandardOn_ANN {
           condition      daysX2_cnf_mod > 0.5 .and. X2_ANN_KM == 0
@@ -254,7 +256,6 @@ define DO_req_X2cnf_nocap {
          value           0.0  }   }
 
 define DO_req_X2cnf {value min(flowcap_cnf, DO_req_X2cnf_nocap) }
-define DO_req_X2cnfDV {alias DO_req_X2cnf kind 'debug' units 'none'} !Testing
 
 
 

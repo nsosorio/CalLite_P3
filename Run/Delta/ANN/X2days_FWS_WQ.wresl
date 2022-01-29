@@ -98,6 +98,9 @@ define flowcap_cnf {       ! cfs for Confluence (Sac & SJR)
           value 99999. }
 }
 
+! The Roe (Port Chicago) "standard applies only in months when the average EC at Port Chicago
+! during the 14 days immediately prior to the first day of the month is less than or equal to 2.64 mmhos/cm."
+! In the model, instead of looking at EC, the X2 position from previous period is compared with trigger_x2roe 
 ! set the trigger value which activates the operation of Roe X2 standard
 define trigger_x2roe {value 66.3 } ! km to just beyond Roe Island
 
@@ -115,8 +118,8 @@ define daysX2_roe {
      case FebtoJun {
           condition      month >= FEB .and. month <= JUN
           select         roe_days
-          from           x2days
-          where          wateryear=wateryear,month=month    }
+          from           x2days_daily
+          where          wateryear=wateryear,month=month,day=day    }
      case StandardOff {
           condition      always
           value          0.    }
@@ -151,8 +154,8 @@ define daysX2_cnf {
      case FebtoJun {
           condition      month >= FEB .and. month <= JUN
           select         cnf_days
-          from           x2days
-          where          wateryear=wateryear,month=month    }
+          from           x2days_daily
+          where          wateryear=wateryear,month=month,day=day    }
      case Aug_FWS_AN {
           condition      month == AUG .and. wyt_SAC <= 2 .and. FallX2 == 1  ! Aug ramped so it is in range of SEP target
           value          0.    }
@@ -177,30 +180,28 @@ define daysX2_cnf {
 ! NOTE: THE DAY MODIFICATION ASSUMES THAT CHS_DAYS >= ROE_DAYS.  IE.  WHEN YOU MEET ROE YOU
 ! AUTOMATICALLY MEET CHIPPS. BE SURE TABLE 'X2DAYS' IS SET PROPERLY.
 
+! "This (Port Chicago/Roe) standard applies only in months when the average EC at Port Chicago during the 14 days
+! immediately prior to the first day of the month is less than or equal to 2.64 mmhos/cm."
+! In the model, the standard applies only in months when the 14-day average X2 position exceeds the 66.4 km Roe trigger
+! On the first day of each Feb-Jun month
+! NSO, 01/28/2022
 define daysX2_roe_mod {
-     case RoeTrigOutofSeasonJan {
-          condition      month <= JAN .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
+     case RoeTrigOutofSeason {
+          condition      range(month,jul,jan) .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
           value          0.    }
-     case RoeTrigOutofSeasonJul {
-          condition      month >= JUL .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
-          value          0.    }
-
      case RoeOff_TriggerOn {
-         condition      x2_last > trigger_x2roe .and. int(X2Roe_DLTSW) ==1
+         condition      day == 1 .and. X2_last_14dayavg > trigger_x2roe .and. int(X2Roe_DLTSW) ==1
           value          0.    }
      case RoeOn {
           condition      always
           value          daysX2_roe }
 }
 define daysX2_chs_mod {  
-     case RoeTrigOutofSeasonJan {
-          condition      month <= JAN .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
-          value          daysX2_chs }
-     case RoeTrigOutofSeasonJul {
-          condition      month >= JUL .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
-          value          daysX2_chs }
+     case RoeTrigOutofSeason {
+          condition      range(month,jul,jan) .and. FallX2 == 1       ! If outside D1641 standard X2 season don't do this adjustment
+          value          0.    }
      case RoeOff_TriggerOn {
-         condition      x2_last > trigger_x2roe .and. int(X2Roe_DLTSW) ==1
+         condition      day == 1 .and. X2_last_14dayavg > trigger_x2roe .and. int(X2Roe_DLTSW) ==1
           value          daysX2_chs }
      case RoeOn {
           condition      always
@@ -210,12 +211,16 @@ define daysX2_chs_mod {
 
 define daysX2_cnf_mod {  
 
-     case SpecialStd {
+/*   case SpecialStd {
           condition       daysX2_cnf > 0.5
           value           daysin - daysX2_chs_mod - daysX2_roe_mod}       ! days here make up the balance
      case StandardOff {                                                   ! for the period unless the original
           condition       always                                          ! days at cnf are zero.  in this case
           value           0.   }                                          ! there is no standard!!
+*/     case StandardOn {                                                   ! for the period unless the original
+          condition       always                                          ! days at cnf are zero.  in this case
+          value           daysX2_cnf}                                          ! there is no standard!!
+
 }
 define modroeday {alias daysX2_roe_mod kind 'debug' units 'none'}
 define modchsday {alias daysX2_chs_mod kind 'debug' units 'none'}

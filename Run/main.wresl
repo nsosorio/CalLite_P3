@@ -33,6 +33,7 @@ initial {
     svar Dynamic_SOD {value 0} !Turns on dynamic SOD ops beyond Banks and Jones pumping plant                 
 	svar Gmodel {value 1} ! Use G-model instead of ANN to estimate salinity and outflow requirements at individual locations	
 	svar predeterminedDeltaTS {value 0}
+	svar Daily_Timestep {value 1}
 }
 
 SEQUENCE CYCLE1 {

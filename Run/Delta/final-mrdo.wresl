@@ -39,7 +39,7 @@ if int(NDO_DLTSW)==3 {
 }
 elseif int(Gmodel) == 1 {
 	define MRDO_final {value max(DO_req_X2roe,	! Feb-Jun Spring X2 D1641
-								DO_req_X2roe,	! Feb-Jun Spring X2 D1641
+								DO_req_X2chs,	! Feb-Jun Spring X2 D1641
 								DO_req_X2cnf,	! Feb-Jun Spring X2 D1641
 								DO_req_flow,	! Jul-Jan Minimum Delta Outflow D1641
 								DO_req_emt,		! Ag Water Quality Standards D1641
@@ -135,3 +135,11 @@ define daysreqX2cnf_out {alias int(endday_cnf) - int(begday_cnf) + 1 KIND 'DAYS-
 define daysreqflow_out {alias int(endday_flw) - int(begday_flw) + 1 KIND 'DAYS-REQ-NDOI' UNITS 'CFS' }
 
 goal meetMRDO {D_DeltaReqd < MRDO_final}  ! Set the final Delta outflow requirement 
+
+! Fulfillment of Spring X2 requirements necessitates tracking the MRDO 3-day rolling average
+! "The minimum daily net Delta outflow shall be 7,100 cfs for this period, calculated as a 3-day running average."
+! 14-day running average of X2 position is also tracked in lastX2_ANN_KM.wresl and compared with Confluence KM position
+! because that is another way to meet requirement
+define D_DeltaReqd_2daysum {sum(i=-2,-1,1) D_DeltaReqd(i)}
+define D_DeltaReqd_3dayavg {std kind 'FLOW-DELIVERY' units 'CFS'}
+goal set_D_DeltaReqd_rollavg { D_DeltaReqd_3dayavg = (D_DeltaReqd_2daysum +  D_DeltaReqd)/3 }

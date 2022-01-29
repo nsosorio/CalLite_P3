@@ -5,8 +5,8 @@ define daysX2_chs {
      case FebtoJun {
           condition      month >= FEB .and. month <= JUN
           select         chs_days
-          from           x2days
-          where          wateryear=wateryear,month=month    }
+          from           x2days_daily
+          where          wateryear=wateryear,month=month,day=day    }
      case Aug_FWS_W {
           condition      month == AUG .and. wyt_SAC <= 1 .and. FallX2 == 1 ! Aug ramped so it is in range of SEP target
           value          0.    }
