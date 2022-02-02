@@ -37,6 +37,10 @@ define SJRatio_MaxExp{
  * AND the New Melones Index is less than 1 MAF,
  * exports shall be limited to a 1:1 ratio with San Joaquin River inflow, as measured at Vernalis.
  * Reclamation and DWR shall implement the Vernalis flow-to-combined export ratios based on a 14-day running average.
+ * If the previous 2 years plus current year of San Joaquin Valley “60-20-20” Water Year Hydrologic Classification
+ * and Indicator as defined in D-1641 and provided in following table, is 6 or less, AND the New Melones Index is less than 1 MAF,
+ * exports shall be limited to a 1:1 ratio with San Joaquin River inflow, as measured at Vernalis.
+
  */
 define SJR_indicator  {value 6. - wyt_SJR}
 define SJR_indicator1 {value 6. - wyt_SJR_prv1}

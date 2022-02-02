@@ -13,7 +13,9 @@ NMFS BO Action 4.1.2
 define D1641_days_open   {select day_open_D1641 from xchanneldays_daily where month=month, day=day}
 
 ! check Wilkins Slough flow for likelihood of flushing flows > 7500 cfs on a daily basis
+! No need for this anymore since we're using a daily timestep. NSO, 02/01/2022
 !define WlknSlFlush_prob {value min( max( 0.0064 * C_Wilkns[Base] / daysin - 36.175 / daysin, 0.), 1.) }
+
 ! Set trigger of when DCC is closed or open depending on Wilkins Slough flow rate threshold of 7500 cfs
 ! (assumed flow rate to flush salmon into the Delta)
 define WlknSlFlushTrig {
@@ -34,7 +36,7 @@ define NMFSdaysopentarg {
     case DEC15JAN31 {
         condition (month == Dec .and. day >= 15) .or. month == JAN ! Dec 15-Jan 31 DCC gates are closed
         value 0. }
-    case otherwise {
+    case otherwise { ! February to June 15 only the D1641 regulation applies for DCC ops
         condition always
         value D1641_days_open }   ! no added restrictions
 }
@@ -114,7 +116,16 @@ define NMFSdaysopendv  {alias NMFS_days_open kind 'DCC-DAYS-OPEN' UNITS 'NONE'} 
 
 
 ! If not going to meet target, drop exports to 2000 cfs max
+/* Appendix 5A – Attachment 7: Representation of National Marine Fisheries Service Biological Opinion
+ * Reasonable and Prudent Alternative Actions for CalSim II Planning Studies
+ * 
+ * Export Restriction: During October 1 – December 14 period, if the flow trigger condition is
+ * such that additional days of DCC gates closed is called for, however water quality conditions are
+ * a concern and the DCC gates remain open, then Delta exports are limited to 2,000 cfs for each
+ * day in question.
+ */
 define daysofftarget {value NMFS_days_open - NMFSdaysopentarg}
+define daysofftargetdv  {alias daysofftarget kind 'DCC-DAYS-OPEN' UNITS 'NONE'}  !for output only
 define NMFS_MaxExp_DCC {
     case UDdefDCC { 
         condition DCC_DLTSW == 2

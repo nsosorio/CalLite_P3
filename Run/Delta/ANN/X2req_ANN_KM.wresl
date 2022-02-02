@@ -49,7 +49,7 @@ define km_chs {
           value 0 } 
      case D1641 {
           condition always
-          value 74. }     ! km to Chipps Island
+          value 74. }     ! km to Chipps Island, also the average X2 required for Sep-Oct in fall following wet years (Fall X2)
 }
 
 define km_cnf {
@@ -58,7 +58,7 @@ define km_cnf {
           value 0 } 
      case D1641 {
           condition always
-          value 81. }     ! km to Confluence (Sac & SJR)
+          value 81. }     ! km to Confluence (Sac & SJR), also the average X2 required for Sep-Oct in fall following above normal years (Fall X2)
 }
 !define km_roe {value 64. }     ! km to Roe Island/Port Chicago
 !define km_chs {value 74. }     ! km to Chipps Island

@@ -17,8 +17,8 @@
 GUI_RPAsOtherRegs
 Index	Option
 1	0	!Fall_X2
-2	0	!Action_4_1_2
-3	0	!Action_4_2_1
+2	1	!Action_4_1_2
+3	1	!Action_4_2_1
 4	0	!ORMROON;
 5	0	!ClearCrkBOswitch
 6	0	!QOMR_DLTSW
