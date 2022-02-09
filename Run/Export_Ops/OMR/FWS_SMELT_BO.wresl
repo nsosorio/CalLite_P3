@@ -45,7 +45,7 @@ define OMR_background {        ! this is used as the background OMR condition in
 !Assumes monthly sum of unimpaired flows for four rivers in Sacramento River Basin (Sac, American, Yuba, and Feather) exceeding 20,000 cfs is a good
 !but conservative indicator of turbidty (12NTU) at the three turbidity stations defined in the FWS BO ( Holland Cut, Prisoner's Point, and Victoria Canal).
 define TurbT_Thresh {value 20000.}
-define SAC_RI {timeseries kind 'SRI_FLOW' units 'CFS'}
+define SAC_RI    {select SRI from sac_ri where  wateryear = wateryear, month = month}
 define SRIdv {alias SAC_RI kind 'FLOW-CHANNEL' units 'CFS'}
 
 define A1_TurbTdv {std kind 'RPA-A1' units 'NONE'}
@@ -61,19 +61,19 @@ define A1_TurbT {
                 value 99.}
         case ON_Dec {
         ! If triggered in December, it is assumed that the action will take place after December 21st for 14 days. (Dec 21 - Jan 3)
-                condition month==DEC .and. SAC_RI>=TurbT_Thresh
+                condition month==DEC .and. SAC_RI>=TurbT_Thresh !.and. (day>=21)
                 value 1.}
     case ON_Jan{
             ! If triggered in January, it is assumed that the action will take place after January 1st for 14 days. (Jan 1 - Jan 14)
-                condition month==JAN .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==JAN .and. A1_TurbTdv(prevDec)==99. .and. SAC_RI>=TurbT_Thresh
                 value 2.}
     case ON_Feb {
         ! If triggered in February, it is assumed that the action will take place after February 1st for 14 days. (Feb 1 - Feb 14)
-                condition month==FEB .and. A1_TurbTdv(-2)==99. .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==FEB .and. A1_TurbTdv(prevJan)==99. .and. A1_TurbTdv(prevDec)==99. .and. SAC_RI>=TurbT_Thresh
                 value 3.}
     case ON_Mar {
         ! If triggered in March, it is assumed that the action will take place after March 1st for 14 days. (Mar 1 - Mar 14)
-                condition month==MAR .and. A1_TurbTdv(-3)==99. .and.A1_TurbTdv(-2)==99. .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==MAR .and. A1_TurbTdv(prevJan)==99. .and.A1_TurbTdv(prevDec)==99. .and. A1_TurbTdv(prevFeb)==99. .and. SAC_RI>=TurbT_Thresh
                 value 4.}
     case OFF {
         condition always
@@ -95,23 +95,22 @@ define A1_TurbTC {
                 condition month>=OCT .and. month<MAR .and. SAC_RI<TurbT_Thresh
                 value A1_TurbTCdv(-1)}
         case ON_Dec {
-                condition month==DEC .and. SAC_RI>=TurbT_Thresh
+                condition month==DEC .and. SAC_RI>=TurbT_Thresh !.and. day>=21
                 value 1.}
         case ON_Jan{
-                condition month==JAN .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==JAN .and. A1_TurbTdv(prevDec)==99. .and. SAC_RI>=TurbT_Thresh
                 value 1.}
         case ON_Feb {
-                condition month==FEB .and. A1_TurbTdv(-2)==99. .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==FEB .and. A1_TurbTdv(prevDec)==99. .and. A1_TurbTdv(prevJan)==99. .and. SAC_RI>=TurbT_Thresh
                 value 1.}
         case ON_Mar {
-                condition month==MAR .and. A1_TurbTdv(-3)==99. .and.A1_TurbTdv(-2)==99. .and. A1_TurbTdv(-1)==99. .and. SAC_RI>=TurbT_Thresh
+                condition month==MAR .and. A1_TurbTdv(prevDec)==99. .and.A1_TurbTdv(prevJan)==99. .and. A1_TurbTdv(prevFeb)==99. .and. SAC_RI>=TurbT_Thresh
                 value 1.}
         case OFF {
                 condition always
                 value A1_TurbTCdv(-1)}
 }
 goal setA1_TurbTCdv {A1_TurbTCdv = A1_TurbTC}
-
 
 define A1_OMR_Targ { value -2000.}
 define A1_OMR_Targdv {alias A1_OMR_Targ kind 'FLOW' units 'CFS'}
@@ -281,7 +280,7 @@ define A3_trig_dadv {alias A3_trig_da kind 'TRIGGER' units 'NONE'}
 define A3_trig_modv {alias A3_trig_mo kind 'TRIGGER' units 'NONE'}
 
 !Action 3 offramp:
-!Determines offramp dates based on the criteria stated in the lookup table.
+!Determines offramp dates based on the criteria stated in the lookup table. Always set to June 30 right now, NSO 02/04/2022
 define temp_offramp_mo    {select WMonth from FWS_BO_A3_Offramp where  WYT= wyt_SAC}
 define temp_offramp_da    {select Day from FWS_BO_A3_Offramp where  WYT=wyt_SAC}
 define A3_offramp_da{
@@ -332,7 +331,7 @@ define X2_A3 { ! REPLACE THIS EQUATION, NSO 01/17/2022
 
 define X2_A3dv {alias X2_A3 kind 'X2-POSITION-A3' units 'KM'}
 
-define A3_OMR_Targ{ ! REPLACE THIS EQUATION, NSO 01/17/2022
+define A3_OMR_Targ{
       case E_Roe{
                 condition X2_A3==1.
         select X2_E_Roe
@@ -360,118 +359,176 @@ define OMR_RPA_1{ ! REPLACE THIS EQUATION, NSO 01/17/2022
         case Oct_Dec {
             condition month>=OCT .and. month<DEC
                 value -99999.}
-
+! **********************************************************************************************
+! December Cases
     case OFF_DEC {
-        condition month==DEC .and. A1_TurbT==99.
+        condition month==DEC .and. A1_TurbT==99. .and. (day>=1 .and. day<=20)
                 value -99999.}
-    case A1_DEC {
-        condition month==DEC .and. A1_TurbT==1.
-                value (OMR_background*20.+A1_OMR_Targ*(daysin-20.))/daysin}
-        case otherwise_DEC {
+    case pre_A1_DEC { ! Turb thresh triggered in December but it is not December 21 yet.
+        condition month==DEC .and. A1_TurbT==1. .and. (day<21)
+                value OMR_background}
+    case A1_DEC { ! ! Turb thresh triggered in December and it is December 21 and later.
+        condition month==DEC .and. A1_TurbT==1. .and. (day>=21)
+                !value (OMR_background*20.+A1_OMR_Targ*(daysin-20.))/daysin}
+                value A1_OMR_Targ}
+    case otherwise_DEC {
                 condition month==DEC
                 value -99999.}
-
-        case A1_Dec_Jan{
-                condition month==JAN .and. A1_TurbTdv(-1)==1.
+! **********************************************************************************************
+! January Cases
+    case A1_Dec_Jan{ ! Turb thresh triggered in December and current month is Jan
+                condition month==JAN .and. A1_TurbTdv(prevDec)==1. .and. day<=3
         ! Average of -2000 cfs for 3 days and a Action 2 OMR for the remainder of the month.
-        value (A1_OMR_Targ*3.+A2_OMR_Targ*28.)/daysin}
-    case A1_JAN{
-        condition month==JAN .and. A1_TurbT==2.
+        !value (A1_OMR_Targ*3.+A2_OMR_Targ*28.)/daysin}
+        value A1_OMR_targ}
+    case A1_Dec_A2_Jan { ! Turb thresh triggered in December and current month is Jan
+                condition month==JAN .and. A1_TurbTdv(prevDec)==1. .and. day>3
+        ! Average of -2000 cfs for 3 days and a Action 2 OMR for the remainder of the month.
+        !value (A1_OMR_Targ*3.+A2_OMR_Targ*28.)/daysin}
+        value A2_OMR_Targ}
+
+    case A1_JAN{ ! Turb thresh triggered in this month of January is assumed for Jan 1-14.
+        condition month==JAN .and. A1_TurbT==2. .and. day<=14
         ! Average of -2000 cfs for 14 days and Action 2 OMR for the remainder of the month.
-        value (A1_OMR_Targ*14.+A2_OMR_Targ*17.)/daysin}
-        case otherwise_JAN {
-                condition month==JAN
-                value -99999.}
-
-        case A1_DJ_A3_F {
-        condition month==FEB .and. A1_TurbTdv(-1)==2. .and.  A3_trig_mo==5.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-    case A1_DJ_A3_F2 {
-                condition month==FEB .and. A1_TurbTdv(-2)==1. .and.  A3_trig_mo==5.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-        case A1_DJ {
-        condition month==FEB .and. A1_TurbTdv(-1)==2. .and.  A3_trig_mo>5.
-        value A2_OMR_Targ}
-        case A1_DJ2 {
-        condition month==FEB .and. A1_TurbTdv(-2)==1. .and.  A3_trig_mo>5.
+        value A1_OMR_targ}
+    case A1_A2_JAN{ ! Turb thresh triggered in this month of January and Action 1 went on from Jan 1-14. The rest of this month is for Action 2.
+        condition month==JAN .and. A1_TurbT==2. .and. day>14
+        ! Average of -2000 cfs for 14 days and Action 2 OMR for the remainder of the month.
         value A2_OMR_Targ}
 
-    case A1_F_A3_F {
-        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo==5.
-                value (A1_OMR_Targ*min(14.,A3_trig_da-1.)+A2_OMR_Targ*max((A3_trig_da-min(14.,A3_trig_da)-1.),0.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-    case A1_F {
-        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo>5.
-                value (A1_OMR_Targ*14.+A2_OMR_Targ*(daysin-14.))/daysin}
-        case otherwise_FEB {
-                condition month==FEB
-                value -99999.}
+    case otherwise_JAN {
+            condition month==JAN
+            value -99999.}
+! **********************************************************************************************
+! February Cases
+    case A1_DJ_A3_F { ! Turb thresh was triggered in January and Action 3 is triggered in February
+		condition month==FEB .and. A1_TurbTdv(prevJan)==2. .and.  A3_trig_mo==5. .and. day>=A3_trig_da
+		! Action 1 already took place from Jan 1-14. Action 2 then took place from Jan 15 to the end. Only Action 3 then takes place in beginning of Feb.
+        value A3_OMR_Targ}
+    case A1_DJ_A3_F2 { ! Turb thresh was triggered in December and Action 3 is triggered in February
+        condition month==FEB .and. A1_TurbTdv(prevDec)==1. .and.  A3_trig_mo==5. .and. day>=A3_trig_da
+        value A2_OMR_Targ}
+    case A1_DJ_A3_F3 { ! Turb thresh was triggered in December and Action 3 is triggered in February
+        condition month==FEB .and. A1_TurbTdv(prevDec)==1. .and.  A3_trig_mo==5. .and. day>=A3_trig_da
+        value A3_OMR_Targ}
 
-        case A1_F_M {
-        condition month==MAR .and. A1_TurbTdv(-1)==3. .and.  A3_trig_mo>6.
+    case A1_DJ { ! Turb thresh was triggered in January and Action 3 is triggered after February
+    	condition month==FEB .and. A1_TurbTdv(prevJan)==2. .and.  A3_trig_mo>5.
+		value A2_OMR_Targ}
+    case A1_DJ2 { ! Turb thresh triggered in December and Action 3 is triggered after February
+    	condition month==FEB .and. A1_TurbTdv(prevDec)==1. .and.  A3_trig_mo>5.
+		value A2_OMR_Targ}
+
+    case A1_F_A3_F { ! Turb thresh triggered in same month of February and Action 3 is triggered before February 14  !!!!!!!!!COME BACK HERE LATER!!!!!!!!!
+        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo==5. .and. A3_trig_da<=14 .and. day<=14
+        ! Choose the most limiting OMR target since both Action 1 and Action 3 are happening at the same time.
+        value max(A1_OMR_Targ, A3_OMR_Targ)}
+    case A1_F_A3_F2 { ! Turb thresh triggered in same month of February and Action 3 is triggered on February !!!!!!!!!COME BACK HERE LATER!!!!!!!!!
+        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo==5. .and. A3_trig_da>14 .and. day>14
+        value A3_OMR_Targ}
+
+    case A1_F { ! Turb thresh triggered in same month of February and Action 3 is triggered after February
+        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo>5. .and. day<=14
+        value A1_OMR_Targ}
+    case A1_F2 { ! Turb thresh triggered in same month of February and Action 3 is triggered after February
+        condition month==FEB .and. A1_TurbT==3. .and.  A3_trig_mo>5. .and. day>14
         value A2_OMR_Targ}
 
-    case A1_M {
-        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==6.
-                value (A1_OMR_Targ*min(14.,A3_trig_da-1.)+A2_OMR_Targ*max((A3_trig_da-min(14.,A3_trig_da)-1.),0.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
+    case otherwise_FEB {
+        condition month==FEB
+        value -99999.}
+! **********************************************************************************************
+! March Cases
+    case A1_F_M { ! Turb thresh was triggered in February and Action 3 is triggered after March
+    	condition month==MAR .and. A1_TurbTdv(prevFeb)==3. .and.  A3_trig_mo>6.
+		value A2_OMR_Targ}	
 
-        case A3_FEB_M {
-        condition month==MAR .and. A1_TurbTdv(-2)==2. .and.  A3_trig_mo==5.
+    case A1_M { ! Turb thresh is triggered in same month of March and Action 3 is triggered on March.
+        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==6. .and. A3_trig_da<=14 .and. day <= 14
+        ! Choose the most limiting OMR target since both Action 1 and Action 3 are happening at the same time.
+        value max(A1_OMR_Targ, A3_OMR_Targ)}
+    case A1_M2 { ! Turb thresh is triggered in same month of March and Action 3 is triggered on March.
+        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==6. .and. A3_trig_da>14 .and. day > 14
         value A3_OMR_Targ}
-    case A3_FEB_M2 {
-        condition month==MAR .and. A1_TurbTdv(-3)==1. .and.  A3_trig_mo==5.
+
+    case A3_FEB_M { ! Turb thresh was triggered in January and Action 3 was triggered on February.
+    	condition month==MAR .and. A1_TurbTdv(prevJan)==2. .and.  A3_trig_mo==5.
+		value A3_OMR_Targ}
+    case A3_FEB_M2 { ! Turb thresh was triggered in December and Action 3 was triggered on February.
+        condition month==MAR .and. A1_TurbTdv(prevDec)==1. .and.  A3_trig_mo==5.
         value A3_OMR_Targ}
-    case A3_FEB_M3 {
-        condition month==MAR .and. A1_TurbTdv(-1)==3. .and.  A3_trig_mo==5.
+    case A3_FEB_M3 { ! Turb thresh was triggered in February and Action 3 was triggered on February.
+        condition month==MAR .and. A1_TurbTdv(prevFeb)==3. .and.  A3_trig_mo==5.
         value A3_OMR_Targ}
-    case A3_FEB_M4 {
-        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==5.
+    case A3_FEB_M4 { ! Turb thresh is triggered in March and Action 3 was triggered on February.
+        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==5. .and. day<=14
+        value max(A1_OMR_Targ, A3_OMR_Targ)}
+    case A3_FEB_M5 { ! Turb thresh is triggered in March and Action 3 was triggered on February.
+        condition month==MAR .and. A1_TurbT==4. .and.  A3_trig_mo==5. .and. day>14
+        value A3_OMR_Targ}
+        
+    case A3_M { ! Turb thresh was triggered in February and Action 3 is triggered in March.
+    	condition month==MAR .and. A1_TurbTdv(prevFeb)==3. .and.  A3_trig_mo==6. .and. day>=A3_trig_da
+        value A3_OMR_Targ}
+    case A3_M2 { ! Turb thresh was triggered in January and Action 3 is triggered in March.
+        condition month==MAR .and. A1_TurbTdv(prevJan)==2. .and.  A3_trig_mo==6. .and. day>=A3_trig_da
+        value A3_OMR_Targ}
+    case A3_M3 { ! Turb thresh was triggered in December and Action 3 is triggered in March.
+        condition month==MAR .and. A1_TurbTdv(prevDec)==1. .and.  A3_trig_mo==6. .and. day>=A3_trig_da
         value A3_OMR_Targ}
 
-        case A3_M {
-        condition month==MAR .and. A1_TurbTdv(-1)==3. .and.  A3_trig_mo==6.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-    case A3_M2 {
-        condition month==MAR .and. A1_TurbTdv(-2)==2. .and.  A3_trig_mo==6.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1))/daysin}
-        case A3_M3 {
-                condition month==MAR .and. A1_TurbTdv(-3)==1. .and.  A3_trig_mo==6.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-        case A3_M4 {
-                condition month==MAR .and. A3_trig_mo==7. .and. A1_TurbTC==1
-                value A2_OMR_Targ}
-        case otherwise_MAR {
-                condition month==MAR
-                value -99999.}
+    case A3_M4 { ! Action 3 is to be triggered in April and the turb thresh is triggered in the same month of March.
+        condition month==MAR .and. A3_trig_mo==7. .and. A1_TurbTC==1 .and. day<=14
+        !value (A1_OMR_Targ*14.+A2_OMR_Targ*(daysin-17))/daysin}
+        value A1_OMR_Targ}
+    case A3_M5 { ! Action 3 is to be triggered in April and the turb thresh is triggered in the same month of March.
+        condition month==MAR .and. A3_trig_mo==7. .and. A1_TurbTC==1 .and. day>14
+        !value (A1_OMR_Targ*14.+A2_OMR_Targ*(daysin-17))/daysin}
+        value A2_OMR_Targ}
+    case otherwise_MAR {
+        condition month==MAR
+        value -99999.}
+! **********************************************************************************************
+! April Cases
+    case A3_APR { ! Action 3 has already been triggered before April
+            condition month==APR .and. A3_trig_mo<7.
+            value A3_OMR_Targ}
+    case A3_APR3 { ! Action 3 is triggered in the same month of April and the turb thresh never triggered
+            condition month==APR .and. A3_trig_mo==7. .and. day>=A3_trig_da .and. A1_TurbTdv(prevDec)==99. .and. A1_TurbTdv(prevJan)==99. .and. A1_TurbTdv(prevFeb)==99. .and. A1_TurbTdv(prevMar)==99.
+            !value (OMR_background*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
+            value A3_OMR_targ}
+    case A3_APR2 { ! Action 3 is triggered in the same month of April
+            condition month==APR .and. A3_trig_mo==7. .and. day>=A3_trig_da
+            value A3_OMR_Targ}
+    case otherwise_APR {
+            condition month==APR
+            value -99999.}
+! **********************************************************************************************
+! May Cases
+    case A3_MAY { ! Action 3 offramp starts in May
+            condition month==MAY .and. A3_offramp_mo==8. .and. day<A3_offramp_da
+            value OMR_background}
+    case A3_MAY2 { ! Action 3 offramp starts in May
+            condition month==MAY .and. A3_offramp_mo==8. .and. day>=A3_offramp_da
+            value A3_OMR_Targ}
 
-        case A3_APR {
-                condition month==APR .and. A3_trig_mo<7.
-                value A3_OMR_Targ}
-        case A3_APR3 {
-                condition month==APR .and. A3_trig_mo==7. .and. A1_TurbTdv(-4)==99. .and. A1_TurbTdv(-3)==99. .and. A1_TurbTdv(-2)==99. .and. A1_TurbTdv(-1)==99.
-                value (OMR_background*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-        case A3_APR2 {
-                condition month==APR .and. A3_trig_mo==7.
-                value (A2_OMR_Targ*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-        case otherwise_APR {
-                condition month==APR
-                value -99999.}
-
-        case A3_MAY {
-                condition month==MAY .and. A3_offramp_mo==8.
-                value (A3_OMR_Targ*(A3_offramp_da)+OMR_background*(daysin-A3_offramp_da))/daysin}
-        case A3_MAY_J {
-                condition month==MAY .and. A3_offramp_mo==9.
-                value A3_OMR_Targ}
-        case otherwise_MAY {
-                condition month==MAY
-                value -99999.}
-
-        case A3_JUN {
-                condition month==JUN .and. A3_offramp_mo==9.
-                value (A3_OMR_Targ*(A3_offramp_da)+OMR_background*(daysin-A3_offramp_da))/daysin}
-        case otherwise_JUN {
-        condition always
-                value -99999.}
+    case A3_MAY_J { ! Action 3 offramp starts in June
+            condition month==MAY .and. A3_offramp_mo==9.
+            value A3_OMR_Targ}
+    case otherwise_MAY {
+            condition month==MAY
+            value -99999.}
+! **********************************************************************************************
+! June Cases
+    case A3_JUN { ! Action 3 offramp starts in the same month of June
+            condition month==JUN .and. A3_offramp_mo==9. .and. day<A3_offramp_da
+            value OMR_background}
+    case A3_JUN2 { ! Action 3 offramp starts in the same month of June
+            condition month==JUN .and. A3_offramp_mo==9. .and. day>=A3_offramp_da
+            value A3_OMR_Targ}
+    case otherwise_JUN {
+    condition always
+            value -99999.}
 }
 
 define OMR_RPA_1dv {alias OMR_RPA_1 kind 'FLOW' units 'CFS'}
@@ -596,8 +653,13 @@ define OMR_RPA_NoA1{
                 condition month==JAN .and. A1_TurbT==99.  .or. OMRBOON == 0 !.and. NoA1_con==1.
                 value OMR_background}
         case FEB {
-                condition month==FEB .and. A1_TurbT==99. .and. A3_trig_mo==5.  
-                value (OMR_background*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
+                condition month==FEB .and. A1_TurbT==99. .and. A3_trig_mo==5. .and. day<A3_trig_da
+                value OMR_background}
+       case FEB3 {
+                condition month==FEB .and. A1_TurbT==99. .and. A3_trig_mo==5. .and. day>=A3_trig_da  
+                value A3_OMR_Targ}
+
+
         case FEB_2 {
                 condition month==FEB .and. A1_TurbT==99. .and. A3_trig_mo>5. !.and. NoA1_con==1.
                 value OMR_background}
@@ -605,20 +667,28 @@ define OMR_RPA_NoA1{
                 condition month==MAR .and. A1_TurbT==99. .and. A3_trig_mo<6. !.and. NoA1_con==1.
                 value A3_OMR_Targ}
         case MAR_2 {
-                condition month==MAR .and. A1_TurbT==99. .and. A3_trig_mo==6.     !.and. NoA1_con==1.
-                value (OMR_background*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
-        case MAR_3 {
+                condition month==MAR .and. A1_TurbT==99. .and. A3_trig_mo==6. .and. day<A3_trig_da    !.and. NoA1_con==1.
+                value OMR_background}
+        case MAR_2a {
+                condition month==MAR .and. A1_TurbT==99. .and. A3_trig_mo==6. .and. day>=A3_trig_da     !.and. NoA1_con==1.
+                value A3_OMR_Targ}
+
+        case MAR_3 { ! Action 3 is to be triggered starting on April
                 condition month==MAR .and. A1_TurbT==99. .and. A3_trig_mo>6. !.and. NoA1_con==1.
                 value OMR_background}
         case othnoA1 {
                 condition month>=JAN .and. month<=MAR
                 value OMR_background}
-        case APR {
+        case APR { ! Action 3 was triggered before April
                 condition month==APR .and. A1_TurbT==99. .and. A3_trig_mo<7.    !.and. NoA1_con==1.
                 value A3_OMR_Targ}
-        case APR_2 {
-                condition month==APR .and. A1_TurbT==99. .and. A3_trig_mo==7.     !.and. NoA1_con==1.
-                value (OMR_background*(A3_trig_da-1.)+A3_OMR_Targ*(daysin-A3_trig_da+1.))/daysin}
+        case APR_2 { ! Action 3 was triggered at April
+                condition month==APR .and. A1_TurbT==99. .and. A3_trig_mo==7. .and. day<A3_trig_da     !.and. NoA1_con==1.
+                value OMR_background}
+        case APR_2a { ! Action 3 was triggered at April
+                condition month==APR .and. A1_TurbT==99. .and. A3_trig_mo==7. .and. day>=A3_trig_da     !.and. NoA1_con==1.
+                value A3_OMR_Targ}
+
     case otherwise{
         condition always
                 value -99999.}
@@ -658,26 +728,50 @@ define OMR_RPA_NoA1dv {alias OMR_RPA_NoA1 kind 'FLOW' units 'CFS'}
 define OMRRPANoA1condv {alias OMR_RPA_NoA1con kind 'TRIGGER' units 'NONE'}
  */
 
-define OMR_RPA_14day{value max(OMR_RPA_1,OMR_RPA_NoA1)}
+define OMR_RPA_daily {value max(OMR_RPA_1,OMR_RPA_NoA1)}
 
+! Calculate 14-day average
+define OMR_RPA_14daysum {sum(i=-14,-1,1) OMR_RPA_dailyDV(i)}
+!define OMR_RPA_14dayavg {std kind 'FLOW-REG' units 'CFS'}
+!goal set_OMR_RPA_rollavg { OMR_RPA_14dayavg = (OMR_RPA_14daysum +  OMR_RPA_daily)/14 }
+define OMR_RPA_14dayavg {value OMR_RPA_14daysum/14}
+
+! Calculate 5-day average
+define OMR_RPA_5daysum {sum(i=-5,-1,1) OMR_RPA_dailyDV(i)}
+!define OMR_RPA_5dayavg {std kind 'FLOW-REG' units 'CFS'}
+!goal set_OMR_RPA_5day_rollavg { OMR_RPA_5dayavg = (OMR_RPA_5daysum +  OMR_RPA_daily)/5 }
+define OMR_RPA_5dayavg {value OMR_RPA_5daysum/5}
+
+/*goal limit_OMR_RPA_5day {
+	lhs OMR_RPA_5dayavg
+	
+	case action {
+		condition OMR_RPA_daily >= -12000.
+        rhs 1.25*OMR_RPA_14dayavg
+        lhs>rhs penalty 0}
+    case None {
+        condition always
+        rhs -99999.}
+}*/
 !Put an additional constraint so that 5 day OMR is not negative more than 25% of the 14 day OMR
-define OMR_RPA_5day {
+/*define OMR_RPA_5day { ! REPLACE THIS EQUATION, NSO 01/17/2022
       case Action {
-            condition OMR_RPA_14day >= -12000.
-            value 1.25*OMR_RPA_14day}
+            condition OMR_RPA >= -12000.
+            value 1.25*OMR_RPA}
       case None {
             condition always
             value -99999.}
-}
+}*/
 
 ! Use Paul Hutton's regression equation to determine an aggregate based on a determination of whether
 ! the 5 day or the 14 day will control
-define OMR_RPA_FWS {value max(OMR_RPA_14day,(OMR_RPA_5day+389.)/1.02)} ! REPLACE THIS EQUATION, NSO 01/17/2022
+!define OMR_RPA_FWS {value max(OMR_RPA_14dayavg,(OMR_RPA_5dayavg+389.)/1.02)} ! REPLACE THIS EQUATION, NSO 01/17/2022
+define OMR_RPA_FWS {value max(OMR_RPA_14dayavg,OMR_RPA_5dayavg)} ! REPLACE THIS EQUATION, NSO 01/17/2022
 
 !QA/QC
 
-define OMR_RPA14d {alias OMR_RPA_14day  kind 'FLOW-REG' units 'CFS'} ! for output
-define OMR_RPA5d {alias OMR_RPA_5day  kind 'FLOW-REG' units 'CFS'}
+define OMR_RPA_dailydv {alias OMR_RPA_daily  kind 'FLOW-REG' units 'CFS'} ! for output
+!define OMR_RPA5d {alias OMR_RPA_5day  kind 'FLOW-REG' units 'CFS'}
 define OMR_RPA_FWSdv {alias OMR_RPA_FWS  kind 'FLOW-REG' units 'CFS'} 
 
 !

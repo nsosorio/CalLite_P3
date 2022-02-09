@@ -11,6 +11,11 @@ Set X2Roe_DLTSW switch to control X2_Reo_Trigger
 ! define FallX2 {select Option from options where Index=1} 
 
 ! FWS BO Action 4 - Storage Release for X2 outflow capped to inflow
+/* "In November, the inflow to CVP/SWP reservoirs
+ * in the Sacramento Basin will be added to reservoir releases to
+ * provide an added increment of Delta inflow and to augment Delta outflow
+ * up to the fall target."
+ */
 define InfForX2Nov {
     case November {
         condition month==NOV .and. wyt_SAC <= 2
@@ -72,7 +77,7 @@ define flowcap_chs {       ! cfs for Chipps Island
           value 99999. }
      case NOV_FWS {
           condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov }
+          value mrdo_finaldv[BASE] + InfForX2Nov }
      case othermonths {
           condition      always
           value 99999. }
@@ -92,7 +97,7 @@ define flowcap_cnf {       ! cfs for Confluence (Sac & SJR)
           value 99999. }
      case NOV_FWS {
           condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov  }
+          value mrdo_finaldv[BASE] + InfForX2Nov  }
      case othermonths {
           condition      always
           value 99999. }
@@ -161,10 +166,10 @@ define daysX2_cnf {
           value          0.    }
      case Sep_FWS_AN {
           condition      month == SEP .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
-          value          daysin    }
+          value          1    }
      case OctNov_FWS_AN {
           condition      month <= NOV .and. wyt_SAC <= 2 .and. FallX2 == 1 ! FWS BO (Dec 08) Action 4 - Fall X2 for Above Normal Years
-          value          daysin    }
+          value          1    }
      case StandardOff {
           condition      always
           value          0.    }
