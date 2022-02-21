@@ -17,9 +17,9 @@ define ExportActualTD {alias D_Jones_TD+D_Banks_TD KIND 'EXPORT-PRJ' units 'CFS'
 define ExportActualIF {alias D_Jones_IF+D_Banks_IF KIND 'EXPORT-PRJ' units 'CFS'  }
 
 ! Calculate 3 day running average
-define ExportActualTD_3daysum {sum(i=-2,-1,1) ExportActualTD(i)}
+define ExportActualTD_2daysum {sum(i=-2,-1,1) ExportActualTD(i)}
 define ExportActualTD_3dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
-goal set_ExportActualTD_rollavg { ExportActualTD_3dayavg = (ExportActualTD_3daysum +  ExportActualTD)/3 }
+goal set_ExportActualTD_rollavg { ExportActualTD_3dayavg = (ExportActualTD_2daysum +  ExportActualTD)/3 }
 
 ! Delta Inflow defined as in DWRSIM Algorithm Description for Export Ratio
 define Inflow {alias C_Hood_ANN
@@ -31,13 +31,13 @@ define Inflow {alias C_Hood_ANN
 }
 
 ! Calculate 14 day running average
-define Inflow_14daysum {sum(i=-13,-1,1) Inflow(i)}
+define Inflow_13daysum {sum(i=-13,-1,1) Inflow(i)}
 define Inflow_14dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
-goal set_Inflow_rollavg { Inflow_14dayavg = (Inflow_14daysum +  Inflow)/14 }
+goal set_Inflow_rollavg { Inflow_14dayavg = (Inflow_13daysum +  Inflow)/14 }
 
-define Inflow_3daysum {sum(i=-2,-1,1) Inflow(i)}
+define Inflow_2daysum {sum(i=-2,-1,1) Inflow(i)}
 define Inflow_3dayavg {std kind 'EXPORT-PRJ' units 'CFS'}
-goal set_Inflow_3dayrollavg { Inflow_3dayavg = (Inflow_3daysum +  Inflow)/3 }
+goal set_Inflow_3dayrollavg { Inflow_3dayavg = (Inflow_2daysum +  Inflow)/3 }
 
 ! EI allowable export variable - MAXIMUM ALLOWABLE EXPORT due to EXPORT RATIO
 define EiExpCtrl {std kind 'EXPORT-CTRL-EI' units 'CFS'}

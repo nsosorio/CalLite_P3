@@ -86,7 +86,7 @@ goal Export_limit_during_pulse_mon {
 
 ! Limit the actual export to the day weighted average allowable export for each month.
 goal Limit_Exports {
-    lhs  ExportActualTD
+    lhs  ExportActualTD_3dayavg
         case AprilMay {
             condition     (month == Apr .and. day >= 15) .or. (month == MAY .and. day <= 15)
             rhs           AprMayExpCtrl
