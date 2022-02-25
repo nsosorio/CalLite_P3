@@ -20,4 +20,5 @@ INCLUDE 'Jones_pump_allow.wresl'
 INCLUDE 'exportratio.wresl'
 INCLUDE 'april_may_maxexport.wresl'
 
+INCLUDE 'historical_pumping.wresl'
 INCLUDE 'intertie.wresl'

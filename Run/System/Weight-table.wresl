@@ -789,7 +789,9 @@ Objective obj = {[S_Trnty_1,40000*taf_cfs],
 [D_Banks_cvcsurp1, -0.01],
 [D_Banks_cvcsurp2, -0.02],
 [D_Banks_whlsurp1, -0.03],
-[D_Banks_whlsurp2, -0.04]}
+[D_Banks_whlsurp2, -0.04],
+[D_Banks,1230],
+[D_Jones,1230]}
 }
 
 elseif int(Dynamic_SJR)==0 .and. int(Dynamic_DeltaOps_Exports)==0. .and. int(Dynamic_SOD)==0. { ! NOD only

@@ -1,0 +1,15 @@
+/*************************************
+historical_pumping.wresl
+ 
+Nicole Osorio DWR (02/22/2022)
+
+Limit simulated exports to historical
+Data source is CDEC
+* 
+* Weights for exports were added in the weight-table by taking average of San Luis zone 2 and 3 weights
+**************************************/
+define D_Banks_TS {timeseries kind 'FLOW-DELIVERY' units 'cfs'}
+define D_Jones_TS {timeseries kind 'FLOW-DELIVERY' units 'cfs'}
+
+goal limit_d_banks { D_Banks < D_Banks_TS }
+goal limit_d_jones { D_Jones < D_Jones_TS }
