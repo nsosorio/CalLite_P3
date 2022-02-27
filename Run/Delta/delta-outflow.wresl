@@ -323,7 +323,7 @@ else {
 	! For the May-January objectives, if the value (objective/standard) is less than or equal to 5,000 cfs,
 	! the 7-day running average (of NDOI or total outflow) shall not be less than 1,000 cfs below the value;
 	! if the value is greater than 5,000 cfs, the 7day running average shall not be less than 80% of the value
-	goal may_jan {
+	/*goal may_jan {
     lhs  C_SacSJR_7dayavg
         case LessThan5000cfs {
             condition     range(month,may,jan) .and. NDOreqflowstd <= 5000.
@@ -333,7 +333,7 @@ else {
             condition     range(month,may,jan) .and. NDOreqflowstd > 5000.
             rhs           NDOreqflowstd*0.8
             lhs>rhs       penalty 0 }        
-            }
+            }*/
 
 	
 }
