@@ -21,8 +21,14 @@ define nov_trigger_cfs {                    !2500 cfs
         from      feather_fish_203
         where   month = NOV}
 
+define minflow_C_therm_switch {value 0.} ! Turning off this requirement for now. NSO, 02/28/2022
+!This should ideally be always zero but due to usage of historical data to drive operations, there are times when this MIF arc has values
 if int(Dynamic_DeltaOps_Exports)==1 {
 define minflow_C_Therm {        
+  case On_Off {                            
+    condition int(minflow_C_therm_switch) == 0
+    value   0.
+  }
   case October {                            !minflow_C_Therm + 500 = 500 cfs
     condition month == OCT
     value   0.
@@ -75,6 +81,10 @@ define minflow_C_Therm {
 
 if int(Dynamic_DeltaOps_Exports)==0 {
 define minflow_C_Therm {        
+  case On_Off {                            
+    condition int(minflow_C_therm_switch) == 0
+    value   0.
+  }
   case October {                            !minflow_C_Therm + 500 = 500 cfs
     condition month == OCT
     value   0.
