@@ -9,7 +9,7 @@
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATATRANSFER_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DATE" value="02/28/2022"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DESCRIPTION" value="Make C_Therm_MIF zero and update Folsom level 5"/>
-<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_minflow_c_therm_zero_folsmlvl5_20220228.dss"/>
+<stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR" value="DSS\output\CL_DCR17_minflow_c_therm_zero_folsmlvl5_20220228_DEBUG.dss"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_DVAR_MS2" value=""/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDDAY" value="30"/>
 <stringAttribute key="wpp.debugModel.ATTR_WPP_ENDMONTH" value="sep"/>
